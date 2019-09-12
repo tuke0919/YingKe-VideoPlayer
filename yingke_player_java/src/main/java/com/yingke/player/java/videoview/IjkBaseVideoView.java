@@ -1,6 +1,8 @@
 package com.yingke.player.java.videoview;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.TypedArray;
 import android.media.AudioManager;
@@ -9,6 +11,7 @@ import android.util.AttributeSet;
 import android.view.OrientationEventListener;
 import android.widget.FrameLayout;
 
+import com.yingke.player.java.PlayerUtils;
 import com.yingke.player.java.controller.MediaPlayerControl;
 import com.yingke.player.java.manager.MediaPlayerManager;
 import com.yingke.player.java.listener.OnVideoViewStateChangeListener;
@@ -701,12 +704,98 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
         }
     }
 
+    /**
+     * 设备方向传感器 监听，只和设备有关
+     */
     protected OrientationEventListener mOrientationEventListener = new OrientationEventListener(getContext()){
+        private long mLastTime;
         @Override
         public void onOrientationChanged(int orientation) {
 
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - mLastTime < 300) {
+                //300毫秒检测一次
+                return;
+            }
+            Activity activity = PlayerUtils.scanForActivity(IjkBaseVideoView.this.getContext());
+            if (activity == null) {
+                return;
+            }
+
+            if(orientation > 350 || orientation < 10) {
+                //0度，Home键 在下方，屏幕顶部朝上
+                onOrientationPortrait(activity);
+
+            } else if(orientation > 80 && orientation < 100) {
+                //90度，Home键 在右边，屏幕右边朝上
+                onOrientationReverseLandscape(activity);
+
+            } else if(orientation > 170 && orientation < 190) {
+                //180度，用户反向竖直拿着手机
+
+
+            } else if(orientation > 260 && orientation < 280) {
+                //270度，Home键 在右边，屏幕左边朝上
+                onOrientationLandscape(activity);
+            }
+            mLastTime = currentTime;
         }
     };
+
+    /**
+     * activity 竖屏
+     */
+    protected void onOrientationPortrait(Activity activity) {
+        // 全屏锁 || 不允许自动旋转 || 当前是竖屏
+        if (mIsLockFullScreen || !mAutoRotate || mCurrentOrientation == SCREEN_ORIENTATION_PORTRAIT)
+            return;
+        if ((mCurrentOrientation == SCREEN_ORIENTATION_LANDSCAPE || mCurrentOrientation == SCREEN_ORIENTATION_REVERSE_LANDSCAPE) && !isFullScreen()) {
+            mCurrentOrientation = SCREEN_ORIENTATION_PORTRAIT;
+            return;
+        }
+        mCurrentOrientation = SCREEN_ORIENTATION_PORTRAIT;
+        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        stopFullScreen();
+    }
+
+    /**
+     * activity 正向横屏，
+     */
+    protected void onOrientationLandscape(Activity activity) {
+        if (mCurrentOrientation == SCREEN_ORIENTATION_LANDSCAPE) return;
+        if (mCurrentOrientation == SCREEN_ORIENTATION_PORTRAIT
+                && activity.getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
+                && isFullScreen()) {
+            mCurrentOrientation = SCREEN_ORIENTATION_LANDSCAPE;
+            return;
+        }
+        mCurrentOrientation = SCREEN_ORIENTATION_LANDSCAPE;
+        if (!isFullScreen()) {
+            startFullScreen();
+        }
+        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    }
+
+    /**
+     * activity 反向横屏
+     */
+    protected void onOrientationReverseLandscape(Activity activity) {
+        if (mCurrentOrientation == SCREEN_ORIENTATION_REVERSE_LANDSCAPE) return;
+        if (mCurrentOrientation == SCREEN_ORIENTATION_PORTRAIT
+                && activity.getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                && isFullScreen()) {
+            mCurrentOrientation = SCREEN_ORIENTATION_LANDSCAPE;
+            return;
+        }
+        mCurrentOrientation = SCREEN_ORIENTATION_LANDSCAPE;
+        if (!isFullScreen()) {
+            startFullScreen();
+        }
+
+        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+    }
+
+
 
 
 }
