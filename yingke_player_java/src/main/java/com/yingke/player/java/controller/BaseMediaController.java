@@ -30,6 +30,8 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class BaseMediaController extends FrameLayout {
 
+    protected static final int sDefaultTimeout = 3000;
+
     protected View mRootView;
     // 控制器内容
     protected RelativeLayout mControllerContent;
@@ -165,7 +167,7 @@ public abstract class BaseMediaController extends FrameLayout {
         @Override
         public void onClick(View v) {
             doPauseResume();
-            // TODO show
+            show(sDefaultTimeout);
         }
     };
 
@@ -225,6 +227,39 @@ public abstract class BaseMediaController extends FrameLayout {
      */
     public void setFullScreenStatus(boolean isFullScreen){
         this.mIsFullScreen = isFullScreen;
+        afterFullScreenChanged();
+    }
+
+    /**
+     * 进入全屏，UI变更
+     */
+    protected void afterFullScreenChanged() {
+        // 进入全屏
+        mFullScreenView.setImageResource(isFullScreen() ? R.drawable.icon_controller_unfull : R.drawable.icon_controller_full);
+        if (isFullScreen()) {
+            mTitlePort.setVisibility(GONE);
+            mTitleLandView.setVisibility(VISIBLE);
+            mBackLand.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // 退出全屏
+                    if (isFullScreen() && mFullScreenListener != null) {
+                        mFullScreenListener.onExitFullScreen();
+                    }
+                }
+            });
+            mShareLand.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // 更多/分享回调
+
+                }
+            });
+        } else {
+            mTitlePort.setVisibility(VISIBLE);
+            mTitleLandView.setVisibility(GONE);
+        }
+
     }
 
     /**
@@ -250,8 +285,7 @@ public abstract class BaseMediaController extends FrameLayout {
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
-            // TODO show
-            BaseMediaController.this.setVisibility(VISIBLE);
+            show(3600000);
             mIsDraggingSeekBar = true;
             if (mUpdateProgressHelper != null) {
                 mUpdateProgressHelper.stopSeekBarUpdate();
@@ -263,7 +297,8 @@ public abstract class BaseMediaController extends FrameLayout {
             if (mMediaPlayer == null) {
                 return;
             }
-            // TODO show
+
+            show(sDefaultTimeout);
             mIsDraggingSeekBar = false;
             mMediaPlayer.seekTo(seekBar.getProgress() * 1000);
             if (mUpdateProgressHelper != null) {
@@ -361,6 +396,12 @@ public abstract class BaseMediaController extends FrameLayout {
 
     /**
      * 显示 控制器
+     */
+    public void show() {
+        show(sDefaultTimeout);
+    }
+    /**
+     * 显示 控制器
      * @param timeOut 0 一直显示直到 hide 调用
      */
     public void show(int timeOut){
@@ -401,6 +442,18 @@ public abstract class BaseMediaController extends FrameLayout {
 
     public boolean isShowing() {
         return mIsShowing;
+    }
+
+    public void setFullScreenListener(OnFullScreenListener fullScreenListener) {
+        mFullScreenListener = fullScreenListener;
+    }
+
+    public void setShownListener(OnShownListener shownListener) {
+        mShownListener = shownListener;
+    }
+
+    public void setHiddenListener(OnHiddenListener hiddenListener) {
+        mHiddenListener = hiddenListener;
     }
 
     /**
