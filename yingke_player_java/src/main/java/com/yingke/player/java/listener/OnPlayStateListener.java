@@ -13,7 +13,7 @@ import com.yingke.player.java.videoview.IjkBaseVideoView;
  * 最后修改人：无
  * <p>
  */
-public interface OnVideoViewStateChangeListener {
+public interface OnPlayStateListener {
 
     /**
      * 屏幕模式 改变

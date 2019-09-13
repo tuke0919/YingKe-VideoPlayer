@@ -13,7 +13,7 @@ import android.graphics.Bitmap;
 public interface MediaPlayerControl {
 
     /**
-     * 开始
+     * 开始/恢复
      */
     void start();
 
@@ -21,11 +21,6 @@ public interface MediaPlayerControl {
      * 暂停
      */
     void pause();
-
-    /**
-     * 恢复播放
-     */
-    void resume();
 
 
     /**
@@ -64,21 +59,6 @@ public interface MediaPlayerControl {
      */
     int getBufferedPercentage();
 
-    /**
-     * 进入全屏
-     */
-    void startFullScreen();
-
-    /**
-     * 退出全屏
-     */
-    void stopFullScreen();
-
-    /**
-     * 是否全屏
-     * @return
-     */
-    boolean isFullScreen();
 
     /**
      * 设置静音

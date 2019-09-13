@@ -14,7 +14,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.yingke.player.java.R;
-import com.yingke.player.java.listener.OnFullScreenListener;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -123,21 +122,61 @@ public abstract class BaseMediaController extends FrameLayout {
         mTitleLand = mRootView.findViewById(R.id.controller_title_land);
         mShareLand = mRootView.findViewById(R.id.controller_share_land);
 
+        // 播放暂停
         mPauseResumeBtn = mRootView.findViewById(R.id.controller_play_pause_btn);
         if (mPauseResumeBtn != null) {
             mPauseResumeBtn.setOnClickListener(mPauseResumeListener);
         }
+        // 当前时间
         mCurrentTime = mRootView.findViewById(R.id.controller_current_time);
+        // 总时间
         mTotalTime = mRootView.findViewById(R.id.controller_total_time);
-        mSpeedLandView = mRootView.findViewById(R.id.controller_speed_btn);
-        mResolutionLandView = mRootView.findViewById(R.id.controller_clearness_btn);
 
+        // 倍速
+        mSpeedLandView = mRootView.findViewById(R.id.controller_speed_btn);
+        if (mSpeedLandView != null){
+            mSpeedLandView.setText(mSpeedName[mSpeedPos]);
+            mSpeedLandView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mSpeedPos++;
+                    if (mSpeedPos == 3)
+                        mSpeedPos = 0;
+                    if (mOnSpeedAction != null) {
+                        mOnSpeedAction.onSpeedClick(mSpeedPos);
+                    }
+                    mSpeedLandView.setText(mSpeedName[mSpeedPos]);
+                }
+            });
+        }
+
+        // 分辨率
+        mResolutionLandView = mRootView.findViewById(R.id.controller_clearness_btn);
+        if (mResolutionLandView != null) {
+            mResolutionLandView.setText(mResolutionName[mResolutionPos]);
+            mResolutionLandView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mResolutionPos++;
+                    if (mResolutionPos == 3)
+                        mResolutionPos = 0;
+                    if (mResolutionAction != null) {
+                        mResolutionAction.onResolutionClick(mResolutionPos);
+                    }
+                    mResolutionLandView.setText(mResolutionName[mResolutionPos]);
+                }
+            });
+        }
+
+
+        // 全屏
         mFullScreenView = mRootView.findViewById(R.id.controller_fullscreen_btn);
         if (mFullScreenView != null) {
             mFullScreenView.setOnClickListener(mScaleListener);
         }
 
         mLockView = mRootView.findViewById(R.id.controller_lock);
+        // 进度条
         mSeekBar = mRootView.findViewById(R.id.controller_seekbar);
         if (mSeekBar != null){
             mSeekBar.setOnSeekBarChangeListener(mSeekBarChangeListener);
@@ -231,7 +270,7 @@ public abstract class BaseMediaController extends FrameLayout {
     }
 
     /**
-     * 进入全屏，UI变更
+     * 进入/退出全屏，UI变更
      */
     protected void afterFullScreenChanged() {
         // 进入全屏
@@ -252,12 +291,18 @@ public abstract class BaseMediaController extends FrameLayout {
                 @Override
                 public void onClick(View v) {
                     // 更多/分享回调
-
+                    if (mOnShareListener != null) {
+                        mOnShareListener.onShare();
+                    }
                 }
             });
+            mSpeedLandView.setVisibility(VISIBLE);
+            mResolutionLandView.setVisibility(VISIBLE);
         } else {
             mTitlePort.setVisibility(VISIBLE);
             mTitleLandView.setVisibility(GONE);
+            mSpeedLandView.setVisibility(GONE);
+            mResolutionLandView.setVisibility(GONE);
         }
 
     }
@@ -277,6 +322,7 @@ public abstract class BaseMediaController extends FrameLayout {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             // s秒
+
             long currentTime = progress;
             if (mCurrentTime != null) {
                 mCurrentTime.setText(DateUtils.formatElapsedTime(currentTime));
@@ -444,10 +490,6 @@ public abstract class BaseMediaController extends FrameLayout {
         return mIsShowing;
     }
 
-    public void setFullScreenListener(OnFullScreenListener fullScreenListener) {
-        mFullScreenListener = fullScreenListener;
-    }
-
     public void setShownListener(OnShownListener shownListener) {
         mShownListener = shownListener;
     }
@@ -475,6 +517,139 @@ public abstract class BaseMediaController extends FrameLayout {
          */
         void onHidden();
     }
+
+    /**
+     * 设置全屏
+     * @param fullScreenListener
+     */
+    public void setFullScreenListener(OnFullScreenListener fullScreenListener) {
+        mFullScreenListener = fullScreenListener;
+    }
+
+    /**
+     * 全屏操作
+     */
+    public interface OnFullScreenListener {
+
+        /**
+         * 进入全屏
+         */
+        void onEnterFullScreen();
+
+        /**
+         * 退出全屏
+         */
+        void onExitFullScreen();
+
+    }
+
+    // 分享相关
+    private onShareListener mOnShareListener;
+
+    /**
+     * 设置分享回调
+     * @param onShareListener
+     */
+    public void setOnShareListener(onShareListener onShareListener) {
+        mOnShareListener = onShareListener;
+    }
+
+    /**
+     * 分享回调
+     */
+    public interface onShareListener{
+
+        /**
+         * 更多，分享
+         */
+        void onShare();
+    }
+
+    // 倍速相关
+    public static final String mSpeedName[] = new String[]{
+            "1.0x", "1.25x", "1.5x"
+    };
+
+    private int mSpeedPos = 0;
+
+    /**
+     * 设置倍速 外部
+     *
+     * @param pos
+     */
+    public void setSpeed(int pos) {
+        this.mSpeedPos = pos;
+        mSpeedLandView.setText(mSpeedName[mSpeedPos]);
+    }
+
+    private OnSpeedAction mOnSpeedAction = null;
+
+    /**
+     * 设置倍速监听器
+     *
+     * @param l
+     */
+    public void setOnSpeedAction(OnSpeedAction l) {
+        this.mOnSpeedAction = l;
+    }
+
+    /**
+     * 倍速监听器
+     */
+    public interface OnSpeedAction {
+        /**
+         * 倍速点击
+         *
+         * @param speedPos
+         */
+        void onSpeedClick(int speedPos);
+    }
+
+    // 清晰度相关
+
+    public static final String mResolutionName[] = new String[]{
+            "标清", "高清", "超清"
+    };
+
+    private int mResolutionPos = 0;
+
+    /**
+     * 设置清晰度 外部
+     *
+     * @param pos
+     */
+    public void setResolution(int pos) {
+        this.mResolutionPos = pos;
+        mResolutionLandView.setText(mResolutionName[mResolutionPos]);
+    }
+
+    public OnResolutionAction mResolutionAction;
+
+    /**
+     * 设置 清晰度
+     * @param resolutionAction
+     */
+    public void setResolutionAction(OnResolutionAction resolutionAction) {
+        mResolutionAction = resolutionAction;
+    }
+
+    /**
+     * 清晰度回调
+     */
+    public interface OnResolutionAction{
+
+        /**
+         * 清晰度点击
+         * @param resolutionPos
+         */
+        void onResolutionClick(int resolutionPos);
+    }
+
+
+
+
+
+
 
 
 
