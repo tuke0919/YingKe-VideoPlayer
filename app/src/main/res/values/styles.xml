@@ -27,4 +27,9 @@
         <item name="android:textSize">15sp</item>
     </style>
 
+    <style name="tab_widget">
+        <item name="android:textColor">@color/color_tab_widget_text</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
 </resources>

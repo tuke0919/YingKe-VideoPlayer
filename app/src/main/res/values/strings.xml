@@ -2,4 +2,10 @@
     <string name="app_name">YingKe-VideoPlayer</string>
 
     <string name="search_hint">搜索感兴趣的视频</string>
+
+    <!--首页Tab-->
+    <string name="tab_home">首页</string>
+    <string name="tab_tiktok">抖音</string>
+    <string name="tab_community">社区</string>
+    <string name="tab_me">我的</string>
 </resources>
