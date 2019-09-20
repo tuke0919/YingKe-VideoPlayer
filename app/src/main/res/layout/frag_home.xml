@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/action_bar"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/white"
+              android:gravity="center_vertical"
+              android:paddingTop="@dimen/status_bar_height">
+
+
+    <!--搜索框-->
+    <LinearLayout
+        android:id="@+id/search_view"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginRight="12dip"
+        android:layout_marginBottom="3dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_search_view"
+        android:gravity="center_vertical"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:src="@mipmap/icon_search" />
+
+        <TextView
+            android:id="@+id/search_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:maxLines="1"
+            android:text="@string/search_hint"
+            android:typeface="sans"
+            android:textColor="@color/color_b2b2b2"
+            android:textSize="12sp"
+            android:textStyle="normal"
+            />
+
+    </LinearLayout>
+
+    <!--顶部分类-->
+    <LinearLayout
+        android:id="@+id/home_top_category"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_below="@id/search_view"
+        android:layout_marginBottom="1dp">
+
+        <com.yingke.videoplayer.widget.ObservableXTabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            app:xTabIndicatorColor="@color/red"
+            app:xTabIndicatorHeight="2.88dp"
+            app:xTabIndicatorWidth="30dp"
+            app:xTabMaxWidth="200dip"
+            app:xTabMinWidth="10dip"
+            app:xTabMode="scrollable"
+            app:xTabPaddingEnd="8dp"
+            app:xTabPaddingStart="8dp"
+            app:xTabPaddingTop="1dp"
+            app:xTabSelectedTextColor="@color/color_333333"
+            app:xTabSelectedTextSize="16sp"
+            app:xTabTextColor="@color/color_666666"
+            app:xTabTextSelectedBold="true"
+            app:xTabTextSize="16sp" />
+
+    </LinearLayout>
+
+    <!--viewpager-->
+    <android.support.v4.view.ViewPager
+        android:id="@+id/home_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/home_top_category">
+
+    </android.support.v4.view.ViewPager>
+
+</RelativeLayout>

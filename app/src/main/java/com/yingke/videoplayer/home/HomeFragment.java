@@ -1,0 +1,103 @@
+package com.yingke.videoplayer.home;
+
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.yingke.videoplayer.R;
+import com.yingke.videoplayer.base.BaseFragment;
+import com.yingke.videoplayer.widget.ObservableXTabLayout;
+
+import java.util.List;
+
+/**
+ * 功能：
+ * </p>
+ * <p>Copyright corp.netease.com 2019 All right reserved </p>
+ *
+ * @author tuke 时间 2019/9/16
+ * @email tuke@corp.netease.com
+ * <p>
+ * 最后修改人：无
+ * <p>
+ */
+public class HomeFragment extends BaseFragment {
+
+
+    private LinearLayout mSearchView;
+    private TextView mSearchText;
+
+    private ObservableXTabLayout mXTabLayout;
+    private ViewPager mViewPager;
+    private TopTabAdapter mTabAdapter;
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return super.onCreateView(inflater, container, savedInstanceState);
+
+    }
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.frag_home;
+    }
+
+    @Override
+    protected void initView() {
+        mSearchView = mRootView.findViewById(R.id.search_view);
+        mSearchText = mRootView.findViewById(R.id.search_text);
+        mXTabLayout = mRootView.findViewById(R.id.tab_layout);
+        mViewPager = mRootView.findViewById(R.id.home_view_pager);
+    }
+
+    @Override
+    protected void initData() {
+        mTabAdapter = new TopTabAdapter(getChildFragmentManager());
+        mViewPager.setAdapter(mTabAdapter);
+        mXTabLayout.setupWithViewPager(mViewPager);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+
+    private void notifyTabDataSetChanged(List<TopTabData> topTabData) {
+        if (mTabAdapter == null) {
+            return;
+        }
+        mTabAdapter.setTopTabData(topTabData);
+        mTabAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+}
