@@ -1,5 +1,6 @@
 package com.yingke.videoplayer.tiktok;
 
+import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.base.BaseFragment;
 
 /**
@@ -21,7 +22,7 @@ public class TiktokFragment extends BaseFragment {
 
     @Override
     protected int getLayoutResId() {
-        return 0;
+        return R.layout.frag_tiktok;
     }
 
     @Override

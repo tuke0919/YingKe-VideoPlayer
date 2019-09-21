@@ -38,27 +38,28 @@ public class TopTabAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int i) {
         TopTabData tabData = mTopTabData.get(i);
+        Fragment fragment = null;
         if (tabData != null) {
             switch (tabData.getType()) {
                 case TopTabData.TabType.TAB_SUBSCRIBE:
-
+                    fragment = CategoryContentFragment.newInstance();
                     break;
                 case TopTabData.TabType.TAB_RECOMMEND:
-
+                    fragment = CategoryContentFragment.newInstance();
                     break;
                 case TopTabData.TabType.TAB_SHORT_VIDEO:
-
+                    fragment = CategoryContentFragment.newInstance();
                     break;
                 case TopTabData.TabType.TAB_COURSE_MENU:
-
+                    fragment = CategoryContentFragment.newInstance();
                     break;
                 default:
-
+                    fragment = CategoryContentFragment.newInstance();
                     break;
 
             }
         }
-        return null;
+        return fragment;
     }
 
     @Override

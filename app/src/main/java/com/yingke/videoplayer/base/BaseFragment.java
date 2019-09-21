@@ -47,7 +47,7 @@ public abstract class BaseFragment extends Fragment {
         PlayerLog.d(getClass().getSimpleName(), "onCreateView");
 
         if (mRootView == null) {
-            inflater.inflate(getLayoutResId(), container, false);
+            mRootView = inflater.inflate(getLayoutResId(), container, false);
             initView();
             initData();
         }

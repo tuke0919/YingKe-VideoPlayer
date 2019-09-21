@@ -29,7 +29,7 @@
 
     <style name="tab_widget">
         <item name="android:textColor">@color/color_tab_widget_text</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">11sp</item>
     </style>
 
 </resources>

@@ -32,10 +32,10 @@ public class MainActivity extends BaseActivity {
     public static final String TAB_ME = "tab_me";
 
     private BottomTabData[] mBottomTabDatas = {
-            new BottomTabData(TAB_HOME, HomeFragment.class, 0,0,R.string.tab_home),
-            new BottomTabData(TAB_TIKTOK, TiktokFragment.class, 0,0,R.string.tab_tiktok),
-            new BottomTabData(TAB_COMMUNITY, CommunityFragment.class, 0,0,R.string.tab_community),
-            new BottomTabData(TAB_ME, PersonalFragment.class, 0,0,R.string.tab_me),
+            new BottomTabData(TAB_HOME, HomeFragment.class, R.mipmap.icon_home_tab,0,R.string.tab_home),
+            new BottomTabData(TAB_TIKTOK, TiktokFragment.class, R.mipmap.icon_video_tab,0,R.string.tab_tiktok),
+            new BottomTabData(TAB_COMMUNITY, CommunityFragment.class, R.mipmap.icon_community_tab,0,R.string.tab_community),
+            new BottomTabData(TAB_ME, PersonalFragment.class, R.mipmap.icon_me_tab,0,R.string.tab_me),
 
     };
 
@@ -47,7 +47,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.frag_home);
+        setContentView(R.layout.activity_main);
         initViews();
         initData();
     }
@@ -64,6 +64,10 @@ public class MainActivity extends BaseActivity {
         mTabHost.setup(this, getSupportFragmentManager(), R.id.frag_container);
         mTabWidget = mTabHost.getTabWidget();
         mTabWidget.setDividerDrawable(null);
+    }
+    private void initData(){
+        addTabHostTab();
+        mTabHost.setCurrentTab(0);
     }
 
     private void addTabHostTab(){
@@ -90,11 +94,6 @@ public class MainActivity extends BaseActivity {
 
             mBottomTabViewHashMap.put(tag, bottomTabView);
         }
-    }
-
-    private void initData(){
-        addTabHostTab();
-        mTabHost.setCurrentTab(0);
     }
 
     private static class BottomTabView{

@@ -62,23 +62,23 @@ public class BaseActivity extends AppCompatActivity  {
      * 初始化toolbar
      */
     protected void initActionbar() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
-        if (mToolbar == null) {
-            throw new IllegalStateException("Toolbar_actionbar mToolbar has not be found in layout,be sure you have define mToolbar in the layout");
-        } else {
-            setSupportActionBar(mToolbar);
-            getSupportActionBar().setDisplayShowHomeEnabled(false);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            mToolbar.setBackgroundResource(getActionBarBg());
-            mToolbar.setNavigationIcon(R.mipmap.left_back);
-            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBack(v);
-                }
-            });
-            mToolbar.setTitleTextAppearance(this, R.style.toolbar_title_style);
-        }
+//        mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
+//        if (mToolbar == null) {
+//            throw new IllegalStateException("Toolbar_actionbar mToolbar has not be found in layout,be sure you have define mToolbar in the layout");
+//        } else {
+//            setSupportActionBar(mToolbar);
+//            getSupportActionBar().setDisplayShowHomeEnabled(false);
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            mToolbar.setBackgroundResource(getActionBarBg());
+//            mToolbar.setNavigationIcon(R.mipmap.left_back);
+//            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    onBack(v);
+//                }
+//            });
+//            mToolbar.setTitleTextAppearance(this, R.style.toolbar_title_style);
+//        }
     }
 
     /**

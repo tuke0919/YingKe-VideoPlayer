@@ -1,5 +1,6 @@
 package com.yingke.videoplayer.personal;
 
+import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.base.BaseFragment;
 
 /**
@@ -16,7 +17,7 @@ import com.yingke.videoplayer.base.BaseFragment;
 public class PersonalFragment extends BaseFragment {
     @Override
     protected int getLayoutResId() {
-        return 0;
+        return R.layout.frag_me;
     }
 
     @Override
