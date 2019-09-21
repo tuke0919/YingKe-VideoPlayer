@@ -8,4 +8,99 @@
     <string name="tab_tiktok">抖音</string>
     <string name="tab_community">社区</string>
     <string name="tab_me">我的</string>
+
+    <string name="top_data_json">[
+    {
+        "id": 1222,
+        "name": "影视",
+        "weight": 98,
+        "type": 67,
+        "fontcolor": ""
+  },
+   {
+        "id": 1223,
+        "name": "游戏",
+        "weight": 97,
+        "type": 32,
+        "fontcolor": ""
+  },
+   {
+        "id": 1224,
+        "name": "小视频",
+        "weight": 96,
+        "type": 34,
+        "fontcolor": ""
+  },
+   {
+        "id": 1225,
+        "name": "VLOG",
+        "weight": 95,
+        "type": 111,
+        "fontcolor": ""
+  },
+   {
+        "id": 1226,
+        "name": "70年",
+        "weight": 94,
+        "type": 21,
+        "fontcolor": ""
+  },
+   {
+        "id": 1227,
+        "name": "音乐",
+        "weight": 93,
+        "type": 43,
+        "fontcolor": ""
+  },
+   {
+        "id": 1228,
+        "name": "综艺",
+        "weight": 92,
+        "type": 54,
+        "fontcolor": ""
+  },
+   {
+        "id": 1229,
+        "name": "美食",
+        "weight": 91,
+        "type": 65,
+        "fontcolor": ""
+  },
+   {
+        "id": 1230,
+        "name": "宠物",
+        "weight": 90,
+        "type": 988,
+        "fontcolor": ""
+  },
+   {
+        "id": 1231,
+        "name": "宠物",
+        "weight": 89,
+        "type": 13,
+        "fontcolor": ""
+  },
+   {
+        "id": 1231,
+        "name": "儿童",
+        "weight": 88,
+        "type": 88,
+        "fontcolor": ""
+  },
+   {
+        "id": 1232,
+        "name": "情感",
+        "weight": 87,
+        "type": 567,
+        "fontcolor": ""
+  },
+   {
+        "id": 1233,
+        "name": "NBA",
+        "weight": 86,
+        "type": 76,
+        "fontcolor": ""
+  }
+]</string>
+
 </resources>

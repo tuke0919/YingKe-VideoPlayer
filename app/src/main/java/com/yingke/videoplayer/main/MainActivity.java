@@ -130,4 +130,9 @@ public class MainActivity extends BaseActivity {
             return mRootView;
         }
     }
+
+    @Override
+    protected boolean isTransStatusBar() {
+        return super.isTransStatusBar();
+    }
 }

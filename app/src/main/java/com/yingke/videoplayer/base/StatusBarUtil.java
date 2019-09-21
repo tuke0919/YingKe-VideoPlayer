@@ -48,7 +48,7 @@ public class StatusBarUtil {
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
                 // 这俩 可设置状态栏背景色，透明或其他color
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(activity.getResources().getColor(R.color.black));
+                window.setStatusBarColor(Color.TRANSPARENT);
             }
         }
     }

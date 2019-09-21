@@ -1,6 +1,7 @@
 package com.yingke.videoplayer.home;
 
 import android.support.annotation.IntDef;
+import android.support.annotation.StringRes;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -102,9 +103,108 @@ public class TopTabData {
      * @param name
      * @return
      */
-    public static TopTabData newTabData(@TabType int type, String name){
+    public static TopTabData newTabData(int type, String name){
         return new TopTabData(type, name);
     }
+
+    public static String mTopDataJson = "[\n" +
+            "    {\n" +
+            "        \"id\": 1222,\n" +
+            "        \"name\": \"影视\",\n" +
+            "        \"weight\": 98,\n" +
+            "        \"type\": 67,\n" +
+            "        \"fontcolor\": \"\"  \n" +
+            "  },\n" +
+            "   {\n" +
+            "        \"id\": 1223,\n" +
+            "        \"name\": \"游戏\",\n" +
+            "        \"weight\": 97,\n" +
+            "        \"type\": 32,\n" +
+            "        \"fontcolor\": \"\"  \n" +
+            "  },\n" +
+            "   {\n" +
+            "        \"id\": 1224,\n" +
+            "        \"name\": \"小视频\",\n" +
+            "        \"weight\": 96,\n" +
+            "        \"type\": 34,\n" +
+            "        \"fontcolor\": \"\"  \n" +
+            "  },\n" +
+            "   {\n" +
+            "        \"id\": 1225,\n" +
+            "        \"name\": \"VLOG\",\n" +
+            "        \"weight\": 95,\n" +
+            "        \"type\": 111,\n" +
+            "        \"fontcolor\": \"\"  \n" +
+            "  },\n" +
+            "   {\n" +
+            "        \"id\": 1226,\n" +
+            "        \"name\": \"70年\",\n" +
+            "        \"weight\": 94,\n" +
+            "        \"type\": 21,\n" +
+            "        \"fontcolor\": \"\"  \n" +
+            "  },\n" +
+            "   {\n" +
+            "        \"id\": 1227,\n" +
+            "        \"name\": \"音乐\",\n" +
+            "        \"weight\": 93,\n" +
+            "        \"type\": 43,\n" +
+            "        \"fontcolor\": \"\"  \n" +
+            "  },\n" +
+            "   {\n" +
+            "        \"id\": 1228,\n" +
+            "        \"name\": \"综艺\",\n" +
+            "        \"weight\": 92,\n" +
+            "        \"type\": 54,\n" +
+            "        \"fontcolor\": \"\"  \n" +
+            "  },\n" +
+            "   {\n" +
+            "        \"id\": 1229,\n" +
+            "        \"name\": \"美食\",\n" +
+            "        \"weight\": 91,\n" +
+            "        \"type\": 65,\n" +
+            "        \"fontcolor\": \"\"  \n" +
+            "  },\n" +
+            "   {\n" +
+            "        \"id\": 1230,\n" +
+            "        \"name\": \"宠物\",\n" +
+            "        \"weight\": 90,\n" +
+            "        \"type\": 988,\n" +
+            "        \"fontcolor\": \"\"  \n" +
+            "  },\n" +
+            "   {\n" +
+            "        \"id\": 1231,\n" +
+            "        \"name\": \"宠物\",\n" +
+            "        \"weight\": 89,\n" +
+            "        \"type\": 13,\n" +
+            "        \"fontcolor\": \"\"  \n" +
+            "  },\n" +
+            "   {\n" +
+            "        \"id\": 1231,\n" +
+            "        \"name\": \"儿童\",\n" +
+            "        \"weight\": 88,\n" +
+            "        \"type\": 88,\n" +
+            "        \"fontcolor\": \"\"  \n" +
+            "  },\n" +
+            "   {\n" +
+            "        \"id\": 1232,\n" +
+            "        \"name\": \"情感\",\n" +
+            "        \"weight\": 87,\n" +
+            "        \"type\": 567,\n" +
+            "        \"fontcolor\": \"\"  \n" +
+            "  },\n" +
+            "   {\n" +
+            "        \"id\": 1233,\n" +
+            "        \"name\": \"NBA\",\n" +
+            "        \"weight\": 86,\n" +
+            "        \"type\": 76,\n" +
+            "        \"fontcolor\": \"\"  \n" +
+            "  }\n" +
+            "]";
+
+
+
+
+
 
 
 

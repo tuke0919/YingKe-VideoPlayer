@@ -2,16 +2,20 @@ package com.yingke.videoplayer.home;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.base.BaseFragment;
 import com.yingke.videoplayer.widget.ObservableXTabLayout;
@@ -69,11 +73,24 @@ public class HomeFragment extends BaseFragment {
         mTabAdapter = new TopTabAdapter(getChildFragmentManager());
         mViewPager.setAdapter(mTabAdapter);
         mXTabLayout.setupWithViewPager(mViewPager);
+
+        refreshTopData();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    private void refreshTopData(){
+        String topDataJson = TopTabData.mTopDataJson;
+        if (!TextUtils.isEmpty(topDataJson)) {
+            List<TopTabData> tabDataList = new Gson().fromJson(topDataJson, new TypeToken<List<TopTabData>>(){}.getType());
+            notifyTabDataSetChanged(tabDataList);
+        } else {
+            notifyTabDataSetChanged(null);
+        }
+        mViewPager.setCurrentItem(1);
     }
 
 

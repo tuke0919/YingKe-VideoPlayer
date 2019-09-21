@@ -49,7 +49,7 @@ public class BaseActivity extends AppCompatActivity  {
      * 初始化状态栏
      */
     public void initStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // 设置亮色模式
             StatusBarUtil.StatusBarLightMode(this, isLightStatusBar());
             // 设置透明 状态栏，布局会顶到状态栏下方
