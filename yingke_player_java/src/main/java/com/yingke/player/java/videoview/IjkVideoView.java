@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.yingke.player.java.PlayerUtils;
+import com.yingke.player.java.controller.BaseMediaController;
 import com.yingke.player.java.widget.ResizedSurfaceView;
 import com.yingke.player.java.widget.ResizedTextureView;
 
@@ -75,19 +76,10 @@ public class IjkVideoView extends IjkBaseVideoView {
     }
 
     /**
-     * 创建播放器实例，设置播放器参数，并且添加用于显示视频的View
-     */
-    @Override
-    public void initPlayer() {
-        super.initPlayer();
-        // 添加 显示视图
-        addDisplay();
-    }
-
-    /**
      * 添加 显示视图
      */
-    protected void addDisplay() {
+    @Override
+    public void addDisplay() {
         if (mUsingSurfaceView || Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
             addSurfaceView();
         } else {
@@ -99,7 +91,7 @@ public class IjkVideoView extends IjkBaseVideoView {
      * 添加SurfaceView
      */
     private void addSurfaceView() {
-        mPlayerContainer.removeAllViews();
+        mPlayerContainer.removeView(mSurfaceView);
         mSurfaceView = new ResizedSurfaceView(getContext());
         SurfaceHolder surfaceHolder = mSurfaceView.getHolder();
         surfaceHolder.addCallback(new SurfaceHolder.Callback() {
@@ -119,11 +111,12 @@ public class IjkVideoView extends IjkBaseVideoView {
             }
         });
         surfaceHolder.setFormat(PixelFormat.RGBA_8888);
+        // 加入布局
         LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 Gravity.CENTER);
-        mPlayerContainer.addView(mSurfaceView,  params);
+        mPlayerContainer.addView(mSurfaceView, 0, params);
     }
 
     /**
@@ -157,13 +150,18 @@ public class IjkVideoView extends IjkBaseVideoView {
             public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
             }
         });
+        // 加入布局
         LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 Gravity.CENTER);
-        mPlayerContainer.addView(mTextureView,  params);
+        mPlayerContainer.addView(mTextureView,  0, params);
     }
 
+    @Override
+    public void setMediaController(BaseMediaController baseMediaController) {
+        super.setMediaController(baseMediaController);
+    }
 
     /**
      * 设置 屏幕缩放类型
@@ -204,7 +202,7 @@ public class IjkVideoView extends IjkBaseVideoView {
 
     @Override
     public int[] getVideoSize() {
-        return new int[0];
+        return mVideoSize;
     }
 
     /**

@@ -9,4 +9,7 @@
     <color name="color_666666">#666666</color>
     <color name="color_eeeeee">#eeeeee</color>
 
+    <color name="trans_alpha_60">#99000000</color>
+    <color name="trans_alpha_50">#b2000000</color>
+
 </resources>

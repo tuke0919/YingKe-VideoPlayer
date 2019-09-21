@@ -1,18 +1,23 @@
 package com.yingke.player.java.controller;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.format.DateUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.yingke.player.java.PlayerLog;
+import com.yingke.player.java.PlayerUtils;
 import com.yingke.player.java.R;
 
 import java.util.concurrent.Executors;
@@ -28,6 +33,8 @@ import java.util.concurrent.TimeUnit;
  * @author tuke 时间 2019/9/11
  */
 public abstract class BaseMediaController extends FrameLayout {
+
+    protected static final String TAG = "BaseMediaController";
 
     protected static final int sDefaultTimeout = 3000;
 
@@ -66,7 +73,6 @@ public abstract class BaseMediaController extends FrameLayout {
     // 屏幕锁
     protected ImageView mLockView;
 
-
     // 播放器控制
     protected MediaPlayerControl mMediaPlayer;
     protected boolean mIsLocked = false;
@@ -75,10 +81,12 @@ public abstract class BaseMediaController extends FrameLayout {
     protected boolean mIsShowing = false;
     protected boolean mPaused = false;
     protected boolean mIsFullScreen = false;
-    protected OnFullScreenListener mFullScreenListener;
-    protected OnShownListener mShownListener;
-    protected OnHiddenListener mHiddenListener;
 
+    // 监听回调
+    protected OnFullScreenListener mFullScreenListener;
+    protected OnShownHiddenListener mShownHiddenListener;
+
+    // 更新进度条
     protected UpdateProgressHelper mUpdateProgressHelper;
 
     public BaseMediaController(Context context) {
@@ -247,26 +255,38 @@ public abstract class BaseMediaController extends FrameLayout {
     protected View.OnClickListener mScaleListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-             if (mIsFullScreen) {
-                 if (mFullScreenListener != null) {
-                     mFullScreenListener.onExitFullScreen();
-                 }
-             } else {
-                 if (mFullScreenListener != null) {
-                     mFullScreenListener.onEnterFullScreen();
-                 }
-             }
-             setFullScreenStatus(!mIsFullScreen);
+            setRequestedOrientation();
         }
     };
 
     /**
+     * 主动设置 横屏 竖屏
+     */
+    private void setRequestedOrientation(){
+        Activity activity = PlayerUtils.scanForActivity(getContext());
+        if (activity == null) {
+            PlayerLog.d(TAG,"controller attached activity is null");
+            return;
+        }
+        if (isFullScreen()) {
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        } else {
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
+        setFullScreenStatus(!mIsFullScreen);
+    }
+
+    /**
      * 设置全屏状态
+     * 外面进入/退出全屏状态，需要同步状态给控制器
      * @param isFullScreen
      */
     public void setFullScreenStatus(boolean isFullScreen){
         this.mIsFullScreen = isFullScreen;
         afterFullScreenChanged();
+
     }
 
     /**
@@ -282,14 +302,15 @@ public abstract class BaseMediaController extends FrameLayout {
                 @Override
                 public void onClick(View v) {
                     // 退出全屏
-                    if (isFullScreen() && mFullScreenListener != null) {
-                        mFullScreenListener.onExitFullScreen();
-                    }
+                    setRequestedOrientation();
                 }
             });
             mShareLand.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (mMediaPlayer != null && mMediaPlayer.isPlaying()){
+                        mMediaPlayer.pause();
+                    }
                     // 更多/分享回调
                     if (mOnShareListener != null) {
                         mOnShareListener.onShare();
@@ -298,11 +319,21 @@ public abstract class BaseMediaController extends FrameLayout {
             });
             mSpeedLandView.setVisibility(VISIBLE);
             mResolutionLandView.setVisibility(VISIBLE);
+
+            // 回调到外面
+            if (mFullScreenListener != null) {
+                mFullScreenListener.onEnterFullScreen();
+            }
         } else {
             mTitlePort.setVisibility(VISIBLE);
             mTitleLandView.setVisibility(GONE);
             mSpeedLandView.setVisibility(GONE);
             mResolutionLandView.setVisibility(GONE);
+
+            // 回调到外面
+            if (mFullScreenListener != null) {
+                mFullScreenListener.onExitFullScreen();
+            }
         }
 
     }
@@ -453,8 +484,8 @@ public abstract class BaseMediaController extends FrameLayout {
     public void show(int timeOut){
         if (!isShowing()) {
             setVisibility(VISIBLE);
-            if (mShownListener != null){
-                mShownListener.onShown();
+            if (mShownHiddenListener != null){
+                mShownHiddenListener.onShown();
             }
             updatePlayPauseView();
             mIsShowing = true;
@@ -477,8 +508,8 @@ public abstract class BaseMediaController extends FrameLayout {
     public void hide() {
         if (isShowing()) {
             setVisibility(GONE);
-            if (mHiddenListener != null) {
-                mHiddenListener.onHidden();
+            if (mShownHiddenListener != null) {
+                mShownHiddenListener.onHidden();
             }
             updatePlayPauseView();
             mIsShowing = false;
@@ -490,28 +521,19 @@ public abstract class BaseMediaController extends FrameLayout {
         return mIsShowing;
     }
 
-    public void setShownListener(OnShownListener shownListener) {
-        mShownListener = shownListener;
-    }
-
-    public void setHiddenListener(OnHiddenListener hiddenListener) {
-        mHiddenListener = hiddenListener;
+    public void setControllerShownHidedListener(OnShownHiddenListener shownHiddenListener) {
+        mShownHiddenListener = shownHiddenListener;
     }
 
     /**
      * 显示回调
      */
-    public interface OnShownListener {
+    public interface OnShownHiddenListener {
         /**
          * 显示
          */
         void onShown();
-    }
 
-    /**
-     * 隐藏回调
-     */
-    public interface OnHiddenListener {
         /**
          * 隐藏
          */

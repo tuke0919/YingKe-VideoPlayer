@@ -187,7 +187,10 @@
                 android:layout_height="match_parent"
                 android:layout_toLeftOf="@id/right_view"
                 android:layout_toRightOf="@+id/controller_current_time"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
+                >
 
                 <SeekBar
                     android:id="@+id/controller_seekbar"
