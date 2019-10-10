@@ -29,10 +29,10 @@ public class BaseActivity extends AppCompatActivity  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        PlayerLog.d(getClass().getSimpleName(), "onCreate");
-
         initStatusBar();
+        PlayerLog.d(getClass().getSimpleName(), "onCreate");
         super.onCreate(savedInstanceState);
+
         mApp = (YingKePlayerApp) this.getApplicationContext();
     }
 
@@ -117,12 +117,17 @@ public class BaseActivity extends AppCompatActivity  {
         onBackPressed();
     }
 
+    @Override
+    protected void onRestart() {
+        PlayerLog.d(getClass().getSimpleName(), "onRestart");
+        super.onRestart();
+
+    }
 
     @Override
     protected void onStart() {
         PlayerLog.d(getClass().getSimpleName(), "onStart");
         super.onStart();
-
     }
 
     @Override
@@ -142,6 +147,7 @@ public class BaseActivity extends AppCompatActivity  {
     protected void onPause() {
         PlayerLog.d(getClass().getSimpleName(), "onPause");
         super.onPause();
+
     }
 
     @Override
@@ -155,18 +161,21 @@ public class BaseActivity extends AppCompatActivity  {
         PlayerLog.d(getClass().getSimpleName(), "onDestroy");
         super.onDestroy();
 
+
     }
 
     @Override
     public boolean isDestroyed() {
         PlayerLog.d(getClass().getSimpleName(), "isDestroyed");
         return super.isDestroyed();
+
     }
 
     @Override
     public void finish() {
         PlayerLog.d(getClass().getSimpleName(), "finish");
         super.finish();
+
     }
 
 
@@ -175,6 +184,7 @@ public class BaseActivity extends AppCompatActivity  {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         PlayerLog.d(getClass().getSimpleName(), "onActivityResult");
         super.onActivityResult(requestCode, resultCode, data);
+
 
     }
 
@@ -188,12 +198,14 @@ public class BaseActivity extends AppCompatActivity  {
     protected void onSaveInstanceState(Bundle outState) {
         PlayerLog.d(getClass().getSimpleName(), "onSaveInstanceState");
         super.onSaveInstanceState(outState);
+
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         PlayerLog.d(getClass().getSimpleName(), "onRestoreInstanceState");
         super.onRestoreInstanceState(savedInstanceState);
+
     }
 
 

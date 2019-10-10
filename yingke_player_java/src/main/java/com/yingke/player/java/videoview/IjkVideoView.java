@@ -52,16 +52,15 @@ public class IjkVideoView extends IjkBaseVideoView {
 
 
     public IjkVideoView(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public IjkVideoView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public IjkVideoView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
         initView();
     }
 

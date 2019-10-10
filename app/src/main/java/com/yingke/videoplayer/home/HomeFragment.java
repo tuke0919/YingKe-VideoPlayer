@@ -61,7 +61,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     @Override
-    protected void initView() {
+    protected void initView(View rootView) {
         mSearchView = mRootView.findViewById(R.id.search_view);
         mSearchText = mRootView.findViewById(R.id.search_text);
         mXTabLayout = mRootView.findViewById(R.id.tab_layout);

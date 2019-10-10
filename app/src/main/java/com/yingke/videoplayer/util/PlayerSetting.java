@@ -15,11 +15,11 @@ public class PlayerSetting {
 
     private static boolean isMobilePlayAllowed = false;
 
-    public static boolean isMobilePlayAllowed() {
+    public static boolean is4GPlayAllowed() {
         return isMobilePlayAllowed;
     }
 
-    public static void setMobilePlayAllowed(boolean isMobilePlayAllowed) {
+    public static void set4GPlayAllowed(boolean isMobilePlayAllowed) {
         PlayerSetting.isMobilePlayAllowed = isMobilePlayAllowed;
     }
 }

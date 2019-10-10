@@ -667,6 +667,14 @@ public abstract class BaseMediaController extends FrameLayout {
         void onResolutionClick(int resolutionPos);
     }
 
+    /**
+     * 设置标题
+     * @param title
+     */
+    public void setTitle(String title) {
+        mTitlePort.setText(title);
+        mTitleLand.setText(title);
+    }
 
 
 

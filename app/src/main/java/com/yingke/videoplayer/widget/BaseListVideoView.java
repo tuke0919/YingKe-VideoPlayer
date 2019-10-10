@@ -1,11 +1,16 @@
-package com.yingke.videoplayer;
+package com.yingke.videoplayer.widget;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.AttributeSet;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.yingke.player.java.controller.BaseMediaController;
 import com.yingke.player.java.listener.OnPlayStateListener;
 import com.yingke.player.java.videoview.IjkVideoView;
-import com.yingke.videoplayer.base.BaseFragment;
+import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.util.NetUtils;
 import com.yingke.videoplayer.util.PlayerSetting;
 
@@ -23,17 +28,29 @@ import static com.yingke.player.java.videoview.IjkBaseVideoView.STATE_PREPARED;
 import static com.yingke.player.java.videoview.IjkBaseVideoView.STATE_PREPARING;
 
 /**
- * 功能：
+ * 功能：业务相关的 播放器控件
  * </p>
  * <p>Copyright corp.netease.com 2019 All right reserved </p>
  *
- * @author tuke 时间 2019/9/21
+ * @author tuke 时间 2019-10-09
  * @email tuke@corp.netease.com
  * <p>
  * 最后修改人：无
  * <p>
  */
-public abstract class BasePlayerFragment extends BaseFragment implements OnPlayStateListener {
+public abstract class BaseListVideoView extends FrameLayout implements OnPlayStateListener {
+
+    public BaseListVideoView(@NonNull Context context) {
+        super(context);
+    }
+
+    public BaseListVideoView(@NonNull Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public BaseListVideoView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
 
 
     protected abstract BaseMediaController getControllerView();
@@ -81,6 +98,7 @@ public abstract class BasePlayerFragment extends BaseFragment implements OnPlayS
             }
         });
     }
+
 
 
     @Override
@@ -168,7 +186,7 @@ public abstract class BasePlayerFragment extends BaseFragment implements OnPlayS
     protected abstract void showPlayingView();
 
     /**
-     * 显示 错误 界面
+     * 显示 错误 界面，内部错误或者网络错误
      */
     protected abstract void showErrorView();
 
@@ -208,11 +226,6 @@ public abstract class BasePlayerFragment extends BaseFragment implements OnPlayS
         }
         return true;
     }
-
-
-
-
-
 
 
 

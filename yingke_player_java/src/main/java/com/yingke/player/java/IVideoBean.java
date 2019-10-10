@@ -1,25 +1,26 @@
-package com.yingke.videoplayer.bean;
+package com.yingke.player.java;
 
 /**
  * 功能：
  * </p>
  * <p>Copyright corp.netease.com 2019 All right reserved </p>
  *
- * @author tuke 时间 2019/9/21
+ * @author tuke 时间 2019/9/23
  * @email tuke@corp.netease.com
  * <p>
  * 最后修改人：无
  * <p>
  */
 public interface IVideoBean {
-
     /**
-     * @return 播放链接
+     * 链接
+     * @return
      */
-    String getFinalUrl();
+    String getSource();
 
     /**
-     * @return 标题
+     * 标题
+     * @return
      */
     String getTitle();
 }

@@ -46,6 +46,15 @@ public class TopTabData {
         this.name = name;
     }
 
+
+    public TopTabData(int id, String name, int weight, int type, String fontColor) {
+        this.id = id;
+        this.name = name;
+        this.weight = weight;
+        this.type = type;
+        this.fontColor = fontColor;
+    }
+
     // 数据id
     private int id;
     // 名称
@@ -103,8 +112,8 @@ public class TopTabData {
      * @param name
      * @return
      */
-    public static TopTabData newTabData(int type, String name){
-        return new TopTabData(type, name);
+    public static TopTabData newTabData(int id, int type, String name, int weight, String fontColor){
+        return new TopTabData(id, name, weight, type, fontColor);
     }
 
     public static String mTopDataJson = "[\n" +
@@ -179,10 +188,10 @@ public class TopTabData {
             "        \"fontcolor\": \"\"  \n" +
             "  },\n" +
             "   {\n" +
-            "        \"id\": 1231,\n" +
+            "        \"id\": 1238,\n" +
             "        \"name\": \"儿童\",\n" +
             "        \"weight\": 88,\n" +
-            "        \"type\": 88,\n" +
+            "        \"type\": 880,\n" +
             "        \"fontcolor\": \"\"  \n" +
             "  },\n" +
             "   {\n" +

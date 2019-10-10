@@ -1,5 +1,7 @@
 package com.yingke.videoplayer.personal;
 
+import android.view.View;
+
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.base.BaseFragment;
 
@@ -21,7 +23,7 @@ public class PersonalFragment extends BaseFragment {
     }
 
     @Override
-    protected void initView() {
+    protected void initView(View rootView) {
 
     }
 

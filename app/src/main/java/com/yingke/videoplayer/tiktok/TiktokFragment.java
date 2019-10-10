@@ -1,5 +1,7 @@
 package com.yingke.videoplayer.tiktok;
 
+import android.view.View;
+
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.base.BaseFragment;
 
@@ -26,7 +28,7 @@ public class TiktokFragment extends BaseFragment {
     }
 
     @Override
-    protected void initView() {
+    protected void initView(View rootView) {
 
     }
 

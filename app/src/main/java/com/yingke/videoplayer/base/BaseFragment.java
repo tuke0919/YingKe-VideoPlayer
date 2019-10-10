@@ -21,12 +21,12 @@ public abstract class BaseFragment extends Fragment {
     public BaseFragment() {
     }
 
+
     @Override
     public void onAttach(Activity activity) {
         PlayerLog.d(getClass().getSimpleName(), "onAttach to " + activity.getClass().getSimpleName());
         super.onAttach(activity);
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public abstract class BaseFragment extends Fragment {
 
         if (mRootView == null) {
             mRootView = inflater.inflate(getLayoutResId(), container, false);
-            initView();
+            initView(mRootView);
             initData();
         }
         ViewGroup parent = (ViewGroup) mRootView.getParent();
@@ -66,7 +66,7 @@ public abstract class BaseFragment extends Fragment {
     /**
      *
      */
-    protected abstract void initView();
+    protected abstract void initView(View rootView);
 
     /**
      *
@@ -75,8 +75,9 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         PlayerLog.d(getClass().getSimpleName(), "onViewCreated");
+        super.onViewCreated(view, savedInstanceState);
+
     }
 
     @Override
@@ -89,12 +90,21 @@ public abstract class BaseFragment extends Fragment {
     public void onResume() {
         PlayerLog.d(getClass().getSimpleName(), "onResume");
         super.onResume();
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        PlayerLog.d(getClass().getSimpleName(), "onSaveInstanceState");
+        super.onSaveInstanceState(outState);
+
     }
 
     @Override
     public void onPause() {
         PlayerLog.d(getClass().getSimpleName(), "onPause");
         super.onPause();
+
 
     }
 
@@ -106,8 +116,9 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         PlayerLog.d(getClass().getSimpleName(), "onDestroyView");
+        super.onDestroyView();
+
     }
 
     @Override
@@ -122,17 +133,19 @@ public abstract class BaseFragment extends Fragment {
         PlayerLog.d(getClass().getSimpleName(), "onDetach from "
                 + getActivity().getClass().getSimpleName());
         super.onDetach();
+
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
+        PlayerLog.d(getClass().getSimpleName(), "setUserVisibleHint = " + isVisibleToUser);
         super.setUserVisibleHint(isVisibleToUser);
 
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
+        PlayerLog.d(getClass().getSimpleName(), "onHiddenChanged");
         super.onHiddenChanged(hidden);
-
     }
 }

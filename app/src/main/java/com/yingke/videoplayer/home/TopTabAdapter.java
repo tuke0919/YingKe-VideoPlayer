@@ -10,6 +10,7 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 
+import com.yingke.player.java.PlayerLog;
 import com.yingke.videoplayer.util.CollectionUtil;
 
 import java.util.ArrayList;
@@ -38,23 +39,24 @@ public class TopTabAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int i) {
         TopTabData tabData = mTopTabData.get(i);
+        PlayerLog.d("Fragment", "getItem i = " + i +"_name_" +  tabData.getName() + "_type_"+ tabData.getType());
         Fragment fragment = null;
         if (tabData != null) {
             switch (tabData.getType()) {
                 case TopTabData.TabType.TAB_SUBSCRIBE:
-                    fragment = CategoryContentFragment.newInstance();
+                    fragment = CategoryContentFragment.newInstance(tabData.getName());
                     break;
                 case TopTabData.TabType.TAB_RECOMMEND:
-                    fragment = CategoryContentFragment.newInstance();
+                    fragment = RecommendFragment.newInstance();
                     break;
                 case TopTabData.TabType.TAB_SHORT_VIDEO:
-                    fragment = CategoryContentFragment.newInstance();
+                    fragment = CategoryContentFragment.newInstance(tabData.getName());
                     break;
                 case TopTabData.TabType.TAB_COURSE_MENU:
-                    fragment = CategoryContentFragment.newInstance();
+                    fragment = CategoryContentFragment.newInstance(tabData.getName());
                     break;
                 default:
-                    fragment = CategoryContentFragment.newInstance();
+                    fragment = CategoryContentFragment.newInstance(tabData.getName());
                     break;
 
             }
@@ -88,8 +90,8 @@ public class TopTabAdapter extends FragmentPagerAdapter {
         if (mTopTabData == null) {
             mTopTabData = new ArrayList<>();
         }
-        mTopTabData.add(0, TopTabData.newTabData(TopTabData.TabType.TAB_SUBSCRIBE, "关注"));
-        mTopTabData.add(1, TopTabData.newTabData(TopTabData.TabType.TAB_RECOMMEND, "推荐"));
+        mTopTabData.add(0, TopTabData.newTabData(100, TopTabData.TabType.TAB_SUBSCRIBE, "关注", 100,""));
+        mTopTabData.add(1, TopTabData.newTabData(101, TopTabData.TabType.TAB_RECOMMEND, "推荐", 99, ""));
     }
 
     private CharSequence getColorSpanTitle(TopTabData tabData){

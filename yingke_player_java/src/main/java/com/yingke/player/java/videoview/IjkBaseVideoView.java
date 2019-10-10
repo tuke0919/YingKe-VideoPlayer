@@ -13,6 +13,7 @@ import android.view.OrientationEventListener;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import com.yingke.player.java.IVideoBean;
 import com.yingke.player.java.PlayerLog;
 import com.yingke.player.java.PlayerUtils;
 import com.yingke.player.java.controller.BaseMediaController;
@@ -117,13 +118,16 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
     // 已经准备
     protected boolean mIsPrepared;
 
+    // 视频数据
+    protected IVideoBean mVideoBean;
+
 
     public IjkBaseVideoView(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public IjkBaseVideoView(Context context,  AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public IjkBaseVideoView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -583,11 +587,29 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
     }
 
     /**
+     * 设置视频数据
+     * @param videoBean
+     */
+    public void setVideoBean(IVideoBean videoBean) {
+        mVideoBean = videoBean;
+        if (videoBean == null) {
+            notifyPlayStateChanged(STATE_ERROR);
+        }
+        setVideoUrl(videoBean.getSource());
+        mBaseMediaController.setTitle(videoBean.getTitle());
+    }
+
+    /**
      * 设置视频地址
      */
-    public void setUrl(String url) {
-        this.mCurrentUrl = url;
-        openVideo();
+    public void setVideoUrl(String url) {
+        if (!TextUtils.isEmpty(url)) {
+            this.mCurrentUrl = url;
+            openVideo();
+        } else {
+            notifyPlayStateChanged(STATE_ERROR);
+        }
+
     }
 
     /**
@@ -596,7 +618,7 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
      * @param url     视频地址
      * @param headers 请求头
      */
-    public void setUrl(String url, Map<String, String> headers) {
+    public void setVideoUrl(String url, Map<String, String> headers) {
         mCurrentUrl = url;
         mHeaders = headers;
         openVideo();
