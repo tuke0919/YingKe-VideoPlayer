@@ -929,7 +929,7 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        if (mCurrentPlayState == STATE_PREPARED && mMediaPlayer != null && mBaseMediaController != null) {
+        if (mMediaPlayer != null && mBaseMediaController != null) {
             toggleMediaControllerVisibility();
         }
         return false;

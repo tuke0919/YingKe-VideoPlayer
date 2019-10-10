@@ -269,11 +269,11 @@ public abstract class BaseMediaController extends FrameLayout {
             return;
         }
         if (isFullScreen()) {
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        } else {
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        } else {
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
         setFullScreenStatus(!mIsFullScreen);
     }
@@ -362,7 +362,7 @@ public abstract class BaseMediaController extends FrameLayout {
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
-            show(3600000);
+            show(0);
             mIsDraggingSeekBar = true;
             if (mUpdateProgressHelper != null) {
                 mUpdateProgressHelper.stopSeekBarUpdate();
@@ -498,6 +498,11 @@ public abstract class BaseMediaController extends FrameLayout {
                     }
                 };
                 mMainHandler.postDelayed(mShowHideTask, timeOut);
+                // 开启更新进度条
+                if (mUpdateProgressHelper == null) {
+                    mUpdateProgressHelper = new UpdateProgressHelper();
+                }
+                mUpdateProgressHelper.startSeekBarUpdate();
             }
         }
     }

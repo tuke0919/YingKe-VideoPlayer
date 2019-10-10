@@ -39,16 +39,16 @@ public class RecommendFragment extends BaseFragment {
     @Override
     protected void initView(View rootView) {
         mContainer = rootView.findViewById(R.id.container);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        ListIjkVideoView ijkVideoView = new ListIjkVideoView(getContext());
-        mContainer.addView(ijkVideoView, params);
     }
 
     @Override
     protected void initData() {
-
-
-//        VideoBean videoBean = new VideoBean();
-//        mKePlayerFragment.setVideoOnline(videoBean);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        ListIjkVideoView ijkVideoView = new ListIjkVideoView(getContext());
+        mContainer.addView(ijkVideoView, params);
+        VideoBean videoBean = new VideoBean();
+        ijkVideoView.setVideoOnline(videoBean);
     }
+
+
 }
