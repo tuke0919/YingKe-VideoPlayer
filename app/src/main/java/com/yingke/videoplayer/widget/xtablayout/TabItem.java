@@ -18,8 +18,8 @@ package com.yingke.videoplayer.widget.xtablayout;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.design.widget.TabLayout;
-import android.support.v7.widget.TintTypedArray;
+import com.google.android.material.tabs.TabLayout;
+import androidx.appcompat.widget.TintTypedArray;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -48,10 +48,10 @@ public final class TabItem extends View {
         super(context, attrs);
 
         final TintTypedArray a = TintTypedArray.obtainStyledAttributes(context, attrs,
-                android.support.design.R.styleable.TabItem);
-        mText = a.getText(android.support.design.R.styleable.TabItem_android_text);
-        mIcon = a.getDrawable(android.support.design.R.styleable.TabItem_android_icon);
-        mCustomLayout = a.getResourceId(android.support.design.R.styleable.TabItem_android_layout, 0);
+                com.google.android.material.R.styleable.TabItem);
+        mText = a.getText(com.google.android.material.R.styleable.TabItem_android_text);
+        mIcon = a.getDrawable(com.google.android.material.R.styleable.TabItem_android_icon);
+        mCustomLayout = a.getResourceId(com.google.android.material.R.styleable.TabItem_android_layout, 0);
         a.recycle();
     }
 }

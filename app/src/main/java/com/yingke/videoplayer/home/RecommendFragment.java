@@ -1,13 +1,10 @@
 package com.yingke.videoplayer.home;
 
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.yingke.videoplayer.R;
-import com.yingke.videoplayer.YingKePlayerFragment;
 import com.yingke.videoplayer.base.BaseFragment;
 import com.yingke.videoplayer.bean.VideoBean;
 import com.yingke.videoplayer.widget.ListIjkVideoView;

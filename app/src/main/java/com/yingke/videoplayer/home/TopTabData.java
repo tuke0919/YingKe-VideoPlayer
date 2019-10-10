@@ -1,11 +1,9 @@
 package com.yingke.videoplayer.home;
 
-import android.support.annotation.IntDef;
-import android.support.annotation.StringRes;
+import androidx.annotation.IntDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.List;
 
 import static com.yingke.videoplayer.home.TopTabData.TabType.TAB_COURSE_MENU;
 import static com.yingke.videoplayer.home.TopTabData.TabType.TAB_OTHER;

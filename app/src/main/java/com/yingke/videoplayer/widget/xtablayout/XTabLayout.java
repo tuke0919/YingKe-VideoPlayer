@@ -13,21 +13,21 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.IntDef;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.design.widget.TabLayout;
-import android.support.v4.util.Pools;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.TextViewCompat;
-import android.support.v7.app.ActionBar;
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.IntDef;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import com.google.android.material.tabs.TabLayout;
+import androidx.core.util.Pools;
+import androidx.core.view.GravityCompat;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.core.view.ViewCompat;
+import androidx.viewpager.widget.ViewPager;
+import androidx.core.widget.TextViewCompat;
+import androidx.appcompat.app.ActionBar;
 import android.text.Layout;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -58,10 +58,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import static android.R.attr.maxWidth;
-import static android.support.v4.view.ViewPager.SCROLL_STATE_DRAGGING;
-import static android.support.v4.view.ViewPager.SCROLL_STATE_IDLE;
-import static android.support.v4.view.ViewPager.SCROLL_STATE_SETTLING;
-import static android.support.v7.widget.AppCompatDrawableManager.get;
+import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_DRAGGING;
+import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_IDLE;
+import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_SETTLING;
+import static androidx.appcompat.widget.AppCompatDrawableManager.get;
 
 /**
  * Created by Kun on 2016/12/20.
@@ -246,7 +246,7 @@ public class XTabLayout extends HorizontalScrollView {
    /*     TypedArray a = context.obtainStyledAttributes(attrs, android.support.design.R.styleable.TabLayout,
                 defStyleAttr, android.support.design.R.style.Widget_Design_TabLayout);*/
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.XTabLayout,
-                defStyleAttr, android.support.design.R.style.Widget_Design_TabLayout);
+                defStyleAttr, com.google.android.material.R.style.Widget_Design_TabLayout);
 
         mTabStrip.setSelectedIndicatorHeight(
                 a.getDimensionPixelSize(R.styleable.XTabLayout_xTabIndicatorHeight, dpToPx(2)));
@@ -269,7 +269,7 @@ public class XTabLayout extends HorizontalScrollView {
         xTabTextAllCaps = a.getBoolean(R.styleable.XTabLayout_xTabTextAllCaps, false);
 
         mTabTextAppearance = a.getResourceId(R.styleable.XTabLayout_xTabTextAppearance,
-                android.support.design.R.style.TextAppearance_Design_Tab);
+                com.google.android.material.R.style.TextAppearance_Design_Tab);
         mTabTextSize = a.getDimensionPixelSize(R.styleable.XTabLayout_xTabTextSize, 0);
         xTabTextBold = a.getBoolean(R.styleable.XTabLayout_xTabTextBold, false);
         mTabSelectedTextSize = a.getDimensionPixelSize(R.styleable.XTabLayout_xTabSelectedTextSize, 0);
@@ -277,12 +277,12 @@ public class XTabLayout extends HorizontalScrollView {
 
         // Text colors/sizes come from the text appearance first
         final TypedArray ta = context.obtainStyledAttributes(mTabTextAppearance,
-                android.support.design.R.styleable.TextAppearance);
+                com.google.android.material.R.styleable.TextAppearance);
         try {
             if (mTabTextSize == 0) {
-                mTabTextSize = ta.getDimensionPixelSize(android.support.design.R.styleable.TextAppearance_android_textSize, 0);
+                mTabTextSize = ta.getDimensionPixelSize(com.google.android.material.R.styleable.TextAppearance_android_textSize, 0);
             }
-            mTabTextColors = ta.getColorStateList(android.support.design.R.styleable.TextAppearance_android_textColor);
+            mTabTextColors = ta.getColorStateList(com.google.android.material.R.styleable.TextAppearance_android_textColor);
         } finally {
             ta.recycle();
         }
@@ -323,8 +323,8 @@ public class XTabLayout extends HorizontalScrollView {
 
         // TODO add attr for these
         final Resources res = getResources();
-        mTabTextMultiLineSize = res.getDimensionPixelSize(android.support.design.R.dimen.design_tab_text_size_2line);
-        mScrollableTabMinWidth = res.getDimensionPixelSize(android.support.design.R.dimen.design_tab_scrollable_min_width);
+        mTabTextMultiLineSize = res.getDimensionPixelSize(com.google.android.material.R.dimen.design_tab_text_size_2line);
+        mScrollableTabMinWidth = res.getDimensionPixelSize(com.google.android.material.R.dimen.design_tab_scrollable_min_width);
 
         // Now apply the tab mode and gravity
         applyModeAndGravity();
@@ -1674,13 +1674,13 @@ public class XTabLayout extends HorizontalScrollView {
                 // If there isn't a custom view, we'll us our own in-built layouts
                 if (mIconView == null) {
                     ImageView iconView = (ImageView) LayoutInflater.from(getContext())
-                            .inflate(android.support.design.R.layout.design_layout_tab_icon, this, false);
+                            .inflate(com.google.android.material.R.layout.design_layout_tab_icon, this, false);
                     addView(iconView, 0);
                     mIconView = iconView;
                 }
                 if (mTextView == null) {
                     TextView textView = (TextView) LayoutInflater.from(getContext())
-                            .inflate(android.support.design.R.layout.design_layout_tab_text, this, false);
+                            .inflate(com.google.android.material.R.layout.design_layout_tab_text, this, false);
                     addView(textView);
                     mTextView = textView;
                     mDefaultMaxLines = TextViewCompat.getMaxLines(mTextView);

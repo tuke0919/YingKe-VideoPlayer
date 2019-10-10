@@ -1,7 +1,7 @@
 package com.yingke.player.java.player;
 
 import android.content.res.AssetFileDescriptor;
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 

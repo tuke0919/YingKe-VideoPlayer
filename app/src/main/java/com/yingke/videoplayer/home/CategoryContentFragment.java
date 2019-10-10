@@ -2,7 +2,7 @@ package com.yingke.videoplayer.home;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +11,6 @@ import android.widget.TextView;
 import com.yingke.player.java.PlayerLog;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.base.BaseFragment;
-
-import java.security.PublicKey;
 
 /**
  * 功能：

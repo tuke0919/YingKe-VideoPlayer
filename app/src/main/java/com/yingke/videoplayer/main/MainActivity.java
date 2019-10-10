@@ -1,12 +1,11 @@
 package com.yingke.videoplayer.main;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.IdRes;
-import android.support.annotation.StringRes;
-import android.support.v4.app.FragmentTabHost;
-import android.text.TextUtils;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
+import androidx.fragment.app.FragmentTabHost;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
