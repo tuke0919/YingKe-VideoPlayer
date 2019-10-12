@@ -112,7 +112,6 @@ public class YingKePlayerFragment extends BasePlayerFragment {
         if (videoBean == null) {
             return;
         }
-
         if (checkNetWork()) {
             mIjkVideoView.setVideoBean(videoBean);
         }

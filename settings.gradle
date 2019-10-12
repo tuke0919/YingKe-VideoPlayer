@@ -1,1 +1,1 @@
-include ':app', ':yingke_player_java'
+include ':app', ':yingke_player_java', ':yingke-widget'
