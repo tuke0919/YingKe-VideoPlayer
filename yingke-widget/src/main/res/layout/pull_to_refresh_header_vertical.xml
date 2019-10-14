@@ -59,11 +59,11 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="top|center_horizontal"
             android:layout_marginTop="37dp"
-            android:background="@color/community_1A43B478"
+            android:background="@color/color_1A43B478"
             android:gravity="center"
             android:text="刷新成功"
             android:singleLine="true"
-            android:textColor="@color/community_43B478"
+            android:textColor="@color/color_43B478"
             android:textSize="11.52sp"
             android:visibility="gone"
             tools:visibility="visible" />

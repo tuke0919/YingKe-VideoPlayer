@@ -105,8 +105,8 @@
     <dimen name="header_footer_top_bottom_padding">5dp</dimen>
     <dimen name="list_buttom">45dp</dimen>
 
-    <color name="community_1A43B478">#1A43B478</color>
-    <color name="community_43B478">#43B478</color>
+    <color name="color_1A43B478">#1A43B478</color>
+    <color name="color_43B478">#43B478</color>
     <color name="content_color">#9b9b9b</color>
 
 

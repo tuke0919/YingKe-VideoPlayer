@@ -36,7 +36,7 @@ import com.yingke.widget.pulltorefresh.PullToRefreshBase.Orientation;
 /**
  * 自定义的下拉刷新loading布局
  *
- * @author netease
+ * @author tuke
  */
 public class CustomLoadingLayout extends LoadingLayout {
     private String LOG_TAG = "CustomLoadingLayout";
