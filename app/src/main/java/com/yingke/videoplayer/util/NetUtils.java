@@ -37,7 +37,7 @@ public class NetUtils {
      * @return
      */
     public static boolean isMobileNetwork() {
-        ConnectivityManager cm = (ConnectivityManager) YingKePlayerApp.getContent().getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) YingKePlayerApp.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
         return (info != null && info.getType() == ConnectivityManager.TYPE_MOBILE);
     }

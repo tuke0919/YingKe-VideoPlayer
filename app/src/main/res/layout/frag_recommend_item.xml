@@ -62,7 +62,7 @@
                 android:textSize="17sp" />
 
             <ImageView
-                android:id="@+id/btn_play"
+                android:id="@+id/cover_play"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -81,15 +81,28 @@
         >
 
         <!--头像-->
-        <com.yingke.widget.roundimage.CircleImageView
-            android:id="@+id/iv_user_avatar"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginLeft="12dp"
+<!--        <com.yingke.widget.roundimage.CircleImageView-->
+<!--            android:id="@+id/iv_user_avatar"-->
+<!--            android:layout_width="30dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:src="@drawable/avatar"-->
+<!--            app:civ_border_width="1dp"-->
+<!--            app:civ_border_color="@android:color/white" />-->
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/user_avatar"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:fadeDuration="100"
+            app:roundAsCircle="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/avatar"
-            app:civ_border_width="1dp"
-            app:civ_border_color="@android:color/white" />
+            app:actualImageResource="@drawable/avatar"
+            app:actualImageScaleType="centerCrop"
+            app:placeholderImage="@drawable/icon_avatar_holder"
+            app:placeholderImageScaleType="centerCrop"
+
+            />
 
         <!--用户名,和描述-->
         <LinearLayout
@@ -97,7 +110,7 @@
             android:layout_width="170dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_toRightOf="@+id/iv_user_avatar"
+            android:layout_toRightOf="@+id/user_avatar"
             android:layout_toLeftOf="@+id/rl_comments_view"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
@@ -113,7 +126,7 @@
                 android:textColor="@color/color_333333"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:padding="1dp"
+                android:padding="0dp"
                 android:textSize="14dp"
                 />
 
