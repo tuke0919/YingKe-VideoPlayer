@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -29,7 +30,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.File;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * 功能：
@@ -42,7 +45,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
  * 最后修改人：无
  * <p>
  */
-public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> implements ListVideoAdapter.OnListVideoClickListener {
+public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> implements
+        ListVideoAdapter.OnListVideoClickListener,
+        RecyclerView.OnChildAttachStateChangeListener {
 
     public static final String TAG = "RecommendFragment";
 
@@ -63,13 +68,10 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
     @Override
     protected void initData() {
         mRefreshView.setMode(PullToRefreshBase.Mode.DISABLED);
-
-
-//        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//        ListIjkVideoView ijkVideoView = new ListIjkVideoView(getContext());
-//        mContainer.addView(ijkVideoView, params);
-//        VideoBean videoBean = new VideoBean();
-//        ijkVideoView.setVideoOnline(videoBean);
+        if (mAdapter instanceof ListVideoAdapter) {
+            ((ListVideoAdapter) mAdapter).setListener(this);
+        }
+        mRecyclerView.addOnChildAttachStateChangeListener(this);
 
         loadData(true);
     }
@@ -87,7 +89,6 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
     @Override
     protected void requestNetWork() {
         // 假装有网络
-//        String videoListJson = getString(R.string.list_video_bean_json);
         String videoListJson = StringUtil.getJsonData(getContext(), "listvideojson.json");
 
         if (!TextUtils.isEmpty(videoListJson)) {
@@ -108,11 +109,24 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
                 EventBus.getDefault().register(this);
             }
         }
+
+        // 去掉加载更多
+        if (TextUtils.isEmpty(mCursor)) {
+            mRefreshView.hideFooter();
+        } else {
+            mRefreshView.showFooter();
+        }
     }
 
     @Override
-    public void onListVideoPlay(FrameLayout videoContainer) {
-        // 点击
+    public void onListVideoPlay(FrameLayout videoContainer, ListVideoData videoData) {
+        // 点击播放视频
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        ListIjkVideoView ijkVideoView = new ListIjkVideoView(getContext());
+        ijkVideoView.setTag("ijkVideoView");
+        // 设置数据
+        videoContainer.addView(ijkVideoView, params);
+        ijkVideoView.setVideoOnline(videoData);
 
     }
 
@@ -131,13 +145,32 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
             mDataList.set(index, videoData);
             mAdapter.notifyItemChanged(index);
         }
-
-
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onChildViewAttachedToWindow(@NonNull View view) {
+
+    }
+
+    @Override
+    public void onChildViewDetachedFromWindow(@NonNull View view) {
+        FrameLayout videoContainer = view.findViewById(R.id.video_view_container);
+        // 停止播放
+        if (videoContainer != null && videoContainer.getChildCount() != 0) {
+            ListIjkVideoView listIjkVideoView = view.findViewWithTag("ijkVideoView");
+            if (listIjkVideoView != null) {
+                listIjkVideoView.stopPlayback();
+            }
+            videoContainer.removeAllViews();
+        }
+        // 切回封面
+        RelativeLayout coverView = view.findViewById(R.id.cover_view);
+        coverView.setVisibility(View.VISIBLE);
     }
 }

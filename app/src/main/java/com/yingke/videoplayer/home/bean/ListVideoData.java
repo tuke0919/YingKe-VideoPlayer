@@ -2,6 +2,7 @@ package com.yingke.videoplayer.home.bean;
 
 import android.graphics.Bitmap;
 
+import com.yingke.player.java.IVideoBean;
 import com.yingke.videoplayer.util.PlayerUtil;
 
 import java.util.Objects;
@@ -17,7 +18,7 @@ import java.util.Objects;
  * 最后修改人：无
  * <p>
  */
-public class ListVideoData {
+public class ListVideoData implements IVideoBean {
 
     private String title;
     private String url;
@@ -28,6 +29,11 @@ public class ListVideoData {
     private int commentCount;
     private int voteCount;
     private boolean isVote;
+
+    @Override
+    public String getSource() {
+        return getUrl();
+    }
 
     public String getTitle() {
         return title;

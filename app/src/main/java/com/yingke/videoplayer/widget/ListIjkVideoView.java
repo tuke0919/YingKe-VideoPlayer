@@ -78,7 +78,6 @@ public class ListIjkVideoView extends BaseListVideoView {
         return mIjkVideoView;
     }
 
-
     private void initViews() {
         View rootView = LayoutInflater.from(getContext()).inflate(R.layout.frag_video_player, null, false);
         mIjkVideoView = rootView.findViewById(R.id.ijk_video_view);
@@ -145,6 +144,11 @@ public class ListIjkVideoView extends BaseListVideoView {
         }
     }
 
+    public void stopPlayback(){
+        if (getIjkVideoView() != null) {
+            getIjkVideoView().stopPlayback();
+        }
+    }
 
     /**
      * 正在播放

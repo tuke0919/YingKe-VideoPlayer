@@ -240,7 +240,13 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
 
 
     /**
-     * 是否处于播放状态
+     * 是否处于正常播放状态
+     * 处于
+     * {@link #STATE_PREPARED}
+     * {@link #STATE_PLAYING}
+     * {@link #STATE_BUFFERING}
+     * {@link #STATE_BUFFERED}
+     * {@link #STATE_PAUSED}
      */
     @Override
     public boolean isInPlaybackState() {

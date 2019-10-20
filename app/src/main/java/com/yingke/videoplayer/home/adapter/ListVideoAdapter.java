@@ -40,15 +40,11 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class ListVideoAdapter extends BaseRecycleViewAdapter<ListVideoData> {
 
-    protected RecyclerView mRecyclerView;
 
     public ListVideoAdapter(Context context) {
         super(context);
     }
 
-    public void setRecyclerView(RecyclerView recyclerView) {
-        mRecyclerView = recyclerView;
-    }
 
     @Override
     public int getConvertViewResId(int itemViewType) {
@@ -94,8 +90,9 @@ public class ListVideoAdapter extends BaseRecycleViewAdapter<ListVideoData> {
             mCoverPlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mCoverView.setVisibility(View.GONE);
                     if (mListener != null) {
-                        mListener.onListVideoPlay(mVideoContainer);
+                        mListener.onListVideoPlay(mVideoContainer, mListVideoData);
                     }
                 }
             });
@@ -110,12 +107,21 @@ public class ListVideoAdapter extends BaseRecycleViewAdapter<ListVideoData> {
             mListVideoData = data;
 
             if (isCoverVisible()) {
+                // 标题
                 mCoverTitle.setText(data.getTitle());
+                // 封面图
                 String thumbPath = data.getThumbPath();
                 if (!TextUtils.isEmpty(thumbPath)){
                     FrescoUtil.displayImage(mCoverImage, new File(thumbPath));
+                } else {
+                    File thumbFile = FileUtil.getVideoThumbFile(context, EncryptUtils.md5String(data.getUrl()));
+                    if (thumbFile.exists()) {
+                        data.setThumbPath(thumbFile.getAbsolutePath());
+                    }
+                    FrescoUtil.displayImage(mCoverImage, thumbFile);
                 }
             }
+            // 用户信息
             FrescoUtil.displayImage(mAuthorAvatar, data.getAuthorAvatar());
             mAuthorName.setText(data.getAuthorName());
             mDescription.setText(data.getDescription());
@@ -147,7 +153,7 @@ public class ListVideoAdapter extends BaseRecycleViewAdapter<ListVideoData> {
 
     public interface OnListVideoClickListener{
 
-        void onListVideoPlay(FrameLayout videoContainer);
+        void onListVideoPlay(FrameLayout videoContainer, ListVideoData videoData);
     }
 
 }
