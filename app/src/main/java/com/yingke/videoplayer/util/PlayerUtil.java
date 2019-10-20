@@ -1,13 +1,22 @@
 package com.yingke.videoplayer.util;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
-import android.net.Uri;
 import android.util.Log;
 
-import java.util.HashMap;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.yingke.player.java.PlayerLog;
+import com.yingke.videoplayer.home.bean.ListVideoData;
+import com.yingke.videoplayer.worker.WorkerCenter;
+import com.yingke.videoplayer.worker.WorkerTask;
 
-import wseemann.media.FFmpegMediaMetadataRetriever;
+import org.greenrobot.eventbus.EventBus;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * 功能：
@@ -21,6 +30,7 @@ import wseemann.media.FFmpegMediaMetadataRetriever;
  * <p>
  */
 public class PlayerUtil {
+    private static final String TAG = "PlayerUtil" ;
 
     /**
      *  服务器返回url，通过url去获取视频的第一帧
@@ -45,9 +55,56 @@ public class PlayerUtil {
         } finally {
             retriever.release();
         }
-        Log.e("getNetVideoBitmap","cost time:" + (System.currentTimeMillis() - startTime));
+//        Log.e("getNetVideoBitmap","cost time:" + (System.currentTimeMillis() - startTime));
         return bitmap;
     }
+
+
+    /**
+     * 获取列表网络视频的帧
+     */
+    public static void videoFrames(final Context context){
+        String videoListJson = StringUtil.getJsonData(context, "listvideojson.json");
+
+        List<ListVideoData> listVideoData = new Gson().fromJson(videoListJson, new TypeToken<List<ListVideoData>>() {}.getType());
+        for (final ListVideoData videoData: listVideoData) {
+            // 有缓存文件
+            File thumbImage = FileUtil.getVideoThumbFile(context, EncryptUtils.md5String(videoData.getUrl()));
+            if (thumbImage.exists()) {
+                return;
+            }
+            // 无缓存文件
+            WorkerCenter.getInstance().submitNormalTask(new WorkerTask<String>("workTask",true){
+
+                ListVideoData data = videoData;
+                String videoUrl = data.getUrl();
+                @Override
+                protected String execute() {
+                    // 截取网络视频帧
+                    PlayerLog.e(TAG, "videoFrames: " + "title = " + data.getTitle() + "\n");
+
+                    long startTime = System.currentTimeMillis();
+                    File thumbImageFile = FileUtil.getVideoThumbFile(context, EncryptUtils.md5String(videoUrl));
+                    Bitmap bitmap = PlayerUtil.getNetVideoBitmap(videoUrl);
+                    FileUtil.saveBitmapToFile(bitmap, thumbImageFile.getAbsolutePath());
+
+                    PlayerLog.e(TAG,"cost time:" + (System.currentTimeMillis() - startTime));
+                    return thumbImageFile.getAbsolutePath();
+                }
+
+                @Override
+                protected void notifyResult(String result) {
+                    data.setThumbPath(result);
+                    PlayerLog.e(TAG, "videoFrames: " + "postSticky..." );
+                    // 发送粘性事件
+                    EventBus.getDefault().postSticky(data);
+                }
+            });
+        }
+    }
+
+
+
 
 
 }

@@ -10,10 +10,10 @@ import java.io.IOException;
 /**
  * 功能：
  * </p>
- * <p>Copyright corp.netease.com 2019 All right reserved </p>
+ * <p>Copyright corp.xxx.com 2019 All right reserved </p>
  *
  * @author tuke 时间 2019-10-14
- * @email tuke@corp.netease.com
+ * @email 13661091407@163.com
  * <p>
  * 最后修改人：无
  * <p>
@@ -21,7 +21,7 @@ import java.io.IOException;
 public class FileUtil {
 
     public static final String SUFFIX = ".jpeg";
-    public static final String VIDEO_THUMB_DIRECTORY = "video_thumb";
+    public static final String VIDEO_THUMB_DIRECTORY = "list_video_thumb";
 
 
     public static File getVideoThumbFile(Context context, String fileName){

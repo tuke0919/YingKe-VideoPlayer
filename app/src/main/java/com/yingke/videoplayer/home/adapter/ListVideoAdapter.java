@@ -2,9 +2,11 @@ package com.yingke.videoplayer.home.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -16,8 +18,13 @@ import com.yingke.videoplayer.util.FrescoUtil;
 import com.yingke.videoplayer.util.PlayerUtil;
 import com.yingke.widget.base.BaseRecycleViewAdapter;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.File;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
@@ -33,9 +40,14 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class ListVideoAdapter extends BaseRecycleViewAdapter<ListVideoData> {
 
+    protected RecyclerView mRecyclerView;
 
     public ListVideoAdapter(Context context) {
         super(context);
+    }
+
+    public void setRecyclerView(RecyclerView recyclerView) {
+        mRecyclerView = recyclerView;
     }
 
     @Override
@@ -51,6 +63,7 @@ public class ListVideoAdapter extends BaseRecycleViewAdapter<ListVideoData> {
     public class ListVideoHolder extends BaseViewHolder<ListVideoData> {
 
         private FrameLayout mVideoContainer;
+        private RelativeLayout mCoverView;
         private SimpleDraweeView mCoverImage;
         private TextView mCoverTitle;
         private ImageView mCoverPlay;
@@ -67,6 +80,7 @@ public class ListVideoAdapter extends BaseRecycleViewAdapter<ListVideoData> {
         public ListVideoHolder(View itemView) {
             super(itemView);
             mVideoContainer = itemView.findViewById(R.id.video_view_container);
+            mCoverView = itemView.findViewById(R.id.cover_view);
             mCoverImage = itemView.findViewById(R.id.cover_image);
             mCoverTitle = itemView.findViewById(R.id.cover_title);
             mCoverPlay = itemView.findViewById(R.id.cover_play);
@@ -94,20 +108,36 @@ public class ListVideoAdapter extends BaseRecycleViewAdapter<ListVideoData> {
             }
             this.position = position;
             mListVideoData = data;
-            File thumbImage = FileUtil.getVideoThumbFile(context, EncryptUtils.md5String(data.getUrl()));
-            if (thumbImage.exists()) {
-                FrescoUtil.displayImage(mCoverImage, thumbImage);
-            } else {
-                Bitmap bitmap = PlayerUtil.getNetVideoBitmap(data.getUrl());
-                FileUtil.saveBitmapToFile(bitmap, thumbImage.getAbsolutePath());
+
+            if (isCoverVisible()) {
+                mCoverTitle.setText(data.getTitle());
+                String thumbPath = data.getThumbPath();
+                if (!TextUtils.isEmpty(thumbPath)){
+                    FrescoUtil.displayImage(mCoverImage, new File(thumbPath));
+                }
             }
-            mCoverTitle.setText(data.getTitle());
             FrescoUtil.displayImage(mAuthorAvatar, data.getAuthorAvatar());
             mAuthorName.setText(data.getAuthorName());
             mDescription.setText(data.getDescription());
             mCommentCount.setText(String.valueOf(data.getCommentCount()));
             mVoteCount.setText(String.valueOf(data.getVoteCount()));
+
         }
+
+        /**
+         * @return 封面可见，判断播放标志
+         */
+        public boolean isCoverVisible(){
+            return  mCoverView != null && mCoverView.getVisibility() == View.VISIBLE;
+        }
+
+        /**
+         * @param thumbImagePath 视频封面
+         */
+        public void changeImage(String thumbImagePath){
+            FrescoUtil.displayImage(mCoverImage, new File(thumbImagePath));
+        }
+
     }
     private OnListVideoClickListener mListener;
 

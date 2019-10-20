@@ -25,10 +25,10 @@ import static com.yingke.player.java.videoview.IjkBaseVideoView.STATE_PREPARING;
 /**
  * 功能：
  * </p>
- * <p>Copyright corp.netease.com 2019 All right reserved </p>
+ * <p>Copyright corp.xxx.com 2019 All right reserved </p>
  *
  * @author tuke 时间 2019/9/21
- * @email tuke@corp.netease.com
+ * @email 13661091407@163.com
  * <p>
  * 最后修改人：无
  * <p>

@@ -15,10 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
  * <p>
  * 功能：基适配器
  * </p>
- * <p>Copyright corp.netease.com 2018 All right reserved </p>
+ * <p>Copyright xxx.com 2018 All right reserved </p>
  *
  * @author tuke 时间 2019/1/10
- * @email tuke@corp.netease.com
+ * @email 13661091407@163.com
  * <p>
  * 最后修改人：无
  */

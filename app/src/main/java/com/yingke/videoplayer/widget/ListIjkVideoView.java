@@ -22,10 +22,10 @@ import com.yingke.videoplayer.R;
 /**
  * 功能：业务相关的 播放器控件
  * </p>
- * <p>Copyright corp.netease.com 2019 All right reserved </p>
+ * <p>Copyright corp.xxx.com 2019 All right reserved </p>
  *
  * @author tuke 时间 2019-10-09
- * @email tuke@corp.netease.com
+ * @email 13661091407@163.com
  * <p>
  * 最后修改人：无
  * <p>
