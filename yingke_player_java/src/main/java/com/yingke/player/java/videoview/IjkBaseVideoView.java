@@ -293,6 +293,7 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
     /**
      * 停止播放, 不同于暂停，不交给控制器
      */
+    @Override
     public void stopPlayback() {
         PlayerLog.d(TAG, "stopPlayback :  "  );
         if (mProgressManager != null && isInPlaybackState()){
@@ -314,6 +315,7 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
     /**
      * 释放播放器 不交给控制器
      */
+    @Override
     public void release() {
         PlayerLog.d(TAG, "release :  "  );
         if (mProgressManager != null && isInPlaybackState()){

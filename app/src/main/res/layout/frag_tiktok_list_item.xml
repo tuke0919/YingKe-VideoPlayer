@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
     <!-- 视频容器 -->
@@ -23,13 +24,22 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="60dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="16dp"
+        android:paddingBottom="60dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="10dp"
         >
 
+        <ImageView
+            android:id="@+id/tiktok_play_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_tiktok_play_trans"
+            android:layout_centerInParent="true"
+            />
+
+
         <LinearLayout
-            android:layout_width="56dp"
+            android:layout_width="47dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginRight="8dp"
@@ -37,12 +47,29 @@
             android:layout_alignParentBottom="true"
             android:gravity="center_horizontal"
             >
+
             <!--  头像 -->
-            <com.yingke.widget.roundimage.CircleImageView
+<!--            <com.yingke.widget.roundimage.CircleImageView-->
+<!--                android:id="@+id/tiktok_user_avatar"-->
+<!--                android:layout_width="47dp"-->
+<!--                android:layout_height="47dp"-->
+<!--                android:src="@drawable/avatar"-->
+<!--                />-->
+
+            <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/tiktok_user_avatar"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:src="@drawable/avatar"
+                android:layout_width="47dp"
+                android:layout_height="47dp"
+                app:fadeDuration="100"
+                app:roundAsCircle="true"
+                android:layout_centerVertical="true"
+                app:actualImageResource="@drawable/avatar"
+                app:actualImageScaleType="centerCrop"
+                app:placeholderImage="@drawable/icon_avatar_holder"
+                app:placeholderImageScaleType="centerCrop"
+                app:roundingBorderColor="@color/white"
+                app:roundingBorderWidth="1dp"
+
                 />
 
             <LinearLayout
@@ -56,45 +83,53 @@
 
                 <!--  点赞 -->
                 <LinearLayout
+                    android:id="@+id/tiktok_vote_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:src="@mipmap/icon_vote"
+                        android:id="@+id/tiktok_vote_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/icon_heart"
+                        android:scaleType="centerInside"
                         />
 
                     <TextView
+                        android:id="@+id/tiktok_vote_count"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="152w"
-                        android:textSize="14sp"
+                        android:textSize="10sp"
                         android:textColor="@android:color/white"
                         android:gravity="center"
-                        android:layout_marginTop="-5dp"
+                        android:layout_marginTop="0dp"
                         />
 
                 </LinearLayout>
                 <!--  评论 -->
                 <LinearLayout
+                    android:id="@+id/tiktok_msg_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
+                    android:gravity="center_horizontal"
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:src="@mipmap/icon_msg"
                         />
 
                     <TextView
+                        android:id="@+id/tiktok_msg_count"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="10.5w"
-                        android:textSize="14sp"
+                        android:textSize="10sp"
                         android:textColor="@android:color/white"
                         android:gravity="center"
                         />
@@ -103,25 +138,28 @@
 
                 <!--  分享 -->
                 <LinearLayout
+                    android:id="@+id/tiktok_share_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
+                    android:gravity="center_horizontal"
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:src="@mipmap/icon_share_tiktok_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/icon_share_tiktok"
                         />
 
                     <TextView
+                        android:id="@+id/tiktok_share_count"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="5713"
-                        android:textSize="14sp"
+                        android:textSize="10sp"
                         android:textColor="@android:color/white"
                         android:gravity="center"
-                        android:layout_marginTop="-4dp"
+                        android:layout_marginTop="0dp"
                         />
                 </LinearLayout>
             </LinearLayout>
@@ -129,8 +167,8 @@
             <!--  音乐图片 -->
             <com.yingke.widget.roundimage.CircleImageView
                 android:id="@+id/tiktok_music_image"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:layout_width="47dp"
+                android:layout_height="47dp"
                 android:src="@drawable/avatar"
                 />
 
@@ -149,6 +187,17 @@
             />
 
         <TextView
+            android:id="@+id/tiktok_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="22小时前"
+            android:textColor="@color/color_999999"
+            android:layout_toRightOf="@+id/tiktok_username"
+            android:layout_alignBottom="@+id/tiktok_username"
+            android:layout_marginLeft="10dp"
+            />
+
+        <TextView
             android:id="@+id/tiktok_description"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
@@ -157,7 +206,7 @@
             android:layout_above="@+id/tiktok_music"
             android:textSize="15sp"
             android:text="太快了！中国军人潘玉程500米障碍跑破世界记录，成为该项目唯一跑进2分10秒的人，为他点赞"
-            android:textStyle="bold"
+            android:textStyle="normal"
             android:layout_marginTop="6dp"
             android:maxLines="3"
             android:lineSpacingMultiplier="1.1"
@@ -173,12 +222,16 @@
             android:ellipsize="marquee"
             android:singleLine="true"
             android:gravity="center_vertical"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:drawableLeft="@mipmap/icon_tiktok"
             android:drawablePadding="3dp"
             android:layout_marginTop="10dp"
-            android:textStyle="bold"
+            android:textStyle="normal"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:selectAllOnFocus="true"
             />
     </RelativeLayout>
+
+
 
 </FrameLayout>

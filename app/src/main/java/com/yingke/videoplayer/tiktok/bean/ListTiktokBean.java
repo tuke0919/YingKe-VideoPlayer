@@ -15,6 +15,7 @@ public class ListTiktokBean {
 
     private String id;
     private String url;
+    private String coverImage;
     private String userAvatar;
     private boolean isWatched;
     private int voteCount;
@@ -26,6 +27,7 @@ public class ListTiktokBean {
 
     private String music;
     private String musicImage;
+    private long createTime;
 
     public String getId() {
         return id;
@@ -113,5 +115,21 @@ public class ListTiktokBean {
 
     public void setMusicImage(String musicImage) {
         this.musicImage = musicImage;
+    }
+
+    public String getCoverImage() {
+        return coverImage;
+    }
+
+    public void setCoverImage(String coverImage) {
+        this.coverImage = coverImage;
+    }
+
+    public long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
     }
 }

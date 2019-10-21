@@ -2,8 +2,12 @@ package com.yingke.videoplayer.tiktok;
 
 import android.view.View;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.base.BaseFragment;
+import com.yingke.videoplayer.util.FrescoUtil;
+
+import java.io.File;
 
 /**
  * 功能：
@@ -22,6 +26,7 @@ public class TiktokFragment extends BaseFragment {
         return new TiktokFragment();
     }
 
+
     @Override
     protected int getLayoutResId() {
         return R.layout.frag_tiktok;
@@ -29,7 +34,10 @@ public class TiktokFragment extends BaseFragment {
 
     @Override
     protected void initView(View rootView) {
-
+        // https://github.com/tuke0919/xiaoshujiang_image/blob/master/video/tiktok_1.mp4?raw=ture
+        SimpleDraweeView mDraweeView = rootView.findViewById(R.id.tiktok_image);
+        File file = new File("/data/data/com.yingke.videoplayer/cache/list_video_thumb/12be376071fdf0eeec4ab4a6864f0477.jpeg");
+        FrescoUtil.displayImage(mDraweeView,file);
     }
 
     @Override

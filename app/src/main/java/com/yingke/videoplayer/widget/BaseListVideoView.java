@@ -3,11 +3,14 @@ package com.yingke.videoplayer.widget;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.yingke.player.java.controller.BaseMediaController;
+import com.yingke.player.java.controller.MediaPlayerControl;
 import com.yingke.player.java.listener.OnPlayStateListener;
 import com.yingke.player.java.videoview.IjkVideoView;
 import com.yingke.videoplayer.R;
@@ -38,7 +41,10 @@ import static com.yingke.player.java.videoview.IjkBaseVideoView.STATE_PREPARING;
  * 最后修改人：无
  * <p>
  */
-public abstract class BaseListVideoView extends FrameLayout implements OnPlayStateListener {
+public abstract class BaseListVideoView extends FrameLayout implements OnPlayStateListener, MediaPlayerControl {
+
+    // 播放器
+    protected IjkVideoView mIjkVideoView;
 
     public BaseListVideoView(@NonNull Context context) {
         super(context);
@@ -61,7 +67,9 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
      * 初始化 播放器
      */
     protected void initVideoPlayerView(){
-        getIjkVideoView().setMediaController(getControllerView());
+        if (hasController()) {
+            getIjkVideoView().setMediaController(getControllerView());
+        }
         getIjkVideoView().addPlayStateListener(this);
     }
 
@@ -69,6 +77,9 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
      * 初始化 控制器
      */
     protected void initControllerView(){
+        if (!hasController()) {
+            return;
+        }
         getControllerView().setFullScreenListener(new BaseMediaController.OnFullScreenListener() {
             @Override
             public void onEnterFullScreen() {
@@ -179,7 +190,6 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
 
     }
 
-
     /**
      * 显示 播放中页面
      */
@@ -206,6 +216,13 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
     protected abstract void showNetTipView();
 
     /**
+     * @return 是否有控制器
+     */
+    protected boolean hasController() {
+        return true;
+    }
+
+    /**
      * 检查网络
      * @return
      */
@@ -227,11 +244,174 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
         return true;
     }
 
+    @Override
+    public void start() {
+        if (mIjkVideoView != null) {
+            mIjkVideoView.start();
+        }
+    }
 
+    @Override
+    public void pause() {
+        if (mIjkVideoView != null) {
+            mIjkVideoView.pause();
+        }
+    }
 
+    @Override
+    public void stopPlayback() {
+        if (mIjkVideoView != null) {
+            mIjkVideoView.stopPlayback();
+        }
+    }
 
+    @Override
+    public void release() {
+        if (mIjkVideoView != null) {
+            mIjkVideoView.release();
+        }
+    }
 
+    @Override
+    public long getDuration() {
+        if (mIjkVideoView != null) {
+            return mIjkVideoView.getDuration();
+        }
+        return 0;
+    }
 
+    @Override
+    public long getCurrentPosition() {
+        if (mIjkVideoView != null) {
+            return mIjkVideoView.getCurrentPosition();
+        }
+        return 0;
+    }
 
+    @Override
+    public void seekTo(long pos) {
+        if (mIjkVideoView != null) {
+            mIjkVideoView.seekTo(pos);
+        }
+    }
 
+    @Override
+    public boolean isPlaying() {
+        if (mIjkVideoView != null) {
+            return mIjkVideoView.isPlaying();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isInPlaybackState() {
+        if (mIjkVideoView != null) {
+            return mIjkVideoView.isInPlaybackState();
+        }
+        return false;
+    }
+
+    @Override
+    public int getBufferedPercentage() {
+        if (mIjkVideoView != null) {
+            return mIjkVideoView.getBufferedPercentage();
+        }
+        return 0;
+    }
+
+    @Override
+    public void setMute(boolean isMute) {
+        if (mIjkVideoView != null) {
+            mIjkVideoView.setMute(isMute);
+        }
+    }
+
+    @Override
+    public boolean isMute() {
+        if (mIjkVideoView != null) {
+            mIjkVideoView.isMute();
+        }
+        return false;
+    }
+
+    @Override
+    public void setLock(boolean isLocked) {
+        if (mIjkVideoView != null) {
+            mIjkVideoView.setLock(isLocked);
+        }
+    }
+
+    @Override
+    public void setScreenScale(int screenScale) {
+        if (mIjkVideoView != null) {
+            mIjkVideoView.setScreenScale(screenScale);
+        }
+    }
+
+    @Override
+    public void setSpeed(float speed) {
+        if (mIjkVideoView != null) {
+            mIjkVideoView.setSpeed(speed);
+        }
+    }
+
+    @Override
+    public long getTcpSpeed() {
+        if (mIjkVideoView != null) {
+            return mIjkVideoView.getTcpSpeed();
+        }
+        return 0;
+    }
+
+    @Override
+    public void replay(boolean resetPosition) {
+        if (mIjkVideoView != null) {
+            mIjkVideoView.replay(resetPosition);
+        }
+    }
+
+    @Override
+    public void setMirrorRotation(boolean enable) {
+        if (mIjkVideoView != null) {
+            mIjkVideoView.setMirrorRotation(enable);
+        }
+    }
+
+    @Override
+    public Bitmap doScreenShot() {
+        if (mIjkVideoView != null) {
+            return mIjkVideoView.doScreenShot();
+        }
+        return null;
+    }
+
+    @Override
+    public int[] getVideoSize() {
+        if (mIjkVideoView != null) {
+            return mIjkVideoView.getVideoSize();
+        }
+        return new int[0];
+    }
+
+    @Override
+    public void startTinyScreen() {
+        if (mIjkVideoView != null) {
+            mIjkVideoView.startTinyScreen();
+        }
+    }
+
+    @Override
+    public void stopTinyScreen() {
+        if (mIjkVideoView != null) {
+            mIjkVideoView.stopTinyScreen();
+        }
+    }
+
+    @Override
+    public boolean isTinyScreen() {
+        if (mIjkVideoView != null) {
+            return mIjkVideoView.isTinyScreen();
+        }
+        return false;
+    }
 }

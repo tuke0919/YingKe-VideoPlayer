@@ -22,6 +22,15 @@ public interface MediaPlayerControl {
      */
     void pause();
 
+    /**
+     * 停止
+     */
+    void stopPlayback();
+
+    /**
+     * 释放资源
+     */
+    void release();
 
     /**
      * 总时长 ms

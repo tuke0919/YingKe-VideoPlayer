@@ -32,8 +32,6 @@ import com.yingke.videoplayer.R;
  */
 public class ListIjkVideoView extends BaseListVideoView {
 
-    // 播放器
-    private IjkVideoView mIjkVideoView;
     // 控制器
     private MediaController mMediaController;
 
@@ -141,12 +139,6 @@ public class ListIjkVideoView extends BaseListVideoView {
 
         if (checkNetWork()) {
             getIjkVideoView().setVideoBean(videoBean);
-        }
-    }
-
-    public void stopPlayback(){
-        if (getIjkVideoView() != null) {
-            getIjkVideoView().stopPlayback();
         }
     }
 
