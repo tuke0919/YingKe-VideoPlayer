@@ -144,7 +144,7 @@ public abstract class BaseRecycleViewAdapter<T> extends RecyclerView.Adapter<Rec
      * @param <T>
      */
     public static abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder{
-        private View mRootView ;
+        protected View mRootView ;
 
         public BaseViewHolder (View itemView) {
             super(itemView);

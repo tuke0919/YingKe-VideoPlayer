@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.yingke.player.java.PlayerLog;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.home.bean.ListVideoData;
 import com.yingke.videoplayer.util.EncryptUtils;
@@ -39,6 +40,7 @@ import androidx.recyclerview.widget.RecyclerView;
  * <p>
  */
 public class ListVideoAdapter extends BaseRecycleViewAdapter<ListVideoData> {
+    private static final String TAG = "ListVideoAdapter";
 
 
     public ListVideoAdapter(Context context) {
@@ -92,7 +94,7 @@ public class ListVideoAdapter extends BaseRecycleViewAdapter<ListVideoData> {
                 public void onClick(View v) {
                     mCoverView.setVisibility(View.GONE);
                     if (mListener != null) {
-                        mListener.onListVideoPlay(mVideoContainer, mListVideoData);
+                        mListener.onListVideoPlay(mRootView, mVideoContainer, mListVideoData);
                     }
                 }
             });
@@ -100,6 +102,7 @@ public class ListVideoAdapter extends BaseRecycleViewAdapter<ListVideoData> {
 
         @Override
         public void onRefreshData(int position, ListVideoData data) {
+            PlayerLog.e(TAG, "position = " + position  );
             if (data == null) {
                 return;
             }
@@ -153,7 +156,7 @@ public class ListVideoAdapter extends BaseRecycleViewAdapter<ListVideoData> {
 
     public interface OnListVideoClickListener{
 
-        void onListVideoPlay(FrameLayout videoContainer, ListVideoData videoData);
+        void onListVideoPlay(View rootView, FrameLayout videoContainer, ListVideoData videoData);
     }
 
 }

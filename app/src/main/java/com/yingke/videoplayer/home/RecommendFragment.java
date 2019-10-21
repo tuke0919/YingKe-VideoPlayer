@@ -55,6 +55,8 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
         return new RecommendFragment();
     }
 
+    private View mVideoRootView;
+
     @Override
     protected int getLayoutResId() {
         return R.layout.frag_recommend;
@@ -119,7 +121,11 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
     }
 
     @Override
-    public void onListVideoPlay(FrameLayout videoContainer, ListVideoData videoData) {
+    public void onListVideoPlay(View rootView, FrameLayout videoContainer, ListVideoData videoData) {
+        // 恢复旧播放器
+        resetViewHolder(mVideoRootView);
+        mVideoRootView = rootView;
+
         // 点击播放视频
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         ListIjkVideoView ijkVideoView = new ListIjkVideoView(getContext());
@@ -127,6 +133,7 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
         // 设置数据
         videoContainer.addView(ijkVideoView, params);
         ijkVideoView.setVideoOnline(videoData);
+
 
     }
 
@@ -160,17 +167,30 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
 
     @Override
     public void onChildViewDetachedFromWindow(@NonNull View view) {
-        FrameLayout videoContainer = view.findViewById(R.id.video_view_container);
+        resetViewHolder(view);
+    }
+
+    /**
+     * 恢复
+     * @param itemView
+     */
+    public void resetViewHolder(View itemView){
+        if (itemView == null) {
+            return;
+        }
+        FrameLayout videoContainer = itemView.findViewById(R.id.video_view_container);
         // 停止播放
         if (videoContainer != null && videoContainer.getChildCount() != 0) {
-            ListIjkVideoView listIjkVideoView = view.findViewWithTag("ijkVideoView");
+            ListIjkVideoView listIjkVideoView = itemView.findViewWithTag("ijkVideoView");
             if (listIjkVideoView != null) {
                 listIjkVideoView.stopPlayback();
             }
             videoContainer.removeAllViews();
         }
         // 切回封面
-        RelativeLayout coverView = view.findViewById(R.id.cover_view);
+        RelativeLayout coverView = itemView.findViewById(R.id.cover_view);
         coverView.setVisibility(View.VISIBLE);
+
+        mVideoRootView = null;
     }
 }

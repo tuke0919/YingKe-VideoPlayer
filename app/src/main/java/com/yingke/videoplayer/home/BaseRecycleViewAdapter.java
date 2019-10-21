@@ -28,6 +28,10 @@ public abstract class BaseRecycleViewAdapter<T> extends RecyclerView.Adapter<Rec
     // 数据集
     public List<T> mDataList;
 
+    public BaseRecycleViewAdapter(Context context){
+        this(context, null);
+    }
+
     public BaseRecycleViewAdapter(Context context, List<T> mDataList) {
         this.context = context;
         if (mDataList == null) {

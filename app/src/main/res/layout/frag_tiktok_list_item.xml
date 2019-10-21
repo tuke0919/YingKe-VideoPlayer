@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    >
+
+    <!-- 视频容器 -->
+    <FrameLayout
+        android:id="@+id/tiktok_video_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
+    <!--  封面 -->
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/tiktok_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="60dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="16dp"
+        >
+
+        <LinearLayout
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginRight="8dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_horizontal"
+            >
+            <!--  头像 -->
+            <com.yingke.widget.roundimage.CircleImageView
+                android:id="@+id/tiktok_user_avatar"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:src="@drawable/avatar"
+                />
+
+            <LinearLayout
+                android:id="@+id/tiktok_profile"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="50dp"
+                >
+
+                <!--  点赞 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:src="@mipmap/icon_vote"
+                        />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="152w"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/white"
+                        android:gravity="center"
+                        android:layout_marginTop="-5dp"
+                        />
+
+                </LinearLayout>
+                <!--  评论 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:src="@mipmap/icon_msg"
+                        />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="10.5w"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/white"
+                        android:gravity="center"
+                        />
+
+                </LinearLayout>
+
+                <!--  分享 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:src="@mipmap/icon_share_tiktok_1"
+                        />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="5713"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/white"
+                        android:gravity="center"
+                        android:layout_marginTop="-4dp"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!--  音乐图片 -->
+            <com.yingke.widget.roundimage.CircleImageView
+                android:id="@+id/tiktok_music_image"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:src="@drawable/avatar"
+                />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tiktok_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:textColor="@color/white"
+            android:text="\@指南针"
+            android:textStyle="bold"
+            android:layout_above="@+id/tiktok_description"
+            />
+
+        <TextView
+            android:id="@+id/tiktok_description"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_alignParentBottom="false"
+            android:layout_above="@+id/tiktok_music"
+            android:textSize="15sp"
+            android:text="太快了！中国军人潘玉程500米障碍跑破世界记录，成为该项目唯一跑进2分10秒的人，为他点赞"
+            android:textStyle="bold"
+            android:layout_marginTop="6dp"
+            android:maxLines="3"
+            android:lineSpacingMultiplier="1.1"
+            />
+
+        <TextView
+            android:id="@+id/tiktok_music"
+            android:layout_width="210dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="\@热门音乐MV创作的原声-热门音乐MV"
+            android:textColor="@color/white"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:gravity="center_vertical"
+            android:textSize="16sp"
+            android:drawableLeft="@mipmap/icon_tiktok"
+            android:drawablePadding="3dp"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            />
+    </RelativeLayout>
+
+</FrameLayout>
