@@ -3,10 +3,10 @@ package com.yingke.videoplayer.tiktok.bean;
 /**
  * 功能：
  * </p>
- * <p>Copyright corp.netease.com 2019 All right reserved </p>
+ * <p>Copyright corp.xxx.com 2019 All right reserved </p>
  *
  * @author tuke 时间 2019-10-21
- * @email tuke@corp.netease.com
+ * @email 13661091407@163.com
  * <p>
  * 最后修改人：无
  * <p>
@@ -14,19 +14,31 @@ package com.yingke.videoplayer.tiktok.bean;
 public class ListTiktokBean {
 
     private String id;
+    // 视频链接
     private String url;
+    // 封面图
     private String coverImage;
+    // 头衔
     private String userAvatar;
+    // 是否关注
     private boolean isWatched;
+    // 点赞数量
     private int voteCount;
+    // 评论数量
     private int commentCount;
+    // 分享数量
     private int shareCount;
 
+    // 用户名
     private String userName;
+    // 描述
     private String description;
 
+    // 音乐
     private String music;
+    // 音乐图片
     private String musicImage;
+    // 创建时间
     private long createTime;
 
     public String getId() {

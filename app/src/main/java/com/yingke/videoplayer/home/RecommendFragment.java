@@ -10,13 +10,10 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.yingke.player.java.PlayerLog;
 import com.yingke.videoplayer.R;
-import com.yingke.videoplayer.base.BaseFragment;
-import com.yingke.videoplayer.bean.VideoBean;
 import com.yingke.videoplayer.home.adapter.ListVideoAdapter;
 import com.yingke.videoplayer.home.bean.ListVideoData;
 import com.yingke.videoplayer.util.EncryptUtils;
 import com.yingke.videoplayer.util.FileUtil;
-import com.yingke.videoplayer.util.PlayerUtil;
 import com.yingke.videoplayer.util.StringUtil;
 import com.yingke.videoplayer.widget.ListIjkVideoView;
 import com.yingke.widget.base.BaseRecycleViewAdapter;
@@ -31,7 +28,6 @@ import java.io.File;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
@@ -91,7 +87,7 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
     @Override
     protected void requestNetWork() {
         // 假装有网络
-        String videoListJson = StringUtil.getJsonData(getContext(), "listvideojson.json");
+        String videoListJson = StringUtil.getJsonData(getContext(), "list_rec_video.json");
 
         if (!TextUtils.isEmpty(videoListJson)) {
             List<ListVideoData> listVideoData = new Gson().fromJson(videoListJson, new TypeToken<List<ListVideoData>>() {}.getType());

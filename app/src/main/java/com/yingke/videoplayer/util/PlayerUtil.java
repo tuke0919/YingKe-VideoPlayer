@@ -3,7 +3,6 @@ package com.yingke.videoplayer.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -64,7 +63,7 @@ public class PlayerUtil {
      * 获取列表网络视频的帧
      */
     public static void videoFrames(final Context context){
-        String videoListJson = StringUtil.getJsonData(context, "listvideojson.json");
+        String videoListJson = StringUtil.getJsonData(context, "list_rec_video.json");
 
         List<ListVideoData> listVideoData = new Gson().fromJson(videoListJson, new TypeToken<List<ListVideoData>>() {}.getType());
         for (final ListVideoData videoData: listVideoData) {
