@@ -16,6 +16,7 @@
         android:text="抖音"
         android:textColor="@color/red"
         android:layout_centerInParent="true"
+        android:visibility="gone"
         />
 
 </RelativeLayout>

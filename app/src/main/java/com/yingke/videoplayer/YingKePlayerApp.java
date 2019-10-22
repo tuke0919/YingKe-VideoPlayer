@@ -40,7 +40,8 @@ public class YingKePlayerApp extends Application {
         initFresco();
 
         // 获取列表网络视频的帧
-        PlayerUtil.videoFrames(this);
+        PlayerUtil.listRecVideoFrames(this);
+        PlayerUtil.listTiktokVideoFrames(this);
     }
 
     @Override

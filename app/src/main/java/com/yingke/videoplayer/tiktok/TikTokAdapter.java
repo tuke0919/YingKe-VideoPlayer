@@ -12,8 +12,11 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.home.BaseRecycleViewAdapter;
 import com.yingke.videoplayer.tiktok.bean.ListTiktokBean;
+import com.yingke.videoplayer.util.EncryptUtils;
+import com.yingke.videoplayer.util.FileUtil;
 import com.yingke.videoplayer.util.FrescoUtil;
 import com.yingke.videoplayer.util.StringUtil;
+import com.yingke.widget.textview.ScrollTextView;
 
 import java.io.File;
 import java.util.List;
@@ -33,8 +36,8 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class TikTokAdapter extends BaseRecycleViewAdapter<ListTiktokBean> {
 
-    public TikTokAdapter(Context context, List<ListTiktokBean> mDataList) {
-        super(context, mDataList);
+    public TikTokAdapter(Context context, List<ListTiktokBean> dataList) {
+        super(context, dataList);
     }
 
     @Override
@@ -70,6 +73,7 @@ public class TikTokAdapter extends BaseRecycleViewAdapter<ListTiktokBean> {
         private TextView mUserName;
         private TextView mDescription;
         private TextView mMusic;
+        private ScrollTextView mMusicText;
 
         private TextView mCreateTime;
         private ImageView mPlayBtn;
@@ -91,7 +95,8 @@ public class TikTokAdapter extends BaseRecycleViewAdapter<ListTiktokBean> {
             mShareCount = itemView.findViewById(R.id.tiktok_share_count);
             mUserName = itemView.findViewById(R.id.tiktok_username);
             mDescription = itemView.findViewById(R.id.tiktok_description);
-            mMusic = itemView.findViewById(R.id.tiktok_music);
+//            mMusic = itemView.findViewById(R.id.tiktok_music);
+            mMusicText = itemView.findViewById(R.id.tiktok_music_text);
             mCreateTime = itemView.findViewById(R.id.tiktok_time);
             mPlayBtn = itemView.findViewById(R.id.tiktok_play_icon);
         }
@@ -104,7 +109,18 @@ public class TikTokAdapter extends BaseRecycleViewAdapter<ListTiktokBean> {
             this.position = position;
             mTiktokBean = data;
 
-            FrescoUtil.displayImage(mDraweeView, data.getCoverImage());
+            // 封面图
+            String thumbPath = data.getCoverImage();
+            if (!TextUtils.isEmpty(thumbPath)){
+                FrescoUtil.displayImage(mDraweeView, new File(thumbPath));
+            } else {
+                File thumbFile = FileUtil.getVideoThumbFile(context, EncryptUtils.md5String(data.getUrl()));
+                if (thumbFile.exists()) {
+                    data.setCoverImage(thumbFile.getAbsolutePath());
+                }
+                FrescoUtil.displayImage(mDraweeView, thumbFile);
+            }
+
             FrescoUtil.displayImage(mUserAvatar, data.getUserAvatar());
             if (data.isWatched()) {
                 mVoteImage.setImageResource(R.mipmap.icon_heart_red);
@@ -114,9 +130,10 @@ public class TikTokAdapter extends BaseRecycleViewAdapter<ListTiktokBean> {
             mVoteCount.setText(StringUtil.countFormat(data.getVoteCount()));
             mMsgCount.setText(StringUtil.countFormat(data.getCommentCount()));
             mShareCount.setText(StringUtil.countFormat(data.getShareCount()));
-            mUserName.setText(data.getUserName());
+            mUserName.setText("@"+ data.getUserName());
             mDescription.setText(data.getDescription());
-            mMusic.setText(data.getMusic());
+//            mMusic.setText(data.getMusic());
+            mMusicText.setText(data.getMusic());
             String time = StringUtil.getTimeStrForUsrMsg(data.getCreateTime());
             if (!TextUtils.isEmpty(time)) {
                 mCreateTime.setVisibility(View.VISIBLE);

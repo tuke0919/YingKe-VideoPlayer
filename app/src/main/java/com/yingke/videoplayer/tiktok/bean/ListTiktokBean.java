@@ -1,5 +1,7 @@
 package com.yingke.videoplayer.tiktok.bean;
 
+import java.util.Objects;
+
 /**
  * 功能：
  * </p>
@@ -143,5 +145,29 @@ public class ListTiktokBean {
 
     public void setCreateTime(long createTime) {
         this.createTime = createTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ListTiktokBean bean = (ListTiktokBean) o;
+        return isWatched == bean.isWatched &&
+                voteCount == bean.voteCount &&
+                commentCount == bean.commentCount &&
+                shareCount == bean.shareCount &&
+                createTime == bean.createTime &&
+                id.equals(bean.id) &&
+                url.equals(bean.url) &&
+                Objects.equals(userAvatar, bean.userAvatar) &&
+                Objects.equals(userName, bean.userName) &&
+                Objects.equals(description, bean.description) &&
+                Objects.equals(music, bean.music) &&
+                Objects.equals(musicImage, bean.musicImage);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, url, userAvatar, isWatched, voteCount, commentCount, shareCount, userName, description, music, musicImage, createTime);
     }
 }

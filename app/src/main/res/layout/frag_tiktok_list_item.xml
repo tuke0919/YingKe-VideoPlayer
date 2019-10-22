@@ -212,24 +212,75 @@
             android:lineSpacingMultiplier="1.1"
             />
 
-        <TextView
+<!--        <com.yingke.videoplayer.widget.MarqueeTextView-->
+<!--            android:id="@+id/tiktok_music"-->
+<!--            android:layout_width="210dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentBottom="true"-->
+<!--            android:text="\@热门音乐MV创作的原声-热门音乐MV"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:textSize="14sp"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:textStyle="normal"-->
+<!--            android:ellipsize="marquee"-->
+<!--            android:singleLine="true"-->
+<!--            android:marqueeRepeatLimit="marquee_forever"-->
+<!--            android:selectAllOnFocus="true"-->
+<!--            android:focusable="true"-->
+<!--            android:focusableInTouchMode="true"-->
+<!--            android:scrollHorizontally="true"-->
+<!--            />-->
+
+        <LinearLayout
             android:id="@+id/tiktok_music"
-            android:layout_width="210dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_alignParentBottom="true"
-            android:text="\@热门音乐MV创作的原声-热门音乐MV"
-            android:textColor="@color/white"
-            android:ellipsize="marquee"
-            android:singleLine="true"
             android:gravity="center_vertical"
-            android:textSize="14sp"
-            android:drawableLeft="@mipmap/icon_tiktok"
-            android:drawablePadding="3dp"
             android:layout_marginTop="10dp"
-            android:textStyle="normal"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:selectAllOnFocus="true"
-            />
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/icon_tiktok_16"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="3dp"
+                />
+
+            <com.yingke.widget.textview.ScrollTextView
+                android:id="@+id/tiktok_music_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/trans"
+                android:singleLine="true"
+                app:clickEnable="true"
+                app:isHorizontal="true"
+                app:speed="2"
+                app:text="你打扰到我学习了1234567890AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
+                app:text_color="@color/white"
+                app:text_size="14sp"
+                />
+
+        </LinearLayout>
+
+
+
+<!--        android:drawableLeft="@mipmap/icon_tiktok_16"-->
+<!--        android:drawablePadding="3dp"-->
+<!--        <MyTextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:ellipsize="marquee"-->
+<!--            android:focusable="true" -->
+<!--            android:focusableInTouchMode="true"-->
+<!--            android:marqueeRepeatLimit="marquee_forever"-->
+<!--            android:scrollHorizontally="true"-->
+<!--            android:singleLine="true"-->
+<!--            />-->
+
     </RelativeLayout>
 
 

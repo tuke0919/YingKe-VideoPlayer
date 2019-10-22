@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.yingke.player.java.PlayerLog;
 import com.yingke.videoplayer.home.bean.ListVideoData;
+import com.yingke.videoplayer.tiktok.bean.ListTiktokBean;
 import com.yingke.videoplayer.worker.WorkerCenter;
 import com.yingke.videoplayer.worker.WorkerTask;
 
@@ -60,9 +61,9 @@ public class PlayerUtil {
 
 
     /**
-     * 获取列表网络视频的帧
+     * 推荐列表网络视频的帧
      */
-    public static void videoFrames(final Context context){
+    public static void listRecVideoFrames(final Context context){
         String videoListJson = StringUtil.getJsonData(context, "list_rec_video.json");
 
         List<ListVideoData> listVideoData = new Gson().fromJson(videoListJson, new TypeToken<List<ListVideoData>>() {}.getType());
@@ -80,7 +81,7 @@ public class PlayerUtil {
                 @Override
                 protected String execute() {
                     // 截取网络视频帧
-                    PlayerLog.e(TAG, "videoFrames: " + "title = " + data.getTitle() + "\n");
+                    PlayerLog.e(TAG, "listRecVideoFrames: " + "title = " + data.getTitle() + "\n");
 
                     long startTime = System.currentTimeMillis();
                     File thumbImageFile = FileUtil.getVideoThumbFile(context, EncryptUtils.md5String(videoUrl));
@@ -94,13 +95,58 @@ public class PlayerUtil {
                 @Override
                 protected void notifyResult(String result) {
                     data.setThumbPath(result);
-                    PlayerLog.e(TAG, "videoFrames: " + "postSticky..." );
+                    PlayerLog.e(TAG, "listRecVideoFrames: " + "postSticky..." );
                     // 发送粘性事件
                     EventBus.getDefault().postSticky(data);
                 }
             });
         }
     }
+
+    /**
+     * 抖音列表网络视频的帧
+     */
+    public static void listTiktokVideoFrames(final Context context){
+        String videoListJson = StringUtil.getJsonData(context, "list_tiktok_video.json");
+
+        List<ListTiktokBean> listVideoData = new Gson().fromJson(videoListJson, new TypeToken<List<ListTiktokBean>>() {}.getType());
+        for (final ListTiktokBean videoData: listVideoData) {
+            // 有缓存文件
+            File thumbImage = FileUtil.getVideoThumbFile(context, EncryptUtils.md5String(videoData.getUrl()));
+            if (thumbImage.exists()) {
+                return;
+            }
+            // 无缓存文件
+            WorkerCenter.getInstance().submitNormalTask(new WorkerTask<String>("workTask",true){
+
+                ListTiktokBean data = videoData;
+                String videoUrl = data.getUrl();
+                @Override
+                protected String execute() {
+                    // 截取网络视频帧
+                    PlayerLog.e(TAG, "listTiktokVideoFrames: " + "title = " + data.getUserName() + "\n");
+
+                    long startTime = System.currentTimeMillis();
+                    File thumbImageFile = FileUtil.getVideoThumbFile(context, EncryptUtils.md5String(videoUrl));
+                    Bitmap bitmap = PlayerUtil.getNetVideoBitmap(videoUrl);
+                    FileUtil.saveBitmapToFile(bitmap, thumbImageFile.getAbsolutePath());
+
+                    PlayerLog.e(TAG,"cost time:" + (System.currentTimeMillis() - startTime));
+                    return thumbImageFile.getAbsolutePath();
+                }
+
+                @Override
+                protected void notifyResult(String result) {
+                    // 设置封面路径
+                    data.setCoverImage(result);
+                    PlayerLog.e(TAG, "listTiktokVideoFrames: " + "postSticky..." );
+                    // 发送粘性事件
+                    EventBus.getDefault().postSticky(data);
+                }
+            });
+        }
+    }
+
 
 
 

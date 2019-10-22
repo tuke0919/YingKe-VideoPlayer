@@ -28,6 +28,11 @@ public class PagerLayoutManager extends LinearLayoutManager implements RecyclerV
     // 位移，用来判断移动方向
     private int mScrollBy;
 
+    public PagerLayoutManager(Context context, int orientation) {
+        super(context, orientation, false);
+        init();
+    }
+
     public PagerLayoutManager(Context context, int orientation, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
         init();
