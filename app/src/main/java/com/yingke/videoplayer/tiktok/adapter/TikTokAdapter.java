@@ -1,4 +1,4 @@
-package com.yingke.videoplayer.tiktok;
+package com.yingke.videoplayer.tiktok.adapter;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -9,8 +9,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.yingke.player.java.PlayerLog;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.home.BaseRecycleViewAdapter;
+import com.yingke.videoplayer.tiktok.ListTiktokVideoView;
 import com.yingke.videoplayer.tiktok.bean.ListTiktokBean;
 import com.yingke.videoplayer.util.EncryptUtils;
 import com.yingke.videoplayer.util.FileUtil;
@@ -95,7 +97,6 @@ public class TikTokAdapter extends BaseRecycleViewAdapter<ListTiktokBean> {
             mShareCount = itemView.findViewById(R.id.tiktok_share_count);
             mUserName = itemView.findViewById(R.id.tiktok_username);
             mDescription = itemView.findViewById(R.id.tiktok_description);
-//            mMusic = itemView.findViewById(R.id.tiktok_music);
             mMusicText = itemView.findViewById(R.id.tiktok_music_text);
             mCreateTime = itemView.findViewById(R.id.tiktok_time);
             mPlayBtn = itemView.findViewById(R.id.tiktok_play_icon);
@@ -103,6 +104,7 @@ public class TikTokAdapter extends BaseRecycleViewAdapter<ListTiktokBean> {
 
         @Override
         public void onRefreshData(int position, ListTiktokBean data) {
+            PlayerLog.e("TiktokFragment", "onRefreshData: position = " + position + " name = " + data.getUserName());
             if (data == null) {
                 return;
             }
@@ -112,12 +114,14 @@ public class TikTokAdapter extends BaseRecycleViewAdapter<ListTiktokBean> {
             // 封面图
             String thumbPath = data.getCoverImage();
             if (!TextUtils.isEmpty(thumbPath)){
+                mDraweeView.setVisibility(View.VISIBLE);
                 FrescoUtil.displayImage(mDraweeView, new File(thumbPath));
             } else {
                 File thumbFile = FileUtil.getVideoThumbFile(context, EncryptUtils.md5String(data.getUrl()));
                 if (thumbFile.exists()) {
                     data.setCoverImage(thumbFile.getAbsolutePath());
                 }
+                mDraweeView.setVisibility(View.VISIBLE);
                 FrescoUtil.displayImage(mDraweeView, thumbFile);
             }
 
@@ -132,7 +136,6 @@ public class TikTokAdapter extends BaseRecycleViewAdapter<ListTiktokBean> {
             mShareCount.setText(StringUtil.countFormat(data.getShareCount()));
             mUserName.setText("@"+ data.getUserName());
             mDescription.setText(data.getDescription());
-//            mMusic.setText(data.getMusic());
             mMusicText.setText(data.getMusic());
             String time = StringUtil.getTimeStrForUsrMsg(data.getCreateTime());
             if (!TextUtils.isEmpty(time)) {
@@ -141,6 +144,15 @@ public class TikTokAdapter extends BaseRecycleViewAdapter<ListTiktokBean> {
             } else {
                 mCreateTime.setVisibility(View.GONE);
             }
+            // 移除
+            if (mVideoContainer.getChildCount() >= 0) {
+                ListTiktokVideoView tiktokVideoView = (ListTiktokVideoView) mVideoContainer.getChildAt(0);
+                if (tiktokVideoView != null) {
+                    tiktokVideoView.release();
+                }
+                mVideoContainer.removeAllViews();
+            }
+
         }
     }
 

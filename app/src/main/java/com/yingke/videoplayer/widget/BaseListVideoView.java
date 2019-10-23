@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.yingke.player.java.IVideoBean;
 import com.yingke.player.java.controller.BaseMediaController;
 import com.yingke.player.java.controller.MediaPlayerControl;
 import com.yingke.player.java.listener.OnPlayStateListener;
@@ -243,6 +244,21 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
         }
         return true;
     }
+
+    /**
+     * 刚开时 设置数据
+     * @param videoBean
+     */
+    public void setVideoOnline(IVideoBean videoBean){
+        if (videoBean == null || getIjkVideoView() == null) {
+            return;
+        }
+
+        if (checkNetWork()) {
+            getIjkVideoView().setVideoBean(videoBean);
+        }
+    }
+
 
     @Override
     public void start() {

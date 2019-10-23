@@ -39,17 +39,23 @@ public class PlayerUtil {
      *  耗时的，考虑用线程
      *
      *  @param videoUrl
-     *  @return
+     *  @param firstFrame 是否第一帧
+     * @return
      */
-    public static Bitmap getNetVideoBitmap(String videoUrl) {
+    public static Bitmap getNetVideoBitmap(String videoUrl, boolean firstFrame) {
         Bitmap bitmap = null;
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         long startTime = System.currentTimeMillis();
         try {
             // 根据url获取缩略图
             retriever.setDataSource(videoUrl, new HashMap());
-            // 获得1s图片
-            bitmap = retriever.getFrameAtTime(1000 * 1000);
+            if (firstFrame) {
+                bitmap = retriever.getFrameAtTime(100 * 1000);
+            } else {
+                // 获得1s图片
+                bitmap = retriever.getFrameAtTime(1000 * 1000);
+            }
+
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         } finally {
@@ -85,7 +91,7 @@ public class PlayerUtil {
 
                     long startTime = System.currentTimeMillis();
                     File thumbImageFile = FileUtil.getVideoThumbFile(context, EncryptUtils.md5String(videoUrl));
-                    Bitmap bitmap = PlayerUtil.getNetVideoBitmap(videoUrl);
+                    Bitmap bitmap = PlayerUtil.getNetVideoBitmap(videoUrl, false);
                     FileUtil.saveBitmapToFile(bitmap, thumbImageFile.getAbsolutePath());
 
                     PlayerLog.e(TAG,"cost time:" + (System.currentTimeMillis() - startTime));
@@ -128,7 +134,7 @@ public class PlayerUtil {
 
                     long startTime = System.currentTimeMillis();
                     File thumbImageFile = FileUtil.getVideoThumbFile(context, EncryptUtils.md5String(videoUrl));
-                    Bitmap bitmap = PlayerUtil.getNetVideoBitmap(videoUrl);
+                    Bitmap bitmap = PlayerUtil.getNetVideoBitmap(videoUrl, true);
                     FileUtil.saveBitmapToFile(bitmap, thumbImageFile.getAbsolutePath());
 
                     PlayerLog.e(TAG,"cost time:" + (System.currentTimeMillis() - startTime));

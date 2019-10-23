@@ -51,6 +51,12 @@ public class ListTiktokVideoView extends BaseListVideoView {
         addView(mIjkVideoView, params);
     }
 
+    public void setLooping(boolean looping){
+        if (mIjkVideoView != null) {
+            mIjkVideoView.setLooping(looping);
+        }
+    }
+
     public void initData(){
         initVideoPlayerView();
     }

@@ -313,7 +313,7 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
     }
 
     /**
-     * 释放播放器 不交给控制器
+     * 释放播放器资源
      */
     @Override
     public void release() {
@@ -328,8 +328,6 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
             if (mAudioFocusHelper != null)
                 mAudioFocusHelper.abandonFocus();
             setKeepScreenOn(false);
-
-
         }
         onPlayStopped();
     }
@@ -604,7 +602,9 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
             notifyPlayStateChanged(STATE_ERROR);
         }
         setVideoUrl(videoBean.getSource());
-        mBaseMediaController.setTitle(videoBean.getTitle());
+        if (mBaseMediaController != null) {
+            mBaseMediaController.setTitle(videoBean.getTitle());
+        }
     }
 
     /**
@@ -970,6 +970,9 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
      * 开关显示隐藏 控制器
      */
     private void toggleMediaControllerVisibility() {
+        if (mBaseMediaController == null) {
+            return;
+        }
         if (mBaseMediaController.isShowing()) {
             mBaseMediaController.hide();
         } else {

@@ -21,12 +21,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
         android:layout_marginRight="5dp"
         android:layout_marginLeft="10dp"
+        android:visibility="visible"
+        android:background="@color/trans"
         >
 
         <ImageView
@@ -46,6 +50,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             android:gravity="center_horizontal"
+            android:visibility="visible"
             >
 
             <!--  头像 -->
@@ -262,6 +267,7 @@
                 app:text="你打扰到我学习了1234567890AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
                 app:text_color="@color/white"
                 app:text_size="14sp"
+                android:visibility="visible"
                 />
 
         </LinearLayout>

@@ -39,7 +39,8 @@ public class FrescoUtil {
     }
 
     public static void displayImage(SimpleDraweeView draweeView, String uriString){
-        draweeView.setImageURI(uriString);
+        Uri uri = Uri.parse(uriString);
+        draweeView.setImageURI(uri);
     }
 
 

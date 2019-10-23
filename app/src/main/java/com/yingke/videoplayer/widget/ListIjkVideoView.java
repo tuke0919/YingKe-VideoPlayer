@@ -132,15 +132,15 @@ public class ListIjkVideoView extends BaseListVideoView {
      * 刚开时 设置数据
      * @param videoBean
      */
-    public void setVideoOnline(IVideoBean videoBean){
-        if (videoBean == null || getIjkVideoView() == null) {
-            return;
-        }
-
-        if (checkNetWork()) {
-            getIjkVideoView().setVideoBean(videoBean);
-        }
-    }
+//    public void setVideoOnline(IVideoBean videoBean){
+//        if (videoBean == null || getIjkVideoView() == null) {
+//            return;
+//        }
+//
+//        if (checkNetWork()) {
+//            getIjkVideoView().setVideoBean(videoBean);
+//        }
+//    }
 
     /**
      * 正在播放

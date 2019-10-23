@@ -3,17 +3,16 @@ package com.yingke.videoplayer.tiktok;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.yingke.player.java.PlayerLog;
+import com.yingke.player.java.ScreenScale;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.base.BaseFragment;
-import com.yingke.videoplayer.home.bean.ListVideoData;
+import com.yingke.videoplayer.tiktok.adapter.TikTokAdapter;
 import com.yingke.videoplayer.tiktok.bean.ListTiktokBean;
 import com.yingke.videoplayer.util.EncryptUtils;
 import com.yingke.videoplayer.util.FileUtil;
-import com.yingke.videoplayer.util.FrescoUtil;
 import com.yingke.videoplayer.util.StringUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -38,7 +37,8 @@ import androidx.recyclerview.widget.RecyclerView;
  * 最后修改人：无
  * <p>
  */
-public class TiktokFragment extends BaseFragment {
+public class TiktokFragment extends BaseFragment implements PagerLayoutManager.OnPageChangedListener {
+
 
     public static final String TAG = "TiktokFragment";
 
@@ -50,6 +50,9 @@ public class TiktokFragment extends BaseFragment {
     private List<ListTiktokBean> mTiktokBeans;
     private TikTokAdapter mTikTokAdapter;
 
+    private int mPosition;
+    private ListTiktokVideoView mListTiktokVideoView;
+
     @Override
     protected int getLayoutResId() {
         return R.layout.frag_tiktok;
@@ -60,6 +63,7 @@ public class TiktokFragment extends BaseFragment {
         mRecyclerView = rootView.findViewById(R.id.recyclerView);
         PagerLayoutManager layoutManager = new PagerLayoutManager(getContext(), OrientationHelper.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
+        layoutManager.setListener(this);
     }
 
     @Override
@@ -87,6 +91,11 @@ public class TiktokFragment extends BaseFragment {
             if (!isRegistered) {
                 EventBus.getDefault().register(this);
             }
+
+            // 实例化播放器
+            mListTiktokVideoView = new ListTiktokVideoView(getContext());
+            mListTiktokVideoView.setScreenScale(ScreenScale.SCREEN_SCALE_CENTER_CROP);
+            mListTiktokVideoView.setLooping(true);
         }
     }
 
@@ -103,6 +112,70 @@ public class TiktokFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onFirstPageAttached(View itemView) {
+        PlayerLog.e(TAG, "onFirstPageAttached: position = " + 0);
+        mPosition = 0;
+        startPlay(0, itemView);
+    }
+
+    @Override
+    public void onPageDetached(boolean isNext, int position, View itemView) {
+        PlayerLog.e(TAG, "onPageDetached: position = " + position);
+
+        if (mPosition == position) {
+            if (mListTiktokVideoView != null) {
+                mListTiktokVideoView.release();
+            }
+            ListTiktokBean tiktokBean = mTiktokBeans.get(position);
+            TiktokVideoVH tiktokVideoVH = new TiktokVideoVH(itemView);
+            tiktokVideoVH.removeVideoView(tiktokBean.getCoverImage());
+        }
+    }
+
+    @Override
+    public void onPageSelected(int position, View itemView,  boolean isBottom) {
+        PlayerLog.e(TAG, "onPageSelected: position = " + position);
+        if (mPosition != position) {
+            mPosition = position;
+            startPlay(position, itemView);
+        }
+    }
+
+    /**
+     * 开始播放
+     * @param position
+     */
+    public void startPlay(int position,  View itemView){
+        if (position < 0 || position >= mTiktokBeans.size()) {
+            return;
+        }
+
+        // 数据
+        ListTiktokBean tiktokBean = mTiktokBeans.get(position);
+
+//        View itemView = mRecyclerView.getChildAt(0);
+        TiktokVideoVH tiktokVideoVH = new TiktokVideoVH(itemView);
+        tiktokVideoVH.addVideoView(mListTiktokVideoView, tiktokBean.getCoverImage());
+
+        mListTiktokVideoView.setVideoOnline(tiktokBean);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mListTiktokVideoView != null && !mListTiktokVideoView.isPlaying()) {
+            mListTiktokVideoView.start();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mListTiktokVideoView != null) {
+            mListTiktokVideoView.pause();
+        }
+    }
 
     @Override
     public void onDestroy() {

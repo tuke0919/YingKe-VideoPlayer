@@ -76,7 +76,7 @@ public class PagerLayoutManager extends LinearLayoutManager implements RecyclerV
                 int positionIdle = getPosition(viewIdle);
                 // 页面选中
                 if (mListener != null && getChildCount() == 1) {
-                    mListener.onPageSelected(positionIdle, positionIdle == getItemCount() - 1);
+                    mListener.onPageSelected(positionIdle, viewIdle, positionIdle == getItemCount() - 1);
                 }
                 break;
             case RecyclerView.SCROLL_STATE_DRAGGING:
@@ -92,14 +92,14 @@ public class PagerLayoutManager extends LinearLayoutManager implements RecyclerV
     @Override
     public void onChildViewAttachedToWindow(@NonNull View view) {
         if (mListener != null && getChildCount() == 1) {
-            mListener.onFirstPageAttached();
+            mListener.onFirstPageAttached(mRecyclerView.getChildAt(0));
         }
     }
 
     @Override
     public void onChildViewDetachedFromWindow(@NonNull View view) {
         if (mListener != null) {
-            mListener.onPageDetached(mScrollBy >= 0,getPosition(view));
+            mListener.onPageDetached(mScrollBy >= 0, getPosition(view), view);
         }
     }
 
@@ -112,21 +112,23 @@ public class PagerLayoutManager extends LinearLayoutManager implements RecyclerV
         /**
          * 初始化
          */
-        void onFirstPageAttached();
+        void onFirstPageAttached(View itemView);
 
         /**
          * 页面离屏
          * @param isNext
          * @param position
+         * @param itemView
          */
-        void onPageDetached(boolean isNext, int position);
+        void onPageDetached(boolean isNext, int position,  View itemView);
 
         /**
          * 页面选中
          * @param position
+         * @param itemView
          * @param isBottom
          */
-        void onPageSelected(int position, boolean isBottom);
+        void onPageSelected(int position, View itemView, boolean isBottom);
 
     }
 }

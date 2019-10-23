@@ -1,5 +1,7 @@
 package com.yingke.videoplayer.tiktok.bean;
 
+import com.yingke.player.java.IVideoBean;
+
 import java.util.Objects;
 
 /**
@@ -13,12 +15,12 @@ import java.util.Objects;
  * 最后修改人：无
  * <p>
  */
-public class ListTiktokBean {
+public class ListTiktokBean implements IVideoBean {
 
     private String id;
     // 视频链接
     private String url;
-    // 封面图
+    // 封面图 是本地路径 在data/data里
     private String coverImage;
     // 头衔
     private String userAvatar;
@@ -169,5 +171,15 @@ public class ListTiktokBean {
     @Override
     public int hashCode() {
         return Objects.hash(id, url, userAvatar, isWatched, voteCount, commentCount, shareCount, userName, description, music, musicImage, createTime);
+    }
+
+    @Override
+    public String getSource() {
+        return url;
+    }
+
+    @Override
+    public String getTitle() {
+        return description;
     }
 }

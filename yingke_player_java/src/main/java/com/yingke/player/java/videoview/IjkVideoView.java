@@ -162,6 +162,37 @@ public class IjkVideoView extends IjkBaseVideoView {
         super.setMediaController(baseMediaController);
     }
 
+
+    @Override
+    public void release() {
+        super.release();
+        mPlayerContainer.removeView(mTextureView);
+        mPlayerContainer.removeView(mSurfaceView);
+        if (mSurfaceTexture != null) {
+            mSurfaceTexture.release();
+            mSurfaceTexture = null;
+        }
+        mCurrentScreenScale = SCREEN_SCALE_DEFAULT;
+    }
+
+    /**
+     * 旋转视频画面
+     *
+     * @param rotation 角度
+     */
+    @Override
+    public void setRotation(float rotation) {
+        if (mTextureView != null) {
+            mTextureView.setRotation(rotation);
+            mTextureView.requestLayout();
+        }
+
+        if (mSurfaceView != null) {
+            mSurfaceView.setRotation(rotation);
+            mSurfaceView.requestLayout();
+        }
+    }
+
     /**
      * 设置 屏幕缩放类型
      * @param screenScale
