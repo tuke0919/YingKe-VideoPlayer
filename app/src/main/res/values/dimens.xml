@@ -10,4 +10,8 @@
     <dimen name="header_footer_top_bottom_padding">5dp</dimen>
     <dimen name="list_buttom">45dp</dimen>
 
+    <!--  底部导航栏的高，非抖音TAB需paddingBottom  -->
+    <dimen name="bottom_tab_host_height">48dp</dimen>
+
+
 </resources>

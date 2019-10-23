@@ -44,6 +44,7 @@ public class IjkVideoView extends IjkBaseVideoView {
     // 视屏大小
     protected int[] mVideoSize = {0, 0};
 
+    // 当前屏幕模式
     protected int mCurrentScreenScale = SCREEN_SCALE_DEFAULT;
     // 小屏状态
     protected boolean mIsTinyScreen;
@@ -243,13 +244,13 @@ public class IjkVideoView extends IjkBaseVideoView {
     @Override
     public void onVideoSizeChanged(int width, int height) {
         mVideoSize[0] = width;
-        mVideoSize[1] = width;
+        mVideoSize[1] = height;
         if (mUsingSurfaceView || Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
             mSurfaceView.setScreenScale(mCurrentScreenScale);
             mSurfaceView.setSurfaceSize(width, height);
         } else {
             mTextureView.setScreenScale(mCurrentScreenScale);
-            mTextureView.setTextureSize(width, width);
+            mTextureView.setTextureSize(width, height);
         }
     }
 

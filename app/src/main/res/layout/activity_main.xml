@@ -11,7 +11,7 @@
         android:id="@+id/frag_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="48dp"
+        android:layout_marginBottom="0dp"
         android:cacheColorHint="#ffffffff" />
 
     <!--分割线-->

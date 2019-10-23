@@ -109,6 +109,7 @@ public class ResizedSurfaceView extends SurfaceView {
                     int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
                     int heightSpecSize = MeasureSpec.getSize(heightMeasureSpec);
 
+                    // 等比例缩放
                     if (widthSpecMode == MeasureSpec.EXACTLY && heightSpecMode == MeasureSpec.EXACTLY) {
                         // the size is fixed
                         width = widthSpecSize;

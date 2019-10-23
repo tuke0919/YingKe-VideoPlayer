@@ -11,7 +11,10 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
@@ -24,6 +27,7 @@ import com.yingke.videoplayer.home.HomeFragment;
 import com.yingke.videoplayer.home.bean.ListVideoData;
 import com.yingke.videoplayer.personal.PersonalFragment;
 import com.yingke.videoplayer.tiktok.TiktokFragment;
+import com.yingke.videoplayer.util.DeviceUtil;
 import com.yingke.videoplayer.util.EncryptUtils;
 import com.yingke.videoplayer.util.FileUtil;
 import com.yingke.videoplayer.util.FrescoUtil;
@@ -54,8 +58,10 @@ public class MainActivity extends BaseActivity {
 
     private HashMap<String, BottomTabView> mBottomTabViewHashMap = new HashMap<>();
 
+    private FrameLayout mFragContainer;
     private FragmentTabHost mTabHost;
     private TabWidget mTabWidget;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +83,9 @@ public class MainActivity extends BaseActivity {
         mTabHost.setup(this, getSupportFragmentManager(), R.id.frag_container);
         mTabWidget = mTabHost.getTabWidget();
         mTabWidget.setDividerDrawable(null);
+        mFragContainer = findViewById(R.id.frag_container);
+        findViewById(R.id.divider).setVisibility(View.GONE);
+
     }
     private void initData(){
         addTabHostTab();
@@ -106,6 +115,19 @@ public class MainActivity extends BaseActivity {
                     null);
 
             mBottomTabViewHashMap.put(tag, bottomTabView);
+            mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+                @Override
+                public void onTabChanged(String tabId) {
+                    if (TextUtils.equals(tabId, TAB_TIKTOK)) {
+                        // 抖音 向下沉
+                        mTabHost.setBackgroundColor(getResources().getColor(R.color.trans));
+                    } else {
+                        // 非抖音
+                        mTabHost.setBackgroundColor(getResources().getColor(R.color.white));
+                    }
+                }
+            });
+
         }
     }
 
