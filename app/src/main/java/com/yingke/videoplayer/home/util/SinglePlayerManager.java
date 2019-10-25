@@ -1,17 +1,22 @@
 package com.yingke.videoplayer.home.util;
 
+import android.app.Activity;
 import android.content.Context;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
 
 import com.yingke.player.java.IVideoBean;
+import com.yingke.player.java.PlayerUtils;
 import com.yingke.player.java.controller.MediaController;
 import com.yingke.videoplayer.home.adapter.ListVideoAdapter;
 import com.yingke.videoplayer.home.item.ListVideoVH;
 import com.yingke.videoplayer.home.pip.SuspensionView;
 import com.yingke.videoplayer.home.player.ListIjkMediaController;
+import com.yingke.videoplayer.util.DeviceUtil;
+import com.yingke.videoplayer.util.PlayerUtil;
 import com.yingke.videoplayer.widget.BaseListVideoView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -157,26 +162,45 @@ public class SinglePlayerManager {
         }
     }
 
-    //#### 画中画
+    //#### 画中画（悬浮窗/小屏）
 
-    private boolean isSuspensionEnable = false;
+    public static final int PIP_TYPE_FLOAT_WINDOW = 0;
+    public static final int PIP_TYPE_TINY_SCREEN = 1;
+
+    // 类型
+    private int mPipType = -1;
+    // 使能
+    private boolean mIsPipEnable = false;
+    // 显示
     private boolean mIsShowing = false;
+    // 悬浮窗视图
     private SuspensionView mSuspensionView;
 
+
     /**
-     * 启动悬浮窗
+     * 启动画中画
      * @param context
-     * @param suspensionEnable
+     * @param isPipEnable
      */
-    public void enableSuspensionWindow(Context context, boolean suspensionEnable) {
-        isSuspensionEnable = suspensionEnable;
-        if (isSuspensionEnable) {
+    public void enablePip(Context context, boolean isPipEnable){
+        enablePip(context, isPipEnable, PIP_TYPE_TINY_SCREEN);
+    }
+
+    /**
+     * 启动画中画
+     * @param context
+     * @param isPipEnable
+     */
+    public void enablePip(Context context, boolean isPipEnable, int pipType) {
+        mIsPipEnable = isPipEnable;
+        mPipType = pipType;
+        if (isSuspensionType()) {
             mSuspensionView = new SuspensionView(context);
         }
     }
 
-    public boolean isSuspensionEnable() {
-        return isSuspensionEnable;
+    public boolean isPipEnable() {
+        return mIsPipEnable;
     }
 
     public boolean isShowing() {
@@ -184,17 +208,17 @@ public class SinglePlayerManager {
     }
 
     /**
-     * @return 悬浮窗显示
+     * @return 画中画显示
      */
     public boolean isEnableAndShowing(){
-        return isSuspensionEnable() && isShowing();
+        return isPipEnable() && isShowing();
     }
 
     /**
-     * 开始悬浮窗
+     * 开始画中画
      */
     public void startFloatWindow() {
-        if (!isSuspensionEnable || mIsShowing || mCurrentListVideoView == null) {
+        if (!mIsPipEnable || mIsShowing || mCurrentListVideoView == null) {
             return;
         }
         mIsShowing = true;
@@ -204,49 +228,106 @@ public class SinglePlayerManager {
         if (controller instanceof ListIjkMediaController) {
             ((ListIjkMediaController) controller).showPipController();
         }
-        mSuspensionView.addView(mCurrentListVideoView);
-        mSuspensionView.attachToWindow();
+
+        if (isSuspensionType()) {
+            // 悬浮窗添加
+            mSuspensionView.addView(mCurrentListVideoView);
+            mSuspensionView.attachToWindow();
+        } else {
+            // contentView添加
+            Activity activity = PlayerUtils.scanForActivity(mRecyclerView.getContext());
+            if (activity == null){
+                return;
+            }
+            // 实际是添加到contentView上
+            ViewGroup contentView = activity.findViewById(android.R.id.content);
+            int width = PlayerUtils.getScreenWidth(mRecyclerView.getContext()) / 2;
+            int height = width * 9 / 16;
+
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, height);
+            params.gravity = Gravity.TOP | Gravity.END;
+            params.topMargin = DeviceUtil.getStatusBarHeight(mRecyclerView.getContext());
+            // 添加到ContentView
+            contentView.addView(mCurrentListVideoView, params);
+        }
+
     }
 
     /**
-     * 关闭悬浮窗
+     * 关闭画中画
      */
     public void stopFloatWindow() {
         stopFloatWindow(true);
     }
 
     /**
-     * 关闭悬浮窗
+     * 关闭画中画
      */
     public void stopFloatWindow(boolean releasePlayer) {
-        if (!isSuspensionEnable || !mIsShowing || mCurrentListVideoView == null) {
+        if (!mIsPipEnable || !mIsShowing || mCurrentListVideoView == null) {
             return;
         }
         mIsShowing = false;
         if (releasePlayer) {
+            // 完全销毁
             mCurrentListVideoView.release();
-            mSuspensionView.removeAllViews();
-            mSuspensionView.detachFromWindow();
+            if (isSuspensionType()) {
+                // 悬浮窗移除
+                mSuspensionView.removeAllViews();
+                mSuspensionView.detachFromWindow();
+            } else {
+                // contentView 移除
+                Activity activity = PlayerUtils.scanForActivity(mRecyclerView.getContext());
+                if (activity == null){
+                    return;
+                }
+                ViewGroup contentView = activity.findViewById(android.R.id.content);
+                // 移除
+                contentView.removeView(mCurrentListVideoView);
+            }
+
             mCurrentListVideoView = null;
             mCurrentVideoBean = null;
         } else {
+            // 不销毁，回到列表中
+
             MediaController controller = mCurrentListVideoView.getControllerView();
             if (controller instanceof ListIjkMediaController) {
                 ((ListIjkMediaController) controller).showNormalController();
             }
-            mSuspensionView.removeAllViews();
-            mSuspensionView.detachFromWindow();
-        }
 
+            if (isSuspensionType()) {
+                // 悬浮窗移除
+                mSuspensionView.removeAllViews();
+                mSuspensionView.detachFromWindow();
+            } else {
+                // contentView 移除
+                Activity activity = PlayerUtils.scanForActivity(mRecyclerView.getContext());
+                if (activity == null){
+                    return;
+                }
+                ViewGroup contentView = activity.findViewById(android.R.id.content);
+                // 移除
+                contentView.removeView(mCurrentListVideoView);
+            }
+        }
+    }
+
+    /**
+     * @return ture 悬浮窗类型
+     */
+    public boolean isSuspensionType() {
+        return mPipType == PIP_TYPE_FLOAT_WINDOW;
     }
 
     public void reset() {
         mCurrentListVideoView = null;
         mCurrentVideoBean = null;
         mRecyclerView = null;
-        isSuspensionEnable = false;
+        mIsPipEnable = false;
         mIsShowing = false;
         mSuspensionView = null;
+        mPipType = -1;
     }
 
 }

@@ -138,17 +138,20 @@ public interface MediaPlayerControl {
     /**
      * 开始小屏
      */
+    @Deprecated
     void startTinyScreen();
 
     /**
      * 结束小屏
      */
+    @Deprecated
     void stopTinyScreen();
 
     /**
      * 是否小屏播放
      * @return
      */
+    @Deprecated
     boolean isTinyScreen();
 
 

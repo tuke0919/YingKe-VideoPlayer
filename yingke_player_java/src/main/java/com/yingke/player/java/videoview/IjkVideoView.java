@@ -259,6 +259,7 @@ public class IjkVideoView extends IjkBaseVideoView {
 
     @Override
     public void startTinyScreen() {
+        // 这里和业务没关系，应该add和业务相关的播放器，很多业务情况不是很满足
         if (mIsTinyScreen){
             return;
         }
@@ -269,6 +270,8 @@ public class IjkVideoView extends IjkBaseVideoView {
         mOrientationEventListener.disable();
         // 移除
         this.removeView(mPlayerContainer);
+
+        // 实际是添加到contentView上
         ViewGroup contentView = activity.findViewById(android.R.id.content);
         int width = mTinyScreenSize[0];
         if (width <= 0) {

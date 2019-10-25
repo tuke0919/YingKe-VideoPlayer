@@ -139,7 +139,7 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
         // 绑定列表
         SinglePlayerManager.getInstance().attachRecycleView(mRecyclerView);
         // 开启悬浮窗
-        SinglePlayerManager.getInstance().enableSuspensionWindow(getContext(), true);
+        SinglePlayerManager.getInstance().enablePip(getContext(), true);
 
     }
 
@@ -209,7 +209,7 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
         super.onDestroy();
         EventBus.getDefault().unregister(this);
 
-        if (SinglePlayerManager.getInstance().isSuspensionEnable()) {
+        if (SinglePlayerManager.getInstance().isPipEnable()) {
             SinglePlayerManager.getInstance().stopFloatWindow();
         }
         SinglePlayerManager.getInstance().releaseVideoPlayer();
@@ -251,7 +251,7 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
         if (videoBean.equals(SinglePlayerManager.getInstance().getCurrentVideoBean())) {
             // 当前正在播放
 
-            if (SinglePlayerManager.getInstance().isSuspensionEnable()) {
+            if (SinglePlayerManager.getInstance().isPipEnable()) {
 
                 if (!SinglePlayerManager.getInstance().isShowing()) {
                     // 有显示悬浮窗
