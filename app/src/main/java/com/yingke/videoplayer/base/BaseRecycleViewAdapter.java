@@ -1,4 +1,4 @@
-package com.yingke.videoplayer.home;
+package com.yingke.videoplayer.base;
 
 import android.content.Context;
 import android.view.LayoutInflater;

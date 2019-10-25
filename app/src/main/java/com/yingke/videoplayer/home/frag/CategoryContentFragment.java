@@ -1,4 +1,4 @@
-package com.yingke.videoplayer.home;
+package com.yingke.videoplayer.home.frag;
 
 import android.app.Activity;
 import android.os.Bundle;

@@ -1,6 +1,5 @@
 package com.yingke.videoplayer.main;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.DrawableRes;
@@ -13,32 +12,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.base.BaseActivity;
 import com.yingke.videoplayer.center.CommunityFragment;
-import com.yingke.videoplayer.home.HomeFragment;
-import com.yingke.videoplayer.home.bean.ListVideoData;
+import com.yingke.videoplayer.home.frag.HomeFragment;
 import com.yingke.videoplayer.personal.PersonalFragment;
 import com.yingke.videoplayer.tiktok.TiktokFragment;
-import com.yingke.videoplayer.util.DeviceUtil;
-import com.yingke.videoplayer.util.EncryptUtils;
-import com.yingke.videoplayer.util.FileUtil;
-import com.yingke.videoplayer.util.FrescoUtil;
-import com.yingke.videoplayer.util.PlayerUtil;
-import com.yingke.videoplayer.util.StringUtil;
-import com.yingke.videoplayer.worker.WorkerCenter;
-import com.yingke.videoplayer.worker.WorkerTask;
 
-import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 
 public class MainActivity extends BaseActivity {
 

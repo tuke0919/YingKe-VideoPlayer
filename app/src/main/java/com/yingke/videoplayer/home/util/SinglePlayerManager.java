@@ -1,4 +1,4 @@
-package com.yingke.videoplayer.home;
+package com.yingke.videoplayer.home.util;
 
 import android.view.View;
 import android.view.ViewParent;

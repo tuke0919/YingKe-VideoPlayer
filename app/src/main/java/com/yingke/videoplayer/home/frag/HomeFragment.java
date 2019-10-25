@@ -1,4 +1,4 @@
-package com.yingke.videoplayer.home;
+package com.yingke.videoplayer.home.frag;
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;
@@ -14,6 +14,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.base.BaseFragment;
+import com.yingke.videoplayer.home.adapter.TopTabAdapter;
+import com.yingke.videoplayer.home.bean.TopTabData;
 import com.yingke.videoplayer.widget.ObservableXTabLayout;
 
 import java.util.List;

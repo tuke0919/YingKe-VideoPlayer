@@ -1,11 +1,10 @@
-package com.yingke.videoplayer.home;
+package com.yingke.videoplayer.home.frag;
 
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -13,6 +12,7 @@ import com.yingke.player.java.PlayerLog;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.home.adapter.ListVideoAdapter;
 import com.yingke.videoplayer.home.bean.ListVideoData;
+import com.yingke.videoplayer.home.util.SinglePlayerManager;
 import com.yingke.videoplayer.util.EncryptUtils;
 import com.yingke.videoplayer.util.FileUtil;
 import com.yingke.videoplayer.util.StringUtil;

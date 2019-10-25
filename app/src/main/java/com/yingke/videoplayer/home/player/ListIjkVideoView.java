@@ -13,12 +13,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.yingke.player.java.IVideoBean;
 import com.yingke.player.java.controller.BaseMediaController;
-import com.yingke.player.java.controller.MediaController;
 import com.yingke.player.java.videoview.IjkVideoView;
 import com.yingke.videoplayer.R;
-import com.yingke.videoplayer.home.SinglePlayerManager;
 import com.yingke.videoplayer.widget.BaseListVideoView;
 
 /**

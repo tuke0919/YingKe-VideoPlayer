@@ -1,15 +1,15 @@
-package com.yingke.videoplayer.home;
+package com.yingke.videoplayer.home.bean;
 
 import androidx.annotation.IntDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import static com.yingke.videoplayer.home.TopTabData.TabType.TAB_COURSE_MENU;
-import static com.yingke.videoplayer.home.TopTabData.TabType.TAB_OTHER;
-import static com.yingke.videoplayer.home.TopTabData.TabType.TAB_RECOMMEND;
-import static com.yingke.videoplayer.home.TopTabData.TabType.TAB_SHORT_VIDEO;
-import static com.yingke.videoplayer.home.TopTabData.TabType.TAB_SUBSCRIBE;
+import static com.yingke.videoplayer.home.bean.TopTabData.TabType.TAB_COURSE_MENU;
+import static com.yingke.videoplayer.home.bean.TopTabData.TabType.TAB_OTHER;
+import static com.yingke.videoplayer.home.bean.TopTabData.TabType.TAB_RECOMMEND;
+import static com.yingke.videoplayer.home.bean.TopTabData.TabType.TAB_SHORT_VIDEO;
+import static com.yingke.videoplayer.home.bean.TopTabData.TabType.TAB_SUBSCRIBE;
 
 /**
  * 功能：

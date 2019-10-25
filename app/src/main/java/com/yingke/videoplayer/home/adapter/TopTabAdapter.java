@@ -1,4 +1,4 @@
-package com.yingke.videoplayer.home;
+package com.yingke.videoplayer.home.adapter;
 
 import android.graphics.Color;
 import androidx.annotation.Nullable;
@@ -11,6 +11,9 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 
 import com.yingke.player.java.PlayerLog;
+import com.yingke.videoplayer.home.bean.TopTabData;
+import com.yingke.videoplayer.home.frag.CategoryContentFragment;
+import com.yingke.videoplayer.home.frag.RecommendFragment;
 import com.yingke.videoplayer.util.CollectionUtil;
 
 import java.util.ArrayList;
