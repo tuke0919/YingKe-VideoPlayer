@@ -8,6 +8,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.yingke.player.java.controller.BaseMediaController;
+import com.yingke.player.java.controller.MediaController;
 import com.yingke.player.java.videoview.IjkVideoView;
 import com.yingke.videoplayer.widget.BaseListVideoView;
 
@@ -67,12 +68,12 @@ public class ListTiktokVideoView extends BaseListVideoView {
     }
 
     @Override
-    protected BaseMediaController getControllerView() {
+    public MediaController getControllerView() {
         return null;
     }
 
     @Override
-    protected IjkVideoView getIjkVideoView() {
+    public IjkVideoView getIjkVideoView() {
         return mIjkVideoView;
     }
 

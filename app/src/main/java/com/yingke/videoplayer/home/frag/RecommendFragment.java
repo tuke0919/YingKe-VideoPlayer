@@ -209,6 +209,9 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
         super.onDestroy();
         EventBus.getDefault().unregister(this);
 
+        if (SinglePlayerManager.getInstance().isSuspensionEnable()) {
+            SinglePlayerManager.getInstance().stopFloatWindow();
+        }
         SinglePlayerManager.getInstance().releaseVideoPlayer();
         SinglePlayerManager.getInstance().reset();
     }

@@ -7,9 +7,11 @@ import android.view.ViewParent;
 import android.widget.FrameLayout;
 
 import com.yingke.player.java.IVideoBean;
+import com.yingke.player.java.controller.MediaController;
 import com.yingke.videoplayer.home.adapter.ListVideoAdapter;
 import com.yingke.videoplayer.home.item.ListVideoVH;
 import com.yingke.videoplayer.home.pip.SuspensionView;
+import com.yingke.videoplayer.home.player.ListIjkMediaController;
 import com.yingke.videoplayer.widget.BaseListVideoView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -198,9 +200,19 @@ public class SinglePlayerManager {
         mIsShowing = true;
 
         removePlayerNotRelease();
-
+        MediaController controller = mCurrentListVideoView.getControllerView();
+        if (controller instanceof ListIjkMediaController) {
+            ((ListIjkMediaController) controller).showPipController();
+        }
         mSuspensionView.addView(mCurrentListVideoView);
         mSuspensionView.attachToWindow();
+    }
+
+    /**
+     * 关闭悬浮窗
+     */
+    public void stopFloatWindow() {
+        stopFloatWindow(true);
     }
 
     /**
@@ -218,22 +230,23 @@ public class SinglePlayerManager {
             mCurrentListVideoView = null;
             mCurrentVideoBean = null;
         } else {
+            MediaController controller = mCurrentListVideoView.getControllerView();
+            if (controller instanceof ListIjkMediaController) {
+                ((ListIjkMediaController) controller).showNormalController();
+            }
             mSuspensionView.removeAllViews();
             mSuspensionView.detachFromWindow();
         }
 
     }
 
-
-
-
-
-
-
     public void reset() {
         mCurrentListVideoView = null;
         mCurrentVideoBean = null;
         mRecyclerView = null;
+        isSuspensionEnable = false;
+        mIsShowing = false;
+        mSuspensionView = null;
     }
 
 }

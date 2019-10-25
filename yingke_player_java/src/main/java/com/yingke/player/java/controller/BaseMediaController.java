@@ -26,9 +26,9 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 功能：
+ * 功能：视频控制器
  * </p>
- * <p>Copyright corp.netease.com 2019 All right reserved </p>
+ * <p>Copyright corp.xxx.com 2019 All right reserved </p>
  *
  * @author tuke 时间 2019/9/11
  */
@@ -58,6 +58,8 @@ public abstract class BaseMediaController extends FrameLayout {
     // 播放/暂停
     protected ImageView mPauseResumeBtn;
 
+    // 顶部总布局
+    protected RelativeLayout mBottomView;
     // 当前时间
     protected TextView mCurrentTime;
     // 总时间
@@ -135,6 +137,9 @@ public abstract class BaseMediaController extends FrameLayout {
         if (mPauseResumeBtn != null) {
             mPauseResumeBtn.setOnClickListener(mPauseResumeListener);
         }
+
+        mBottomView = mRootView.findViewById(R.id.controller_bottom_view);
+
         // 当前时间
         mCurrentTime = mRootView.findViewById(R.id.controller_current_time);
         // 总时间

@@ -63,9 +63,9 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
     }
 
 
-    protected abstract BaseMediaController getControllerView();
+    public abstract MediaController getControllerView();
 
-    protected abstract IjkVideoView getIjkVideoView();
+    public abstract IjkVideoView getIjkVideoView();
 
     /**
      * 初始化 播放器

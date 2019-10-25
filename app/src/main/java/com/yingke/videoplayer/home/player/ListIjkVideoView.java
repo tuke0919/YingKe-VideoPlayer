@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.yingke.player.java.controller.BaseMediaController;
+import com.yingke.player.java.controller.MediaController;
 import com.yingke.player.java.videoview.IjkVideoView;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.widget.BaseListVideoView;
@@ -48,7 +49,6 @@ public class ListIjkVideoView extends BaseListVideoView {
     private RelativeLayout mRePlayView;
     private TextView mRePlayBtn;
 
-    private boolean attachToManager = false;
 
     public ListIjkVideoView(@NonNull Context context) {
         this(context, null);
@@ -65,12 +65,12 @@ public class ListIjkVideoView extends BaseListVideoView {
     }
 
     @Override
-    protected BaseMediaController getControllerView() {
+    public MediaController getControllerView() {
         return mMediaController;
     }
 
     @Override
-    protected IjkVideoView getIjkVideoView() {
+    public IjkVideoView getIjkVideoView() {
         return mIjkVideoView;
     }
 
@@ -126,11 +126,6 @@ public class ListIjkVideoView extends BaseListVideoView {
         initVideoPlayerView();
     }
 
-    public void attachPlayerManager(){
-        attachToManager = true;
-//        SinglePlayerManager.getInstance().attachVideoPlayer(this);
-
-    }
 
     /**
      * 刚开时 设置数据

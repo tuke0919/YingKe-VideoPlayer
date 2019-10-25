@@ -14,7 +14,7 @@
         android:layout_height="match_parent"/>
 
     <!-- 控制器 -->
-    <com.yingke.player.java.controller.MediaController
+    <com.yingke.videoplayer.home.player.ListIjkMediaController
         android:id="@+id/ijk_media_controller"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
