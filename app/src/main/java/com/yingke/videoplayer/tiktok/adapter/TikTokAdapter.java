@@ -12,7 +12,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.yingke.player.java.PlayerLog;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.home.BaseRecycleViewAdapter;
-import com.yingke.videoplayer.tiktok.ListTiktokVideoView;
+import com.yingke.videoplayer.tiktok.player.ListTiktokVideoView;
 import com.yingke.videoplayer.tiktok.bean.ListTiktokBean;
 import com.yingke.videoplayer.util.EncryptUtils;
 import com.yingke.videoplayer.util.FileUtil;

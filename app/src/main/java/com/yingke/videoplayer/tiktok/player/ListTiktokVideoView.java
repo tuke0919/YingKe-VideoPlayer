@@ -1,4 +1,4 @@
-package com.yingke.videoplayer.tiktok;
+package com.yingke.videoplayer.tiktok.player;
 
 import android.content.Context;
 import android.text.TextUtils;

@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.yingke.player.java.IVideoBean;
 import com.yingke.player.java.controller.BaseMediaController;
+import com.yingke.player.java.controller.MediaController;
 import com.yingke.player.java.controller.MediaPlayerControl;
 import com.yingke.player.java.listener.OnPlayStateListener;
 import com.yingke.player.java.videoview.IjkVideoView;
@@ -46,6 +47,8 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
 
     // 播放器
     protected IjkVideoView mIjkVideoView;
+    // 控制器
+    protected MediaController mMediaController;
 
     public BaseListVideoView(@NonNull Context context) {
         super(context);

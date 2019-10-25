@@ -112,18 +112,12 @@ public class ListVideoData implements IVideoBean {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ListVideoData videoData = (ListVideoData) o;
-        return commentCount == videoData.commentCount &&
-                voteCount == videoData.voteCount &&
-                isVote == videoData.isVote &&
-                Objects.equals(title, videoData.title) &&
-                Objects.equals(url, videoData.url) &&
-                Objects.equals(authorName, videoData.authorName) &&
-                Objects.equals(authorAvatar, videoData.authorAvatar) &&
-                Objects.equals(description, videoData.description);
+        return Objects.equals(url, videoData.url);
+
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, url, authorName, authorAvatar, description, commentCount, voteCount, isVote);
+        return Objects.hash(url);
     }
 }

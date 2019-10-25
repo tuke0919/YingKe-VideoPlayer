@@ -1,5 +1,6 @@
 package com.yingke.videoplayer.home;
 
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,7 @@ import com.yingke.videoplayer.home.bean.ListVideoData;
 import com.yingke.videoplayer.util.EncryptUtils;
 import com.yingke.videoplayer.util.FileUtil;
 import com.yingke.videoplayer.util.StringUtil;
-import com.yingke.videoplayer.widget.ListIjkVideoView;
+import com.yingke.videoplayer.home.player.ListIjkVideoView;
 import com.yingke.widget.base.BaseRecycleViewAdapter;
 import com.yingke.widget.pulltorefresh.PullToRefreshBase;
 import com.yingke.widget.pulltorefresh.fragment.BaseRecyclerViewFragment;
@@ -28,6 +29,7 @@ import java.io.File;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
@@ -53,6 +55,8 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
 
     private View mVideoRootView;
 
+    private boolean isInited = false;
+
     @Override
     protected int getLayoutResId() {
         return R.layout.frag_recommend;
@@ -72,6 +76,24 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
         mRecyclerView.addOnChildAttachStateChangeListener(this);
 
         loadData(true);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!isInited) {
+            return;
+        }
+
+        if (!isVisibleToUser ) {
+            SinglePlayerManager.getInstance().onPause();
+        }
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        isInited = true;
     }
 
     @Override
@@ -114,22 +136,22 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
         } else {
             mRefreshView.showFooter();
         }
+        // 绑定列表
+        SinglePlayerManager.getInstance().attachRecycleView(mRecyclerView);
+
     }
 
     @Override
     public void onListVideoPlay(View rootView, FrameLayout videoContainer, ListVideoData videoData) {
-        // 恢复旧播放器
-        resetViewHolder(mVideoRootView);
-        mVideoRootView = rootView;
-
         // 点击播放视频
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         ListIjkVideoView ijkVideoView = new ListIjkVideoView(getContext());
         ijkVideoView.setTag("ijkVideoView");
-        // 设置数据
-        videoContainer.addView(ijkVideoView, params);
-        ijkVideoView.setVideoOnline(videoData);
 
+        SinglePlayerManager.getInstance().attachVideoPlayer(videoData, ijkVideoView);
+        // 设置数据
+        videoContainer.addView(ijkVideoView, 0,  params);
+        ijkVideoView.setVideoOnline(videoData);
 
     }
 
@@ -146,14 +168,40 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
         int index = mDataList.indexOf(videoData);
         if (index != -1) {
             mDataList.set(index, videoData);
+
+            SinglePlayerManager.getInstance().releaseVideoPlayer();
             mAdapter.notifyItemChanged(index);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        SinglePlayerManager.getInstance().onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+
+        SinglePlayerManager.getInstance().releaseVideoPlayer();
+        SinglePlayerManager.getInstance().reset();
     }
 
     @Override
@@ -163,30 +211,15 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
 
     @Override
     public void onChildViewDetachedFromWindow(@NonNull View view) {
-        resetViewHolder(view);
-    }
-
-    /**
-     * 恢复
-     * @param itemView
-     */
-    public void resetViewHolder(View itemView){
-        if (itemView == null) {
+        int position  = mRecyclerView.getChildAdapterPosition(view);
+        if (position <= RecyclerView.NO_POSITION) {
             return;
         }
-        FrameLayout videoContainer = itemView.findViewById(R.id.video_view_container);
-        // 停止播放
-        if (videoContainer != null && videoContainer.getChildCount() != 0) {
-            ListIjkVideoView listIjkVideoView = itemView.findViewWithTag("ijkVideoView");
-            if (listIjkVideoView != null) {
-                listIjkVideoView.stopPlayback();
-            }
-            videoContainer.removeAllViews();
-        }
-        // 切回封面
-        RelativeLayout coverView = itemView.findViewById(R.id.cover_view);
-        coverView.setVisibility(View.VISIBLE);
 
-        mVideoRootView = null;
+        ListVideoData videoBean = mDataList.get(position);
+        if (videoBean.equals(SinglePlayerManager.getInstance().getCurrentVideoBean())) {
+            SinglePlayerManager.getInstance().releaseVideoPlayer();
+        }
+
     }
 }

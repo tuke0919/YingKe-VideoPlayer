@@ -11,6 +11,7 @@ import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.base.BaseFragment;
 import com.yingke.videoplayer.tiktok.adapter.TikTokAdapter;
 import com.yingke.videoplayer.tiktok.bean.ListTiktokBean;
+import com.yingke.videoplayer.tiktok.player.ListTiktokVideoView;
 import com.yingke.videoplayer.util.EncryptUtils;
 import com.yingke.videoplayer.util.FileUtil;
 import com.yingke.videoplayer.util.StringUtil;

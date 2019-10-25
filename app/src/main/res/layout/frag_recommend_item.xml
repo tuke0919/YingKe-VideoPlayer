@@ -3,92 +3,95 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#ffffff"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
 
+<!--    <FrameLayout-->
+<!--        android:id="@+id/video_view_header"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="220dp">-->
+
+<!--    </FrameLayout>-->
+
+
+    <!--视频容器-->
     <FrameLayout
-        android:id="@+id/video_view_header"
+        android:id="@+id/video_view_container"
         android:layout_width="match_parent"
         android:layout_height="220dp">
 
-        <!--视频容器-->
-        <FrameLayout
-            android:id="@+id/video_view_container"
-            android:layout_width="match_parent"
-            android:layout_height="220dp">
+    </FrameLayout>
 
-        </FrameLayout>
+    <!--封面-->
+    <RelativeLayout
+        android:id="@+id/cover_view"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:visibility="visible"
+        >
 
-        <!--封面-->
-        <RelativeLayout
-            android:id="@+id/cover_view"
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/cover_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible"
-            >
+            app:actualImageResource="@drawable/videofeed_14"
+            app:actualImageScaleType="fitXY"
+            app:fadeDuration="100"
+            />
 
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/cover_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:actualImageResource="@drawable/videofeed_14"
-                app:actualImageScaleType="fitXY"
-                app:fadeDuration="100"
-                />
-
-<!--            <ImageView-->
-<!--                android:id="@+id/cover_image"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:scaleType="fitXY"-->
-<!--                android:src="@drawable/videofeed_14"-->
-<!--                android:layout_alignParentTop="true"-->
-<!--                android:layout_alignParentLeft="true"-->
-<!--                android:layout_alignParentStart="true" />-->
+        <!--            <ImageView-->
+        <!--                android:id="@+id/cover_image"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="match_parent"-->
+        <!--                android:scaleType="fitXY"-->
+        <!--                android:src="@drawable/videofeed_14"-->
+        <!--                android:layout_alignParentTop="true"-->
+        <!--                android:layout_alignParentLeft="true"-->
+        <!--                android:layout_alignParentStart="true" />-->
 
 
-            <!--竖屏 标题-->
-            <TextView
-                android:id="@+id/cover_title"
-                android:layout_width="match_parent"
-                android:layout_height="45dip"
-                android:layout_marginRight="16dip"
-                android:layout_marginLeft="16dp"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:maxLines="2"
-                android:text="《极限挑战》未播：这三个人笑疯了，黄渤，孙红雷嘲讽宋小宝太黑看不见..."
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:textSize="17sp" />
+        <!--竖屏 标题-->
+        <TextView
+            android:id="@+id/cover_title"
+            android:layout_width="match_parent"
+            android:layout_height="45dip"
+            android:layout_marginRight="16dip"
+            android:layout_marginLeft="16dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:text="《极限挑战》未播：这三个人笑疯了，黄渤，孙红雷嘲讽宋小宝太黑看不见..."
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="17sp" />
 
-            <ImageView
-                android:id="@+id/cover_play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/icon_play" />
+        <ImageView
+            android:id="@+id/cover_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/icon_play" />
 
-        </RelativeLayout>
-    </FrameLayout>
+    </RelativeLayout>
 
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:layout_below="@+id/video_view_header"
+        android:layout_below="@+id/video_view_container"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         >
 
         <!--头像-->
-<!--        <com.yingke.widget.roundimage.CircleImageView-->
-<!--            android:id="@+id/iv_user_avatar"-->
-<!--            android:layout_width="30dp"-->
-<!--            android:layout_height="30dp"-->
-<!--            android:layout_centerVertical="true"-->
-<!--            android:src="@drawable/avatar"-->
-<!--            app:civ_border_width="1dp"-->
-<!--            app:civ_border_color="@android:color/white" />-->
+        <!--        <com.yingke.widget.roundimage.CircleImageView-->
+        <!--            android:id="@+id/iv_user_avatar"-->
+        <!--            android:layout_width="30dp"-->
+        <!--            android:layout_height="30dp"-->
+        <!--            android:layout_centerVertical="true"-->
+        <!--            android:src="@drawable/avatar"-->
+        <!--            app:civ_border_width="1dp"-->
+        <!--            app:civ_border_color="@android:color/white" />-->
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/user_avatar"
@@ -206,6 +209,10 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             />
+
+
     </RelativeLayout>
+
+
 
 </RelativeLayout>

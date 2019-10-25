@@ -471,6 +471,13 @@ public abstract class BaseMediaController extends FrameLayout {
     private Runnable mShowHideTask;
     private Handler mMainHandler = new Handler(Looper.getMainLooper());
 
+
+    /**
+     * 显示控制器直到隐藏
+     */
+    public void showUntilHide(){
+        show(0);
+    }
     /**
      * 显示 控制器
      */

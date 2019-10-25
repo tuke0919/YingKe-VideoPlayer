@@ -1,4 +1,4 @@
-package com.yingke.videoplayer.widget;
+package com.yingke.videoplayer.home.player;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
@@ -18,6 +18,8 @@ import com.yingke.player.java.controller.BaseMediaController;
 import com.yingke.player.java.controller.MediaController;
 import com.yingke.player.java.videoview.IjkVideoView;
 import com.yingke.videoplayer.R;
+import com.yingke.videoplayer.home.SinglePlayerManager;
+import com.yingke.videoplayer.widget.BaseListVideoView;
 
 /**
  * 功能：业务相关的 播放器控件
@@ -31,9 +33,6 @@ import com.yingke.videoplayer.R;
  * <p>
  */
 public class ListIjkVideoView extends BaseListVideoView {
-
-    // 控制器
-    private MediaController mMediaController;
 
     // 播放错误
     private RelativeLayout mPlayerErrorView;
@@ -51,6 +50,8 @@ public class ListIjkVideoView extends BaseListVideoView {
     // 播放完成
     private RelativeLayout mRePlayView;
     private TextView mRePlayBtn;
+
+    private boolean attachToManager = false;
 
     public ListIjkVideoView(@NonNull Context context) {
         this(context, null);
@@ -126,6 +127,12 @@ public class ListIjkVideoView extends BaseListVideoView {
     private void initData() {
         initControllerView();
         initVideoPlayerView();
+    }
+
+    public void attachPlayerManager(){
+        attachToManager = true;
+//        SinglePlayerManager.getInstance().attachVideoPlayer(this);
+
     }
 
     /**

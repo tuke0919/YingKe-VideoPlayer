@@ -13,10 +13,13 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.yingke.player.java.PlayerLog;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.home.bean.ListVideoData;
+import com.yingke.videoplayer.home.item.ListVideoVH;
+import com.yingke.videoplayer.home.player.ListIjkVideoView;
 import com.yingke.videoplayer.util.EncryptUtils;
 import com.yingke.videoplayer.util.FileUtil;
 import com.yingke.videoplayer.util.FrescoUtil;
 import com.yingke.videoplayer.util.PlayerUtil;
+import com.yingke.videoplayer.widget.BaseListVideoView;
 import com.yingke.widget.base.BaseRecycleViewAdapter;
 
 import org.greenrobot.eventbus.EventBus;
@@ -60,93 +63,21 @@ public class ListVideoAdapter extends BaseRecycleViewAdapter<ListVideoData> {
 
     public class ListVideoHolder extends BaseViewHolder<ListVideoData> {
 
-        private FrameLayout mVideoContainer;
-        private RelativeLayout mCoverView;
-        private SimpleDraweeView mCoverImage;
-        private TextView mCoverTitle;
-        private ImageView mCoverPlay;
-
-        private SimpleDraweeView mAuthorAvatar;
-        private TextView mAuthorName;
-        private TextView mDescription;
-        private TextView mCommentCount;
-        private TextView mVoteCount;
-
-        private int position;
-        private ListVideoData mListVideoData;
+        private ListVideoVH mListVideoVH;
 
         public ListVideoHolder(View itemView) {
             super(itemView);
-            mVideoContainer = itemView.findViewById(R.id.video_view_container);
-            mCoverView = itemView.findViewById(R.id.cover_view);
-            mCoverImage = itemView.findViewById(R.id.cover_image);
-            mCoverTitle = itemView.findViewById(R.id.cover_title);
-            mCoverPlay = itemView.findViewById(R.id.cover_play);
-
-            mAuthorAvatar = itemView.findViewById(R.id.user_avatar);
-            mAuthorName = itemView.findViewById(R.id.tv_user_name);
-            mDescription = itemView.findViewById(R.id.tv_description);
-            mCommentCount = itemView.findViewById(R.id.tv_comments);
-            mVoteCount = itemView.findViewById(R.id.iv_vote_view);
-
-            mCoverPlay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mCoverView.setVisibility(View.GONE);
-                    if (mListener != null) {
-                        mListener.onListVideoPlay(mRootView, mVideoContainer, mListVideoData);
-                    }
-                }
-            });
+            mListVideoVH = new ListVideoVH(itemView, mListener);
         }
 
         @Override
         public void onRefreshData(int position, ListVideoData data) {
-            PlayerLog.e(TAG, "position = " + position  );
-            if (data == null) {
-                return;
-            }
-            this.position = position;
-            mListVideoData = data;
-
-            if (isCoverVisible()) {
-                // 标题
-                mCoverTitle.setText(data.getTitle());
-                // 封面图
-                String thumbPath = data.getThumbPath();
-                if (!TextUtils.isEmpty(thumbPath)){
-                    FrescoUtil.displayImage(mCoverImage, new File(thumbPath));
-                } else {
-                    File thumbFile = FileUtil.getVideoThumbFile(context, EncryptUtils.md5String(data.getUrl()));
-                    if (thumbFile.exists()) {
-                        data.setThumbPath(thumbFile.getAbsolutePath());
-                    }
-                    FrescoUtil.displayImage(mCoverImage, thumbFile);
-                }
-            }
-            // 用户信息
-            FrescoUtil.displayImage(mAuthorAvatar, data.getAuthorAvatar());
-            mAuthorName.setText(data.getAuthorName());
-            mDescription.setText(data.getDescription());
-            mCommentCount.setText(String.valueOf(data.getCommentCount()));
-            mVoteCount.setText(String.valueOf(data.getVoteCount()));
-
+            mListVideoVH.onRefreshData(position, data);
         }
 
-        /**
-         * @return 封面可见，判断播放标志
-         */
-        public boolean isCoverVisible(){
-            return  mCoverView != null && mCoverView.getVisibility() == View.VISIBLE;
+        public ListVideoVH getListVideoVH() {
+            return mListVideoVH;
         }
-
-        /**
-         * @param thumbImagePath 视频封面
-         */
-        public void changeImage(String thumbImagePath){
-            FrescoUtil.displayImage(mCoverImage, new File(thumbImagePath));
-        }
-
     }
     private OnListVideoClickListener mListener;
 

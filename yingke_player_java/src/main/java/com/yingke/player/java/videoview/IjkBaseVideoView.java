@@ -134,7 +134,7 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
         super(context, attrs, defStyleAttr);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.IjkBaseVideoView);
         mAutoRotate = typedArray.getBoolean(R.styleable.IjkBaseVideoView_autoRotate, false);
-        mUsingSurfaceView = typedArray.getBoolean(R.styleable.IjkBaseVideoView_usingSurfaceView, true);
+        mUsingSurfaceView = typedArray.getBoolean(R.styleable.IjkBaseVideoView_usingSurfaceView, false);
         mIsLooping = typedArray.getBoolean(R.styleable.IjkBaseVideoView_looping, false);
         mEnableAudioFocus = typedArray.getBoolean(R.styleable.IjkBaseVideoView_enableAudioFocus, true);
         mEnableMediaCodec = typedArray.getBoolean(R.styleable.IjkBaseVideoView_enableMediaCodec, false);
@@ -166,6 +166,7 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
         if (mAddToVideoViewManager) {
             MediaPlayerManager.instance().releaseVideoPlayer();
             MediaPlayerManager.instance().setIjkBaseVideoView(this);
+
         }
 
         // 音频焦点
