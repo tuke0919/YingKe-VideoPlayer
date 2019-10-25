@@ -1,12 +1,15 @@
 package com.yingke.videoplayer.home.util;
 
+import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
 
 import com.yingke.player.java.IVideoBean;
 import com.yingke.videoplayer.home.adapter.ListVideoAdapter;
 import com.yingke.videoplayer.home.item.ListVideoVH;
+import com.yingke.videoplayer.home.pip.SuspensionView;
 import com.yingke.videoplayer.widget.BaseListVideoView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,6 +48,10 @@ public class SinglePlayerManager {
     }
 
     public void attachVideoPlayer(IVideoBean bean, BaseListVideoView listVideoView) {
+
+        if (isEnableAndShowing()) {
+            stopFloatWindow(true);
+        }
         releaseVideoPlayer();
         mCurrentVideoBean = bean;
         mCurrentListVideoView = listVideoView;
@@ -55,6 +62,11 @@ public class SinglePlayerManager {
      */
     public void releaseVideoPlayer() {
         if (mCurrentListVideoView != null) {
+
+            if (isEnableAndShowing() ) {
+                return;
+            }
+
             removePlayer();
             mCurrentListVideoView = null;
             mCurrentVideoBean = null;
@@ -65,11 +77,30 @@ public class SinglePlayerManager {
      * 移除播放器
      */
     private void removePlayer() {
+        if (mCurrentListVideoView == null) {
+            return;
+        }
         ViewParent parent = mCurrentListVideoView.getParent();
         if (parent instanceof FrameLayout) {
             ViewParent itemView = parent.getParent();
             if (itemView != null) {
-                showIdleView((View) itemView);
+                showIdleView((View) itemView, true);
+            }
+        }
+    }
+
+    /**
+     * 移除但不释放 播放器
+     */
+    private void removePlayerNotRelease() {
+        if (mCurrentListVideoView == null) {
+            return;
+        }
+        ViewParent videoParent = mCurrentListVideoView.getParent();
+        if (videoParent instanceof ViewGroup) {
+            ViewParent itemView = videoParent.getParent();
+            if (itemView != null) {
+                showIdleView((View) itemView, false);
             }
         }
     }
@@ -77,15 +108,16 @@ public class SinglePlayerManager {
     /**
      * 显示空闲页
      * @param itemView
+     * @param releasePlayer
      */
-    private void showIdleView(View itemView) {
+    private void showIdleView(View itemView, boolean releasePlayer) {
         if (itemView == null) {
             return;
         }
         RecyclerView.ViewHolder holder = mRecyclerView.findContainingViewHolder(itemView);
         if (holder instanceof ListVideoAdapter.ListVideoHolder) {
             ListVideoVH listVideoVH = ((ListVideoAdapter.ListVideoHolder) holder).getListVideoVH();
-            listVideoVH.showIdleView();
+            listVideoVH.showIdleView(releasePlayer);
         }
     }
 
@@ -94,6 +126,13 @@ public class SinglePlayerManager {
      */
     public IVideoBean getCurrentVideoBean() {
         return mCurrentVideoBean;
+    }
+
+    /**
+     * @return 当前播放器
+     */
+    public BaseListVideoView getCurrentListVideoView() {
+        return mCurrentListVideoView;
     }
 
     /**
@@ -115,6 +154,80 @@ public class SinglePlayerManager {
             mCurrentListVideoView.pause();
         }
     }
+
+    //#### 画中画
+
+    private boolean isSuspensionEnable = false;
+    private boolean mIsShowing = false;
+    private SuspensionView mSuspensionView;
+
+    /**
+     * 启动悬浮窗
+     * @param context
+     * @param suspensionEnable
+     */
+    public void enableSuspensionWindow(Context context, boolean suspensionEnable) {
+        isSuspensionEnable = suspensionEnable;
+        if (isSuspensionEnable) {
+            mSuspensionView = new SuspensionView(context);
+        }
+    }
+
+    public boolean isSuspensionEnable() {
+        return isSuspensionEnable;
+    }
+
+    public boolean isShowing() {
+        return mIsShowing;
+    }
+
+    /**
+     * @return 悬浮窗显示
+     */
+    public boolean isEnableAndShowing(){
+        return isSuspensionEnable() && isShowing();
+    }
+
+    /**
+     * 开始悬浮窗
+     */
+    public void startFloatWindow() {
+        if (!isSuspensionEnable || mIsShowing || mCurrentListVideoView == null) {
+            return;
+        }
+        mIsShowing = true;
+
+        removePlayerNotRelease();
+
+        mSuspensionView.addView(mCurrentListVideoView);
+        mSuspensionView.attachToWindow();
+    }
+
+    /**
+     * 关闭悬浮窗
+     */
+    public void stopFloatWindow(boolean releasePlayer) {
+        if (!isSuspensionEnable || !mIsShowing || mCurrentListVideoView == null) {
+            return;
+        }
+        mIsShowing = false;
+        if (releasePlayer) {
+            mCurrentListVideoView.release();
+            mSuspensionView.removeAllViews();
+            mSuspensionView.detachFromWindow();
+            mCurrentListVideoView = null;
+            mCurrentVideoBean = null;
+        } else {
+            mSuspensionView.removeAllViews();
+            mSuspensionView.detachFromWindow();
+        }
+
+    }
+
+
+
+
+
 
 
     public void reset() {

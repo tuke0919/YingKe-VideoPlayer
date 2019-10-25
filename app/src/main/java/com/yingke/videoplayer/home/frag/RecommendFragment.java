@@ -12,11 +12,13 @@ import com.yingke.player.java.PlayerLog;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.home.adapter.ListVideoAdapter;
 import com.yingke.videoplayer.home.bean.ListVideoData;
+import com.yingke.videoplayer.home.item.ListVideoVH;
 import com.yingke.videoplayer.home.util.SinglePlayerManager;
 import com.yingke.videoplayer.util.EncryptUtils;
 import com.yingke.videoplayer.util.FileUtil;
 import com.yingke.videoplayer.util.StringUtil;
 import com.yingke.videoplayer.home.player.ListIjkVideoView;
+import com.yingke.videoplayer.widget.BaseListVideoView;
 import com.yingke.widget.base.BaseRecycleViewAdapter;
 import com.yingke.widget.pulltorefresh.PullToRefreshBase;
 import com.yingke.widget.pulltorefresh.fragment.BaseRecyclerViewFragment;
@@ -52,8 +54,6 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
     public static RecommendFragment newInstance(){
         return new RecommendFragment();
     }
-
-    private View mVideoRootView;
 
     private boolean isInited = false;
 
@@ -138,12 +138,15 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
         }
         // 绑定列表
         SinglePlayerManager.getInstance().attachRecycleView(mRecyclerView);
+        // 开启悬浮窗
+        SinglePlayerManager.getInstance().enableSuspensionWindow(getContext(), true);
 
     }
 
     @Override
     public void onListVideoPlay(View rootView, FrameLayout videoContainer, ListVideoData videoData) {
         // 点击播放视频
+
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         ListIjkVideoView ijkVideoView = new ListIjkVideoView(getContext());
         ijkVideoView.setTag("ijkVideoView");
@@ -153,6 +156,12 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
         videoContainer.addView(ijkVideoView, 0,  params);
         ijkVideoView.setVideoOnline(videoData);
 
+    }
+
+    @Override
+    public void onMoreClick(ListVideoData videoData) {
+        // 分享点击
+        SinglePlayerManager.getInstance().startFloatWindow();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
@@ -206,7 +215,26 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
 
     @Override
     public void onChildViewAttachedToWindow(@NonNull View view) {
+        int position  = mRecyclerView.getChildAdapterPosition(view);
+        if (position <= RecyclerView.NO_POSITION) {
+            return;
+        }
+        ListVideoData videoBean = mDataList.get(position);
+        if (videoBean.equals(SinglePlayerManager.getInstance().getCurrentVideoBean())) {
+            // 当前正在播放
+            if (SinglePlayerManager.getInstance().isEnableAndShowing()) {
+                // 有显示悬浮窗
 
+                // 停止悬浮窗
+                SinglePlayerManager.getInstance().stopFloatWindow(false);
+                // 插入列表
+                ListVideoVH listVideoVH = getListVideoVH(view);
+                if (listVideoVH != null) {
+                    BaseListVideoView listVideoView = SinglePlayerManager.getInstance().getCurrentListVideoView();
+                    listVideoVH.addVideoPlayer(listVideoView);
+                }
+            }
+        }
     }
 
     @Override
@@ -218,8 +246,34 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
 
         ListVideoData videoBean = mDataList.get(position);
         if (videoBean.equals(SinglePlayerManager.getInstance().getCurrentVideoBean())) {
-            SinglePlayerManager.getInstance().releaseVideoPlayer();
+            // 当前正在播放
+
+            if (SinglePlayerManager.getInstance().isSuspensionEnable()) {
+
+                if (!SinglePlayerManager.getInstance().isShowing()) {
+                    // 有显示悬浮窗
+                    SinglePlayerManager.getInstance().startFloatWindow();
+                }
+
+            } else {
+                // 没有显示悬浮窗
+                SinglePlayerManager.getInstance().releaseVideoPlayer();
+            }
         }
 
+    }
+
+    /**
+     *
+     * @param itemView Holder根布局
+     * @return
+     */
+    public ListVideoVH getListVideoVH(View itemView) {
+        RecyclerView.ViewHolder holder = mRecyclerView.findContainingViewHolder(itemView);
+        if (holder instanceof ListVideoAdapter.ListVideoHolder) {
+            ListVideoVH listVideoVH = ((ListVideoAdapter.ListVideoHolder) holder).getListVideoVH();
+            return listVideoVH;
+        }
+        return null;
     }
 }

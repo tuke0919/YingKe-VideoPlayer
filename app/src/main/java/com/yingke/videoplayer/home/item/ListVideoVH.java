@@ -14,6 +14,7 @@ import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.home.adapter.ListVideoAdapter;
 import com.yingke.videoplayer.home.bean.ListVideoData;
 import com.yingke.videoplayer.home.player.ListIjkVideoView;
+import com.yingke.videoplayer.home.util.SinglePlayerManager;
 import com.yingke.videoplayer.util.EncryptUtils;
 import com.yingke.videoplayer.util.FileUtil;
 import com.yingke.videoplayer.util.FrescoUtil;
@@ -50,6 +51,8 @@ public class ListVideoVH implements View.OnClickListener {
     private TextView mCommentCount;
     private TextView mVoteCount;
 
+    private ImageView mShareView;
+
     private int position;
     private ListVideoData mListVideoData;
 
@@ -69,8 +72,10 @@ public class ListVideoVH implements View.OnClickListener {
         mDescription = itemView.findViewById(R.id.tv_description);
         mCommentCount = itemView.findViewById(R.id.tv_comments);
         mVoteCount = itemView.findViewById(R.id.iv_vote_view);
+        mShareView = itemView.findViewById(R.id.iv_share_view);
 
         mCoverPlay.setOnClickListener(this);
+        mShareView.setOnClickListener(this);
 
     }
 
@@ -119,7 +124,15 @@ public class ListVideoVH implements View.OnClickListener {
      * 显示空闲界面
      */
     public void showIdleView() {
-        clearVideoPlayer(mVideoContainer);
+        showIdleView(true);
+    }
+
+    /**
+     * 显示空闲界面
+     * @param releasePlayer 是否释放播放器
+     */
+    public void showIdleView(boolean releasePlayer) {
+        clearVideoPlayer(mVideoContainer, releasePlayer);
         // 显示封面标题
         mCoverView.setVisibility(View.VISIBLE);
     }
@@ -128,15 +141,28 @@ public class ListVideoVH implements View.OnClickListener {
      * 清除播放器
      * @param videoContainer
      */
-    public void clearVideoPlayer(ViewGroup videoContainer) {
+    public void clearVideoPlayer(ViewGroup videoContainer, boolean releasePlayer) {
         if (videoContainer != null && videoContainer.getChildCount() > 0) {
-            ListIjkVideoView videoView = (ListIjkVideoView) videoContainer.getChildAt(0);
-            if (videoView != null) {
-                videoView.release();
-                videoView = null;
+            if (releasePlayer) {
+                ListIjkVideoView videoView = (ListIjkVideoView) videoContainer.getChildAt(0);
+                if (videoView != null) {
+                    videoView.release();
+                    videoView = null;
+                }
             }
             videoContainer.removeAllViews();
         }
+    }
+
+    /**
+     * 添加播放器
+     * @param listVideoView
+     */
+    public void addVideoPlayer(BaseListVideoView listVideoView) {
+        clearVideoPlayer(mVideoContainer, true);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        mVideoContainer.addView(listVideoView, 0, params);
+        mCoverView.setVisibility(View.GONE);
     }
 
     @Override
@@ -147,12 +173,24 @@ public class ListVideoVH implements View.OnClickListener {
                     return;
                 }
 
+                if (mListVideoData.equals(SinglePlayerManager.getInstance().getCurrentVideoBean())) {
+                    return;
+                }
+
                 mCoverView.setVisibility(View.GONE);
                 if (mListener != null) {
-                    clearVideoPlayer(mVideoContainer);
+                    clearVideoPlayer(mVideoContainer, true);
                     mListener.onListVideoPlay(ListVideoVH.this.itemView, mVideoContainer, mListVideoData);
                 }
                 break;
+            case R.id.iv_share_view:
+                // 分享
+                if (mListener != null) {
+                    mListener.onMoreClick(mListVideoData);
+                }
+
+                break;
+
         }
     }
 }

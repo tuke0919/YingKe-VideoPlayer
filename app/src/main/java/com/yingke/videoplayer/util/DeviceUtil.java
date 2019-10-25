@@ -77,7 +77,7 @@ public class DeviceUtil {
     /**
      * 状态栏高度
      */
-    public static int getStatusBarHeight(Activity mContext) {
+    public static int getStatusBarHeight(Context mContext) {
         if (STATUS_BAR_HEIGHT != 0) {
             return STATUS_BAR_HEIGHT;
         }
@@ -90,8 +90,7 @@ public class DeviceUtil {
             obj = c.newInstance();
             field = c.getField("status_bar_height");
             x = Integer.parseInt(field.get(obj).toString());
-            STATUS_BAR_HEIGHT = mContext.getResources()
-                    .getDimensionPixelSize(x);
+            STATUS_BAR_HEIGHT = mContext.getResources().getDimensionPixelSize(x);
         } catch (Exception e1) {
             e1.printStackTrace();
         }
