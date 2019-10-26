@@ -15,7 +15,7 @@ import java.util.Objects;
  * 最后修改人：无
  * <p>
  */
-public class ListTiktokBean implements IVideoBean {
+public class ListTiktokBean extends IVideoBean {
 
     private String id;
     // 视频链接
@@ -177,6 +177,7 @@ public class ListTiktokBean implements IVideoBean {
     public String getSource() {
         return url;
     }
+
 
     @Override
     public String getTitle() {

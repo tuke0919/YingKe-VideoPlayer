@@ -183,7 +183,7 @@ public class SinglePlayerManager {
      * @param isPipEnable
      */
     public void enablePip(Context context, boolean isPipEnable){
-        enablePip(context, isPipEnable, PIP_TYPE_TINY_SCREEN);
+        enablePip(context, isPipEnable, PIP_TYPE_FLOAT_WINDOW);
     }
 
     /**

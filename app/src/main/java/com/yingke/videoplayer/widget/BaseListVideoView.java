@@ -38,10 +38,6 @@ import static com.yingke.player.java.videoview.IjkBaseVideoView.STATE_PREPARING;
  * <p>Copyright corp.xxx.com 2019 All right reserved </p>
  *
  * @author tuke 时间 2019-10-09
- * @email 13661091407@163.com
- * <p>
- * 最后修改人：无
- * <p>
  */
 public abstract class BaseListVideoView extends FrameLayout implements OnPlayStateListener, MediaPlayerControl {
 
@@ -135,6 +131,7 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
                 onInnerError();
                 break;
             case  STATE_IDLE :
+                onInnerIdle();
                 break;
             case  STATE_PREPARING:
                 onInnerPreparing();
@@ -160,6 +157,10 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
             default:
                 return ;
         }
+    }
+
+    public void onInnerIdle(){
+        showIdleView();
     }
 
     public void onInnerError(){
@@ -198,6 +199,11 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
      * 显示 播放中页面
      */
     protected abstract void showPlayingView();
+
+    /**
+     * 显示 空闲页面,
+     */
+    protected abstract void showIdleView();
 
     /**
      * 显示 错误 界面，内部错误或者网络错误
@@ -258,8 +264,18 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
         }
 
         if (checkNetWork()) {
+            beforeSetVideoOnline(videoBean);
             getIjkVideoView().setVideoBean(videoBean);
+
         }
+    }
+
+    /**
+     * 设置链接之前
+     * @param videoBean
+     */
+    public void beforeSetVideoOnline(IVideoBean videoBean){
+
     }
 
 

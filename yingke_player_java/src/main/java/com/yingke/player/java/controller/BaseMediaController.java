@@ -84,6 +84,9 @@ public abstract class BaseMediaController extends FrameLayout {
     protected boolean mPaused = false;
     protected boolean mIsFullScreen = false;
 
+    // 总是显示控制器
+    protected boolean mIsShowAlways = false;
+
     // 监听回调
     protected OnFullScreenListener mFullScreenListener;
     protected OnShownHiddenListener mShownHiddenListener;
@@ -219,7 +222,7 @@ public abstract class BaseMediaController extends FrameLayout {
         @Override
         public void onClick(View v) {
             doPauseResume();
-            show(sDefaultTimeout);
+            show();
         }
     };
 
@@ -380,7 +383,7 @@ public abstract class BaseMediaController extends FrameLayout {
                 return;
             }
 
-            show(sDefaultTimeout);
+            show();
             mIsDraggingSeekBar = false;
             mMediaPlayer.seekTo(seekBar.getProgress() * 1000);
             if (mUpdateProgressHelper != null) {
@@ -476,18 +479,15 @@ public abstract class BaseMediaController extends FrameLayout {
     private Runnable mShowHideTask;
     private Handler mMainHandler = new Handler(Looper.getMainLooper());
 
-
-    /**
-     * 显示控制器直到隐藏
-     */
-    public void showUntilHide(){
-        show(0);
-    }
     /**
      * 显示 控制器
      */
     public void show() {
-        show(sDefaultTimeout);
+        if (mIsShowAlways) {
+            show(0);
+        } else {
+            show(sDefaultTimeout);
+        }
     }
     /**
      * 显示 控制器
@@ -502,6 +502,7 @@ public abstract class BaseMediaController extends FrameLayout {
             updatePlayPauseView();
             mIsShowing = true;
             if (timeOut != 0) {
+                mIsShowAlways = false;
                 mMainHandler.removeCallbacks(mShowHideTask);
                 mShowHideTask = new Runnable() {
                     @Override
@@ -510,12 +511,12 @@ public abstract class BaseMediaController extends FrameLayout {
                     }
                 };
                 mMainHandler.postDelayed(mShowHideTask, timeOut);
-                // 开启更新进度条
-                if (mUpdateProgressHelper == null) {
-                    mUpdateProgressHelper = new UpdateProgressHelper();
-                }
-                mUpdateProgressHelper.startSeekBarUpdate();
             }
+            // 开启更新进度条
+            if (mUpdateProgressHelper == null) {
+                mUpdateProgressHelper = new UpdateProgressHelper();
+            }
+            mUpdateProgressHelper.startSeekBarUpdate();
         }
     }
 
@@ -535,6 +536,7 @@ public abstract class BaseMediaController extends FrameLayout {
     }
 
     public boolean isShowing() {
+        mIsShowing = (getVisibility() == VISIBLE);
         return mIsShowing;
     }
 

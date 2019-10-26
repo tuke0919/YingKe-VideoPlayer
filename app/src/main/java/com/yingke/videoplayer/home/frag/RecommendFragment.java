@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.yingke.player.java.PlayerLog;
 import com.yingke.videoplayer.R;
+import com.yingke.videoplayer.home.ListVideoStickEvent;
 import com.yingke.videoplayer.home.adapter.ListVideoAdapter;
 import com.yingke.videoplayer.home.bean.ListVideoData;
 import com.yingke.videoplayer.home.item.ListVideoVH;
@@ -114,9 +115,17 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
         if (!TextUtils.isEmpty(videoListJson)) {
             List<ListVideoData> listVideoData = new Gson().fromJson(videoListJson, new TypeToken<List<ListVideoData>>() {}.getType());
             for (ListVideoData data : listVideoData) {
+                // 设置首播类型
+                data.setCurrentType(data.getFirstType());
+
                 File thumbFile = FileUtil.getVideoThumbFile(getContext(), EncryptUtils.md5String(data.getUrl()));
                 if (thumbFile.exists()) {
                     data.setThumbPath(thumbFile.getAbsolutePath());
+                }
+
+                File thumbAdFile = FileUtil.getVideoThumbFile(getContext(), EncryptUtils.md5String(data.getAdUrl()));
+                if (thumbAdFile.exists()) {
+                    data.setAdThumbPath(thumbAdFile.getAbsolutePath());
                 }
             }
             mDataList.clear();
@@ -165,21 +174,31 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void doEventMainThread(ListVideoData videoData) {
+    public void doEventMainThread(ListVideoStickEvent event) {
         PlayerLog.e(TAG, "doEventMainThread: ");
-        if (videoData == null ||  mDataList == null) {
+        if (event == null ||  mDataList == null) {
             return;
         }
-        PlayerLog.e(TAG, "doEventMainThread: " + "\n"
-                + "title = " + videoData.getTitle() + "\n"
-                + "thumbPath = " + videoData.getThumbPath());
+        ListVideoData videoData = event.mListVideoData;
+        boolean isStickAd = event.isStickAd;
 
+        PlayerLog.e(TAG, "doEventMainThread: title = " + videoData.getTitle());
         int index = mDataList.indexOf(videoData);
         if (index != -1) {
-            mDataList.set(index, videoData);
+            if (!isStickAd) {
+                // 更新真实视频封面
 
-            SinglePlayerManager.getInstance().releaseVideoPlayer();
-            mAdapter.notifyItemChanged(index);
+                PlayerLog.e(TAG, "doEventMainThread: isStickAd = false");
+                ListVideoData realVideoData = mDataList.get(index);
+                realVideoData.setThumbPath(videoData.getThumbPath());
+                SinglePlayerManager.getInstance().releaseVideoPlayer();
+                mAdapter.notifyItemChanged(index);
+            } else {
+                // 更新广告封面图
+                PlayerLog.e(TAG, "doEventMainThread: isStickAd = true");
+                ListVideoData realVideoData = mDataList.get(index);
+                realVideoData.setAdThumbPath(videoData.getAdThumbPath());
+            }
         }
     }
 

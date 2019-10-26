@@ -16,11 +16,13 @@
         android:layout_alignParentBottom="true"
         android:background="@drawable/controller_bottom_mask" />
 
-    <!-- 控制器的内容 -->
+    <!-- 控制器的主要内容 -->
     <RelativeLayout
         android:id="@+id/controller_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        >
 
         <!--顶部视图-->
         <RelativeLayout
@@ -95,39 +97,6 @@
             </RelativeLayout>
 
         </RelativeLayout>
-
-        <!-- 画中画-->
-        <RelativeLayout
-            android:id="@+id/controller_top_view_pip"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_alignParentTop="true"
-            android:visibility="visible"
-            >
-            <!-- 返回定位 -->
-            <ImageView
-                android:id="@+id/controller_port_pip_full"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/icon_pip_full"
-                android:layout_margin="5dp"
-                android:layout_alignParentLeft="true"
-                />
-
-            <!-- 关闭-->
-            <ImageView
-                android:id="@+id/controller_port_pip_close"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/icon_pip_close"
-                android:layout_alignParentRight="true"
-                android:layout_margin="5dp"
-                />
-
-        </RelativeLayout>
-
-
-
 
         <!--播放暂停-->
         <ImageView

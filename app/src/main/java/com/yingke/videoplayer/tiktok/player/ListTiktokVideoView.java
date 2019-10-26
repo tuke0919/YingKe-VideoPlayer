@@ -83,6 +83,11 @@ public class ListTiktokVideoView extends BaseListVideoView {
     }
 
     @Override
+    protected void showIdleView() {
+
+    }
+
+    @Override
     protected void showErrorView() {
         Toast.makeText(getContext(), "网络不可用", Toast.LENGTH_SHORT).show();
     }

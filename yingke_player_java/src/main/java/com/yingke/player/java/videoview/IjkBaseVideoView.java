@@ -153,6 +153,7 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
+        notifyPlayStateChanged(STATE_IDLE);
 
         initAndPreparePlayer();
     }
@@ -166,7 +167,6 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
         if (mAddToVideoViewManager) {
             MediaPlayerManager.instance().releaseVideoPlayer();
             MediaPlayerManager.instance().setIjkBaseVideoView(this);
-
         }
 
         // 音频焦点
@@ -314,7 +314,7 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
     }
 
     /**
-     * 释放播放器资源
+     * 释放播放器资源 彻底结束的时候
      */
     @Override
     public void release() {
@@ -618,7 +618,6 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
         } else {
             notifyPlayStateChanged(STATE_ERROR);
         }
-
     }
 
     /**

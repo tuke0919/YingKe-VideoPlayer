@@ -19,6 +19,52 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <!--封面-->
+    <RelativeLayout
+        android:id="@+id/cover_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/cover_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:actualImageResource="@drawable/videofeed_14"
+            app:actualImageScaleType="fitXY"
+            app:fadeDuration="100"
+            />
+
+        <!--竖屏 标题-->
+        <TextView
+            android:id="@+id/cover_title"
+            android:layout_width="match_parent"
+            android:layout_height="45dip"
+            android:layout_marginRight="16dip"
+            android:layout_marginLeft="16dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:text="《极限挑战》未播：这三个人笑疯了，黄渤，孙红雷嘲讽宋小宝太黑看不见..."
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="17sp"
+            android:visibility="gone"
+            />
+
+        <ImageView
+            android:id="@+id/cover_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/icon_play"
+            android:visibility="gone"
+            />
+
+    </RelativeLayout>
+
+
     <!-- 视频加载出错的界面 -->
     <RelativeLayout
         android:id="@+id/player_error_view"

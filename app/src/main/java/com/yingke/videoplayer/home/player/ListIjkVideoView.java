@@ -3,6 +3,8 @@ package com.yingke.videoplayer.home.player;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +15,21 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.yingke.player.java.controller.BaseMediaController;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.yingke.player.java.IVideoBean;
 import com.yingke.player.java.controller.MediaController;
 import com.yingke.player.java.videoview.IjkVideoView;
 import com.yingke.videoplayer.R;
+import com.yingke.videoplayer.home.bean.ListVideoData;
+import com.yingke.videoplayer.util.EncryptUtils;
+import com.yingke.videoplayer.util.FileUtil;
+import com.yingke.videoplayer.util.FrescoUtil;
 import com.yingke.videoplayer.widget.BaseListVideoView;
+
+import java.io.File;
+
+import static com.yingke.player.java.IVideoBean.TYPE_AD;
+import static com.yingke.player.java.IVideoBean.TYPE_REAL;
 
 /**
  * 功能：业务相关的 播放器控件
@@ -49,6 +61,14 @@ public class ListIjkVideoView extends BaseListVideoView {
     private RelativeLayout mRePlayView;
     private TextView mRePlayBtn;
 
+    // 空闲页面
+    private RelativeLayout mCoverView;
+    private SimpleDraweeView mCoverImage;
+    private TextView mCoverTitle;
+    private ImageView mCoverPlay;
+
+    // 数据
+    protected IVideoBean mVideoBean;
 
     public ListIjkVideoView(@NonNull Context context) {
         this(context, null);
@@ -118,6 +138,12 @@ public class ListIjkVideoView extends BaseListVideoView {
             }
         });
 
+        mCoverView = rootView.findViewById(R.id.cover_view);
+        mCoverImage = rootView.findViewById(R.id.cover_image);
+        mCoverTitle = rootView.findViewById(R.id.cover_title);
+        mCoverTitle.setVisibility(GONE);
+        mCoverPlay = rootView.findViewById(R.id.cover_play);
+        mCoverPlay.setVisibility(VISIBLE);
         addView(rootView);
     }
 
@@ -126,26 +152,82 @@ public class ListIjkVideoView extends BaseListVideoView {
         initVideoPlayerView();
     }
 
+    @Override
+    public void setVideoOnline(IVideoBean videoBean) {
+        super.setVideoOnline(videoBean);
+    }
+
+    @Override
+    public void beforeSetVideoOnline(IVideoBean videoBean) {
+        super.beforeSetVideoOnline(videoBean);
+        mVideoBean = videoBean;
+        // 设置封面
+        if (mVideoBean instanceof ListVideoData) {
+            int mCurrentType = mVideoBean.getCurrentType();
+            switch (mCurrentType) {
+                case TYPE_AD:
+                    setCoverImage((ListVideoData) mVideoBean, true);
+                    break;
+                case TYPE_REAL:
+                    setCoverImage((ListVideoData) mVideoBean, false);
+                    break;
+            }
+        }
+    }
 
     /**
-     * 刚开时 设置数据
-     * @param videoBean
+     * 设置封面图
+     * @param videoData
+     * @param isAd
      */
-//    public void setVideoOnline(IVideoBean videoBean){
-//        if (videoBean == null || getIjkVideoView() == null) {
-//            return;
-//        }
-//
-//        if (checkNetWork()) {
-//            getIjkVideoView().setVideoBean(videoBean);
-//        }
-//    }
+    public void setCoverImage(ListVideoData videoData, boolean isAd) {
+        String thumbPath = videoData.getThumbPath();;
+        if (isAd) {
+            thumbPath = videoData.getAdThumbPath();
+        }
+        if (!TextUtils.isEmpty(thumbPath)){
+            FrescoUtil.displayImage(mCoverImage, new File(thumbPath));
+        } else {
+            String url = videoData.getUrl();
+            if (isAd) {
+                url = videoData.getAdUrl();
+            }
+            if (!TextUtils.isEmpty(url)) {
+                File thumbFile = FileUtil.getVideoThumbFile(getContext(), EncryptUtils.md5String(url));
+                if (thumbFile.exists()) {
+                    if (isAd) {
+                        videoData.setAdThumbPath(thumbFile.getAbsolutePath());
+                    } else {
+                        videoData.setThumbPath(thumbFile.getAbsolutePath());
+                    }
+                    FrescoUtil.displayImage(mCoverImage, thumbFile);
+                }
+            }
+        }
+    }
 
     /**
      * 正在播放
      */
     @Override
     public void showPlayingView(){
+        mCoverView.setVisibility(GONE);
+        mPlayerErrorView.setVisibility(View.GONE);
+        mNetTipView.setVisibility(View.GONE);
+        mLoadingView.setVisibility(View.GONE);
+        mLoadingImage.clearAnimation();
+        mRePlayView.setVisibility(View.GONE);
+    }
+
+    /**
+     * 空闲页
+     */
+    @Override
+    protected void showIdleView() {
+        mMediaController.hide();
+        mCoverView.setVisibility(VISIBLE);
+        mCoverPlay.setVisibility(VISIBLE);
+
         mPlayerErrorView.setVisibility(View.GONE);
         mNetTipView.setVisibility(View.GONE);
         mLoadingView.setVisibility(View.GONE);
@@ -158,14 +240,17 @@ public class ListIjkVideoView extends BaseListVideoView {
      */
     @Override
     public void showLoadingView() {
-        mMediaController.setVisibility(View.GONE);
+        mCoverView.setVisibility(VISIBLE);
+        mCoverPlay.setVisibility(GONE);
+
+        mMediaController.hide();
         mPlayerErrorView.setVisibility(View.GONE);
         mNetTipView.setVisibility(View.GONE);
         mLoadingView.setVisibility(View.VISIBLE);
         RotateAnimation rotate  = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         LinearInterpolator lin = new LinearInterpolator();
         rotate.setInterpolator(lin);
-        rotate.setDuration(300);
+        rotate.setDuration(500);
         rotate.setRepeatCount(-1);
         rotate.setFillAfter(true);
         rotate.setStartOffset(10);
@@ -178,7 +263,8 @@ public class ListIjkVideoView extends BaseListVideoView {
      */
     @Override
     public void showErrorView(){
-        mMediaController.setVisibility(View.GONE);
+        mCoverView.setVisibility(GONE);
+        mMediaController.hide();
         mPlayerErrorView.setVisibility(View.VISIBLE);
         mNetTipView.setVisibility(View.GONE);
         mLoadingView.setVisibility(View.GONE);
@@ -191,12 +277,27 @@ public class ListIjkVideoView extends BaseListVideoView {
      */
     @Override
     public void showCompletionView(){
-        mMediaController.setVisibility(View.GONE);
+        mCoverView.setVisibility(GONE);
+        mMediaController.hide();
         mPlayerErrorView.setVisibility(View.GONE);
         mNetTipView.setVisibility(View.GONE);
         mLoadingView.setVisibility(View.GONE);
         mLoadingImage.clearAnimation();
-        mRePlayView.setVisibility(View.VISIBLE);
+
+        int mCurrentType = mVideoBean.getCurrentType();
+        switch (mCurrentType) {
+            case TYPE_AD:
+                mRePlayView.setVisibility(View.GONE);
+
+                // 继续播放真视频
+                mVideoBean.setCurrentType(TYPE_REAL);
+                setVideoOnline(mVideoBean);
+                break;
+            case TYPE_REAL:
+                mRePlayView.setVisibility(View.VISIBLE);
+                mVideoBean.setCurrentType(TYPE_AD);
+                break;
+        }
     }
 
     /**
@@ -204,7 +305,9 @@ public class ListIjkVideoView extends BaseListVideoView {
      */
     @Override
     public void showNetTipView(){
-        mMediaController.setVisibility(View.GONE);
+        mCoverView.setVisibility(GONE);
+
+        mMediaController.hide();
         mPlayerErrorView.setVisibility(View.GONE);
         mNetTipView.setVisibility(View.VISIBLE);
         mLoadingView.setVisibility(View.GONE);

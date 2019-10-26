@@ -10,8 +10,6 @@ import com.yingke.player.java.controller.MediaController;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.home.util.SinglePlayerManager;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 /**
  * 功能：带画中画 的控制器
  * </p>
@@ -43,13 +41,13 @@ public class ListIjkMediaController extends MediaController {
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.pip_media_controller;
+        return R.layout.list_media_controller_pip;
     }
 
     @Override
     protected void initView() {
         super.initView();
-        mPipView =  mRootView.findViewById(R.id.controller_top_view_pip);
+        mPipView =  mRootView.findViewById(R.id.controller_content_pip);
         mFullView =  mRootView.findViewById(R.id.controller_port_pip_full);
         mCloseView =  mRootView.findViewById(R.id.controller_port_pip_close);
         mCloseView.setOnClickListener(new OnClickListener() {

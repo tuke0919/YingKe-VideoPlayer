@@ -7,8 +7,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.yingke.player.java.IVideoBean;
 import com.yingke.player.java.PlayerLog;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.home.adapter.ListVideoAdapter;
@@ -169,7 +171,12 @@ public class ListVideoVH implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.cover_play :
-                if (mListVideoData == null || TextUtils.isEmpty(mListVideoData.getThumbPath())) {
+                if (mListVideoData == null
+                        || TextUtils.isEmpty(mListVideoData.getThumbPath())
+                        || (mListVideoData.getCurrentType() == IVideoBean.TYPE_AD && TextUtils.isEmpty(mListVideoData.getAdThumbPath()))) {
+
+                    // 带广告的，封面不能空
+                    Toast.makeText(mVideoContainer.getContext(), "视频或广告封面为空，请稍后播放...", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -190,7 +197,6 @@ public class ListVideoVH implements View.OnClickListener {
                 }
 
                 break;
-
         }
     }
 }

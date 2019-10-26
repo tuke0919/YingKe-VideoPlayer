@@ -11,16 +11,43 @@ package com.yingke.player.java;
  * 最后修改人：无
  * <p>
  */
-public interface IVideoBean {
+public abstract class IVideoBean {
+
+    public static final int TYPE_AD = 0;
+    public static final int TYPE_REAL = 1;
+
+    public int mCurrentType = TYPE_REAL;
+
     /**
-     * 链接
+     * @return 当前播放的类型
+     */
+    public int getCurrentType(){
+        return mCurrentType;
+    }
+
+    /**
+     * @param currentType
+     */
+    public void setCurrentType(int currentType) {
+        mCurrentType = currentType;
+    }
+
+    /**
+     * @return 首选播放的类型
+     */
+    public int getFirstType(){
+        return mCurrentType;
+    }
+
+    /**
+     * 真实链接、广告链接
      * @return
      */
-    String getSource();
+    public abstract String getSource();
 
     /**
      * 标题
      * @return
      */
-    String getTitle();
+    public abstract String getTitle();
 }

@@ -127,7 +127,10 @@ public class IjkVideoView extends IjkBaseVideoView {
      */
     private void addTextureView() {
         mPlayerContainer.removeAllViews();
-        mSurfaceTexture = null;
+        if (mSurfaceTexture != null) {
+            mSurfaceTexture.release();
+            mSurfaceTexture = null;
+        }
         mTextureView = new ResizedTextureView(getContext());
         mTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
