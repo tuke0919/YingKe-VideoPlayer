@@ -33,7 +33,9 @@ public abstract class IVideoBean {
     }
 
     /**
-     * @return 首选播放的类型
+     * 首选播放的类型
+     * 如果不想要广告，默认实现就好
+     * @return
      */
     public int getFirstType(){
         return mCurrentType;

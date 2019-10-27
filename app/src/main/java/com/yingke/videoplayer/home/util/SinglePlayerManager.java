@@ -15,7 +15,6 @@ import com.yingke.videoplayer.home.adapter.ListVideoAdapter;
 import com.yingke.videoplayer.home.item.ListVideoVH;
 import com.yingke.videoplayer.home.pip.SuspensionView;
 import com.yingke.videoplayer.home.player.ListIjkAdMediaController;
-import com.yingke.videoplayer.home.player.ListIjkPipMediaController;
 import com.yingke.videoplayer.util.DeviceUtil;
 import com.yingke.videoplayer.widget.BaseListVideoView;
 
@@ -54,6 +53,10 @@ public class SinglePlayerManager {
         }
     }
 
+    /**
+     * @param bean
+     * @param listVideoView
+     */
     public void attachVideoPlayer(IVideoBean bean, BaseListVideoView listVideoView) {
 
         if (isEnableAndShowing()) {
@@ -74,16 +77,16 @@ public class SinglePlayerManager {
                 return;
             }
 
-            removePlayer();
+            removePlayerAndRelease();
             mCurrentListVideoView = null;
             mCurrentVideoBean = null;
         }
     }
 
     /**
-     * 移除播放器
+     * 移除并释放播放器
      */
-    private void removePlayer() {
+    private void removePlayerAndRelease() {
         if (mCurrentListVideoView == null) {
             return;
         }
@@ -265,6 +268,9 @@ public class SinglePlayerManager {
 
     /**
      * 关闭画中画
+     * 1，手动点叉叉，关闭
+     * 2，点击不同的视频资源，关闭
+     * @param releasePlayer 需要回到列表-false
      */
     public void stopFloatWindow(boolean releasePlayer) {
         if (!mIsPipEnable || !mIsShowing || mCurrentListVideoView == null) {
@@ -274,6 +280,8 @@ public class SinglePlayerManager {
         if (releasePlayer) {
             // 完全销毁
             mCurrentListVideoView.release();
+            mCurrentVideoBean.setCurrentType(mCurrentVideoBean.getFirstType());
+
             if (isSuspensionType()) {
                 // 悬浮窗移除
                 mSuspensionView.removeAllViews();
