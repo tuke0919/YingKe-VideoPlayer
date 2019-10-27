@@ -11,6 +11,8 @@
 
     <string name="vdetail_2g3g_tip">你当前正使用2G/3G/4G网络</string>
 
+    <string name="list_video_ad_time">%1$s秒</string>
+
     <string name="top_data_json">[
     {
         "id": 1222,

@@ -21,21 +21,21 @@ import com.yingke.videoplayer.home.util.SinglePlayerManager;
  * 最后修改人：无
  * <p>
  */
-public class ListIjkMediaController extends MediaController {
+public class ListIjkPipMediaController extends MediaController {
 
     private RelativeLayout mPipView;
     private ImageView mFullView;
     private ImageView mCloseView;
 
-    public ListIjkMediaController(Context context) {
+    public ListIjkPipMediaController(Context context) {
         super(context);
     }
 
-    public ListIjkMediaController(Context context, AttributeSet attrs) {
+    public ListIjkPipMediaController(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ListIjkMediaController(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ListIjkPipMediaController(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -66,22 +66,26 @@ public class ListIjkMediaController extends MediaController {
     }
 
     /**
+     * 普通控制器
+     */
+    @Override
+    public void showNormalController() {
+        super.showNormalController();
+        hidePipController();
+    }
+
+    /**
      * 画中画控制器
      */
     public void showPipController() {
-        mTopView.setVisibility(GONE);
-        mBottomView.setVisibility(GONE);
+        hideNormalController();
         mPipView.setVisibility(VISIBLE);
     }
 
     /**
-     * 普通控制器
+     * 隐藏画中画控制器
      */
-    public void showNormalController() {
-        mTopView.setVisibility(VISIBLE);
-        mBottomView.setVisibility(VISIBLE);
+    public void hidePipController(){
         mPipView.setVisibility(GONE);
     }
-
-
 }

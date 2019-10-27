@@ -5,22 +5,26 @@
     android:background="@color/trans"
     android:visibility="visible">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/controller_top_mask" />
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/controller_bottom_mask" />
-
     <!-- 控制器的内容 -->
     <RelativeLayout
         android:id="@+id/controller_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
+
+        <ImageView
+            android:id="@+id/top_mask"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/controller_top_mask" />
+
+        <ImageView
+            android:id="@+id/bottom_mask"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/controller_bottom_mask" />
 
         <!--顶部视图-->
         <RelativeLayout
@@ -230,7 +234,7 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_alignParentTop="true"
-        android:visibility="visible"
+        android:visibility="gone"
         >
 
         <!-- 返回定位 -->
@@ -259,12 +263,137 @@
     <RelativeLayout
         android:id="@+id/controller_content_ad"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        >
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/controller_ad_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dip"
+                android:paddingRight="15dip"
+                android:paddingBottom="15dip"
+                android:paddingTop="15dip"
+                android:scaleType="center"
+                android:src="@drawable/icon_controller_back" />
+
+            <TextView
+                android:id="@+id/controller_ad_skip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:text="跳过广告"
+                android:textColor="@color/white"
+                android:background="@drawable/bg_ad_trans"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="16dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                />
+
+            <TextView
+                android:id="@+id/controller_ad_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/controller_ad_skip"
+                android:textSize="13sp"
+                android:text="47秒"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:background="@drawable/bg_ad_trans"
+                android:layout_marginRight="6dp"
+                android:paddingLeft="13dp"
+                android:paddingRight="13dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:layout_centerVertical="true"
+                />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="广告"
+                android:textSize="8sp"
+                android:textColor="@color/color_333333"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="1dp"
+                android:paddingBottom="1dp"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_ad_tag"
+                />
+
+
+            <TextView
+                android:id="@+id/controller_ad_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="22dp"
+                android:textSize="13sp"
+                android:text="了解详情"
+                android:textColor="@color/white"
+                android:background="@drawable/bg_ad_blue"
+                android:paddingLeft="13dp"
+                android:paddingRight="13dp"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/controller_ad_volume_view"
+                android:layout_marginRight="4dp"
+                />
+
+            <FrameLayout
+                android:id="@+id/controller_ad_volume_view"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:background="@drawable/bg_ad_trans"
+                android:padding="3dp"
+                android:layout_marginRight="4dp"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/controller_ad_full"
+                >
+
+                <TextView
+                    android:id="@+id/controller_ad_volume"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/icon_selector_volume"
+                    />
+
+            </FrameLayout>
+
+            <ImageView
+                android:id="@+id/controller_ad_full"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:background="@drawable/bg_ad_trans"
+                android:padding="3dp"
+                android:src="@mipmap/icon_full_4"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                />
+        </RelativeLayout>
 
     </RelativeLayout>
-
-
-
 
 </RelativeLayout>

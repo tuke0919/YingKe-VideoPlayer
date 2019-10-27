@@ -272,7 +272,7 @@ public abstract class BaseMediaController extends FrameLayout {
     /**
      * 主动设置 横屏 竖屏
      */
-    private void setRequestedOrientation(){
+    protected void setRequestedOrientation(){
         Activity activity = PlayerUtils.scanForActivity(getContext());
         if (activity == null) {
             PlayerLog.d(TAG,"controller attached activity is null");
@@ -424,13 +424,27 @@ public abstract class BaseMediaController extends FrameLayout {
                     mSeekBar.setMax(du);
                 }
             }
+
             // 缓存进度
             int percent = mMediaPlayer.getBufferedPercentage();
             mSeekBar.setSecondaryProgress((int) (percent * (duration / 1000)));
 
             // 设置当前进度
             mSeekBar.setProgress((int) currentPosition / 1000);
+
+            // 通知位置 s
+            notifyPlayerPosition((int) currentPosition / 1000, (int) (percent * (duration / 1000)), (int) (duration / 1000));
         }
+    }
+
+    /**
+     * 进度条的进度位置 单位s
+     * @param currentPositionS  当前位置
+     * @param secondPositionS   第二位置
+     * @param durationS         总时长
+     */
+    protected void notifyPlayerPosition(int currentPositionS, int secondPositionS, int durationS) {
+
     }
 
     /**
@@ -715,6 +729,25 @@ public abstract class BaseMediaController extends FrameLayout {
     }
 
     /**
+     * @return 是否静音
+     */
+    public boolean isMute() {
+        if (mMediaPlayer != null) {
+            return mMediaPlayer.isMute();
+        }
+        return false;
+    }
+
+    /**
+     * 设置静音
+     * @param isMute
+     */
+    public void setMute(boolean isMute) {
+        if (mMediaPlayer != null) {
+            mMediaPlayer.setMute(isMute);
+        }
+    }
+    /**
      * 一直显示控制器
      * @return
      */
@@ -729,4 +762,13 @@ public abstract class BaseMediaController extends FrameLayout {
     public void setShowAlways(boolean showAlways) {
         mIsShowAlways = showAlways;
     }
+
+    public void showNormalController(){
+        mControllerContent.setVisibility(VISIBLE);
+    }
+
+    public void hideNormalController(){
+        mControllerContent.setVisibility(GONE);
+    }
+
 }

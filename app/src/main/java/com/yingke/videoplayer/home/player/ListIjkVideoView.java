@@ -14,9 +14,11 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.yingke.player.java.IVideoBean;
+import com.yingke.player.java.PlayerLog;
 import com.yingke.player.java.controller.MediaController;
 import com.yingke.player.java.videoview.IjkVideoView;
 import com.yingke.videoplayer.R;
@@ -24,6 +26,7 @@ import com.yingke.videoplayer.home.bean.ListVideoData;
 import com.yingke.videoplayer.util.EncryptUtils;
 import com.yingke.videoplayer.util.FileUtil;
 import com.yingke.videoplayer.util.FrescoUtil;
+import com.yingke.videoplayer.util.ToastUtil;
 import com.yingke.videoplayer.widget.BaseListVideoView;
 
 import java.io.File;
@@ -43,6 +46,8 @@ import static com.yingke.player.java.IVideoBean.TYPE_REAL;
  * <p>
  */
 public class ListIjkVideoView extends BaseListVideoView {
+
+    private static final String TAG = "ListIjkVideoView";
 
     // 播放错误
     private RelativeLayout mPlayerErrorView;
@@ -150,8 +155,30 @@ public class ListIjkVideoView extends BaseListVideoView {
     @Override
     protected void initControllerView() {
         super.initControllerView();
-        if (getControllerView() != null) {
-            getControllerView().setShowAlways(true);
+        if (getControllerView() instanceof ListIjkAdMediaController) {
+            ((ListIjkAdMediaController) getControllerView()).setListener(new ListIjkAdMediaController.OnAdControllerListener() {
+                @Override
+                public void onSkipAd() {
+                    PlayerLog.e(TAG, "跳过广告");
+                    // 继续播放真视频
+                    if (mVideoBean != null) {
+                        mVideoBean.setCurrentType(TYPE_REAL);
+                        setVideoOnline(mVideoBean);
+                    }
+                }
+
+                @Override
+                public void onToAdDetail() {
+                    PlayerLog.e(TAG, "去广告详情");
+                    ToastUtil.showToast("去广告详情");
+                }
+
+                @Override
+                public void onAdBack() {
+                    PlayerLog.e(TAG, "广告全屏时返回");
+
+                }
+            });
         }
     }
 
@@ -174,10 +201,27 @@ public class ListIjkVideoView extends BaseListVideoView {
             int mCurrentType = mVideoBean.getCurrentType();
             switch (mCurrentType) {
                 case TYPE_AD:
+                    // 广告视频
+
+                    getControllerView().setShowAlways(true);
+                    getControllerView().show();
+
                     setCoverImage((ListVideoData) mVideoBean, true);
+                    if (getControllerView() instanceof ListIjkAdMediaController) {
+                        ((ListIjkAdMediaController) getControllerView()).showAdController();
+                    }
                     break;
                 case TYPE_REAL:
+                    // 真视频
+
+                    getControllerView().setShowAlways(false);
+                    getControllerView().hide();
+
                     setCoverImage((ListVideoData) mVideoBean, false);
+                    if (getControllerView() instanceof ListIjkAdMediaController) {
+                        ((ListIjkAdMediaController) getControllerView()).showNormalController();
+                    }
+
                     break;
             }
         }

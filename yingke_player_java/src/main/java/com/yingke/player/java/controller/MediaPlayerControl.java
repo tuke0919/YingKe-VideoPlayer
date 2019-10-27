@@ -6,7 +6,7 @@ import android.graphics.Bitmap;
  * 功能：播放器控制视图 控制 真实播放器的 接口
  *   是控制器对播放器的操作和控制
  * </p>
- * <p>Copyright corp.netease.com 2019 All right reserved </p>
+ * <p>Copyright corp.xxx.com 2019 All right reserved </p>
  *
  * @author tuke 时间 2019/9/11
  */

@@ -5,16 +5,6 @@
     android:background="@color/trans"
     android:visibility="visible">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/controller_top_mask" />
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/controller_bottom_mask" />
 
     <!-- 控制器的主要内容 -->
     <RelativeLayout
@@ -23,6 +13,20 @@
         android:layout_height="match_parent"
         android:visibility="visible"
         >
+
+        <ImageView
+            android:id="@+id/top_mask"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/controller_top_mask" />
+
+        <ImageView
+            android:id="@+id/bottom_mask"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/controller_bottom_mask" />
+
 
         <!--顶部视图-->
         <RelativeLayout

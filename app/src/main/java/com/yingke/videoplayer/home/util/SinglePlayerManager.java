@@ -14,9 +14,9 @@ import com.yingke.player.java.controller.MediaController;
 import com.yingke.videoplayer.home.adapter.ListVideoAdapter;
 import com.yingke.videoplayer.home.item.ListVideoVH;
 import com.yingke.videoplayer.home.pip.SuspensionView;
-import com.yingke.videoplayer.home.player.ListIjkMediaController;
+import com.yingke.videoplayer.home.player.ListIjkAdMediaController;
+import com.yingke.videoplayer.home.player.ListIjkPipMediaController;
 import com.yingke.videoplayer.util.DeviceUtil;
-import com.yingke.videoplayer.util.PlayerUtil;
 import com.yingke.videoplayer.widget.BaseListVideoView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -223,10 +223,13 @@ public class SinglePlayerManager {
         }
         mIsShowing = true;
 
+        // 移除但不释放 播放器
         removePlayerNotRelease();
+
+        // 显示画中画控制器
         MediaController controller = mCurrentListVideoView.getControllerView();
-        if (controller instanceof ListIjkMediaController) {
-            ((ListIjkMediaController) controller).showPipController();
+        if (controller instanceof ListIjkAdMediaController) {
+            ((ListIjkAdMediaController) controller).showPipController();
         }
 
         if (isSuspensionType()) {
@@ -292,8 +295,18 @@ public class SinglePlayerManager {
             // 不销毁，回到列表中
 
             MediaController controller = mCurrentListVideoView.getControllerView();
-            if (controller instanceof ListIjkMediaController) {
-                ((ListIjkMediaController) controller).showNormalController();
+
+            if (controller instanceof ListIjkAdMediaController) {
+                switch (mCurrentVideoBean.getCurrentType()) {
+                    case IVideoBean.TYPE_AD:
+                        // 广告
+                        ((ListIjkAdMediaController) controller).showAdController();
+                        break;
+                    case IVideoBean.TYPE_REAL:
+                        // 源视频
+                        ((ListIjkAdMediaController) controller).showNormalController();
+                        break;
+                }
             }
 
             if (isSuspensionType()) {
