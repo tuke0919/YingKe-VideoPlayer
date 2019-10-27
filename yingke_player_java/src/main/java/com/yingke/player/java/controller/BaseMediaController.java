@@ -25,6 +25,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import static com.yingke.player.java.videoview.IjkBaseVideoView.STATE_PREPARED;
+
 /**
  * 功能：视频控制器
  * </p>
@@ -84,7 +86,7 @@ public abstract class BaseMediaController extends FrameLayout {
     protected boolean mPaused = false;
     protected boolean mIsFullScreen = false;
 
-    // 总是显示控制器
+    // 播放过程中总是显示控制器
     protected boolean mIsShowAlways = false;
 
     // 监听回调
@@ -489,6 +491,7 @@ public abstract class BaseMediaController extends FrameLayout {
             show(sDefaultTimeout);
         }
     }
+
     /**
      * 显示 控制器
      * @param timeOut 0 一直显示直到 hide 调用
@@ -502,7 +505,6 @@ public abstract class BaseMediaController extends FrameLayout {
             updatePlayPauseView();
             mIsShowing = true;
             if (timeOut != 0) {
-                mIsShowAlways = false;
                 mMainHandler.removeCallbacks(mShowHideTask);
                 mShowHideTask = new Runnable() {
                     @Override
@@ -512,11 +514,12 @@ public abstract class BaseMediaController extends FrameLayout {
                 };
                 mMainHandler.postDelayed(mShowHideTask, timeOut);
             }
+
             // 开启更新进度条
-            if (mUpdateProgressHelper == null) {
-                mUpdateProgressHelper = new UpdateProgressHelper();
-            }
-            mUpdateProgressHelper.startSeekBarUpdate();
+//            if (mUpdateProgressHelper == null) {
+//                mUpdateProgressHelper = new UpdateProgressHelper();
+//            }
+//            mUpdateProgressHelper.startSeekBarUpdate();
         }
     }
 
@@ -542,6 +545,22 @@ public abstract class BaseMediaController extends FrameLayout {
 
     public void setControllerShownHidedListener(OnShownHiddenListener shownHiddenListener) {
         mShownHiddenListener = shownHiddenListener;
+    }
+
+    /**
+     * 设置播放器状态
+     * @param playerState
+     */
+    public void setPlayerState(int playerState) {
+        switch (playerState) {
+            case STATE_PREPARED:
+                // 开启更新进度条
+                if (mUpdateProgressHelper == null) {
+                    mUpdateProgressHelper = new UpdateProgressHelper();
+                }
+                mUpdateProgressHelper.startSeekBarUpdate();
+                break;
+        }
     }
 
     /**
@@ -695,11 +714,19 @@ public abstract class BaseMediaController extends FrameLayout {
         mTitleLand.setText(title);
     }
 
+    /**
+     * 一直显示控制器
+     * @return
+     */
+    public boolean isShowAlways() {
+        return mIsShowAlways;
+    }
 
-
-
-
-
-
-
+    /**
+     *
+     * @param showAlways
+     */
+    public void setShowAlways(boolean showAlways) {
+        mIsShowAlways = showAlways;
+    }
 }

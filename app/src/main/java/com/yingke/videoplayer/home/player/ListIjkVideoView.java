@@ -147,6 +147,14 @@ public class ListIjkVideoView extends BaseListVideoView {
         addView(rootView);
     }
 
+    @Override
+    protected void initControllerView() {
+        super.initControllerView();
+        if (getControllerView() != null) {
+            getControllerView().setShowAlways(true);
+        }
+    }
+
     private void initData() {
         initControllerView();
         initVideoPlayerView();
@@ -211,6 +219,9 @@ public class ListIjkVideoView extends BaseListVideoView {
      */
     @Override
     public void showPlayingView(){
+        if (mMediaController.isShowAlways()) {
+            mMediaController.show();
+        }
         mCoverView.setVisibility(GONE);
         mPlayerErrorView.setVisibility(View.GONE);
         mNetTipView.setVisibility(View.GONE);
@@ -314,6 +325,5 @@ public class ListIjkVideoView extends BaseListVideoView {
         mLoadingImage.clearAnimation();
         mRePlayView.setVisibility(View.GONE);
     }
-
 
 }

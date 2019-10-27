@@ -59,19 +59,15 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
     }
 
 
+    /**
+     * @return 控制器
+     */
     public abstract MediaController getControllerView();
 
-    public abstract IjkVideoView getIjkVideoView();
-
     /**
-     * 初始化 播放器
+     * @return 播放器
      */
-    protected void initVideoPlayerView(){
-        if (hasController()) {
-            getIjkVideoView().setMediaController(getControllerView());
-        }
-        getIjkVideoView().addPlayStateListener(this);
-    }
+    public abstract IjkVideoView getIjkVideoView();
 
     /**
      * 初始化 控制器
@@ -110,6 +106,15 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
         });
     }
 
+    /**
+     * 初始化 播放器
+     */
+    protected void initVideoPlayerView(){
+        if (hasController()) {
+            getIjkVideoView().setMediaController(getControllerView());
+        }
+        getIjkVideoView().addPlayStateListener(this);
+    }
 
 
     @Override

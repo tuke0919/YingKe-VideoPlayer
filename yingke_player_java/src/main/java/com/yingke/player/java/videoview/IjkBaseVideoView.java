@@ -392,7 +392,6 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
         if (isInPlaybackState()) {
             mCurrentPosition = mMediaPlayer.getCurrentPosition();
             PlayerLog.d(TAG, "getCurrentPosition : pos = " + mCurrentPosition  );
-
             return mCurrentPosition;
         }
         return 0;
@@ -949,7 +948,9 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
      */
     public void setMediaController(BaseMediaController baseMediaController) {
         mBaseMediaController = baseMediaController;
-        if (baseMediaController != null) {
+
+        // 不为null且不是一直显示
+        if (baseMediaController != null && !baseMediaController.isShowAlways()) {
             baseMediaController.hide();
         }
 
@@ -970,7 +971,8 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
      * 开关显示隐藏 控制器
      */
     private void toggleMediaControllerVisibility() {
-        if (mBaseMediaController == null) {
+        // 不为null且不是一直显示
+        if (mBaseMediaController == null || mBaseMediaController.isShowAlways()) {
             return;
         }
         if (mBaseMediaController.isShowing()) {
@@ -987,6 +989,9 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
     public void notifyPlayStateChanged(int playState){
         mCurrentPlayState = playState;
         PlayerLog.d(TAG, "playState : " + playState(playState));
+        if (mBaseMediaController != null) {
+            mBaseMediaController.setPlayerState(playState);
+        }
         for (OnPlayStateListener listener: mOnPlayStateListeners) {
             if (listener != null) {
                 listener.onPlayStateChanged(playState);
