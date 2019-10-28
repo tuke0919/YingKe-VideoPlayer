@@ -14,7 +14,6 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.yingke.player.java.IVideoBean;
@@ -203,10 +202,9 @@ public class ListIjkVideoView extends BaseListVideoView {
                 case TYPE_AD:
                     // 广告视频
 
-                    getControllerView().setShowAlways(true);
-                    getControllerView().show();
-
+                    // 设置封面
                     setCoverImage((ListVideoData) mVideoBean, true);
+                    // 显示广告控制器
                     if (getControllerView() instanceof ListIjkAdMediaController) {
                         ((ListIjkAdMediaController) getControllerView()).showAdController();
                     }
@@ -214,9 +212,7 @@ public class ListIjkVideoView extends BaseListVideoView {
                 case TYPE_REAL:
                     // 真视频
 
-                    getControllerView().setShowAlways(false);
-                    getControllerView().hide();
-
+                    // 设置封面
                     setCoverImage((ListVideoData) mVideoBean, false);
                     if (getControllerView() instanceof ListIjkAdMediaController) {
                         ((ListIjkAdMediaController) getControllerView()).showNormalController();
@@ -263,9 +259,8 @@ public class ListIjkVideoView extends BaseListVideoView {
      */
     @Override
     public void showPlayingView(){
-        if (mMediaController.isShowAlways()) {
-            mMediaController.show();
-        }
+        mMediaController.setVisibility(VISIBLE);
+
         mCoverView.setVisibility(GONE);
         mPlayerErrorView.setVisibility(View.GONE);
         mNetTipView.setVisibility(View.GONE);
@@ -279,7 +274,8 @@ public class ListIjkVideoView extends BaseListVideoView {
      */
     @Override
     protected void showIdleView() {
-        mMediaController.hide();
+        mMediaController.setVisibility(GONE);
+
         mCoverView.setVisibility(VISIBLE);
         mCoverPlay.setVisibility(VISIBLE);
 
@@ -295,10 +291,10 @@ public class ListIjkVideoView extends BaseListVideoView {
      */
     @Override
     public void showLoadingView() {
+        mMediaController.setVisibility(GONE);
         mCoverView.setVisibility(VISIBLE);
         mCoverPlay.setVisibility(GONE);
 
-        mMediaController.hide();
         mPlayerErrorView.setVisibility(View.GONE);
         mNetTipView.setVisibility(View.GONE);
         mLoadingView.setVisibility(View.VISIBLE);
@@ -318,8 +314,8 @@ public class ListIjkVideoView extends BaseListVideoView {
      */
     @Override
     public void showErrorView(){
+        mMediaController.setVisibility(GONE);
         mCoverView.setVisibility(GONE);
-        mMediaController.hide();
         mPlayerErrorView.setVisibility(View.VISIBLE);
         mNetTipView.setVisibility(View.GONE);
         mLoadingView.setVisibility(View.GONE);
@@ -332,8 +328,8 @@ public class ListIjkVideoView extends BaseListVideoView {
      */
     @Override
     public void showCompletionView(){
+        mMediaController.setVisibility(GONE);
         mCoverView.setVisibility(GONE);
-        mMediaController.hide();
         mPlayerErrorView.setVisibility(View.GONE);
         mNetTipView.setVisibility(View.GONE);
         mLoadingView.setVisibility(View.GONE);

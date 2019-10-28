@@ -904,20 +904,19 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
     /**
      * 进入全屏
      */
-    void enterFullScreen(){
+    public void enterFullScreen(){
         if (mBaseMediaController != null) {
-            mBaseMediaController.setFullScreenStatus(true);
+            mBaseMediaController.enterFullScreen();
         }
         notifyScreenModeChanged(SCREEN_MODE_FULL);
-
     }
 
     /**
      * 退出全屏
      */
-    void exitFullScreen(){
+    public void exitFullScreen(){
         if (mBaseMediaController != null) {
-            mBaseMediaController.setFullScreenStatus(false);
+            mBaseMediaController.exitFullScreen();
         }
         notifyScreenModeChanged(SCREEN_MODE_NORMAL);
         if (!mAutoRotate) {
@@ -929,18 +928,10 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
      * 是否全屏
      * @return
      */
-    boolean isFullScreen(){
+    public boolean isFullScreen(){
         return mBaseMediaController != null && mBaseMediaController.isFullScreen();
     }
 
-
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-        if (mMediaPlayer != null && mBaseMediaController != null) {
-            toggleMediaControllerVisibility();
-        }
-        return false;
-    }
 
     /**
      * 设置控制器
@@ -950,10 +941,9 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
         mBaseMediaController = baseMediaController;
 
         // 不为null且不是一直显示
-        if (baseMediaController != null && !baseMediaController.isShowAlways()) {
+        if (baseMediaController != null) {
             baseMediaController.hide();
         }
-
         attachMediaController();
     }
 
@@ -967,20 +957,6 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
         }
     }
 
-    /**
-     * 开关显示隐藏 控制器
-     */
-    private void toggleMediaControllerVisibility() {
-        // 不为null且不是一直显示
-        if (mBaseMediaController == null || mBaseMediaController.isShowAlways()) {
-            return;
-        }
-        if (mBaseMediaController.isShowing()) {
-            mBaseMediaController.hide();
-        } else {
-            mBaseMediaController.show();
-        }
-    }
 
     /**
      * 通知播放状态改变

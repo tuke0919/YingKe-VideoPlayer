@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.text.format.DateUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -41,9 +42,11 @@ public abstract class BaseMediaController extends FrameLayout {
     protected static final int sDefaultTimeout = 3000;
 
     protected View mRootView;
-    // 控制器内容
-    protected RelativeLayout mControllerContent;
+    // 控制器正常内容
+    protected RelativeLayout mNormalControllerView;
 
+    // 控制器主内容
+    protected RelativeLayout mControllerMainContent;
     // 顶部总布局
     protected RelativeLayout mTopView;
     // 竖屏 标题
@@ -76,6 +79,10 @@ public abstract class BaseMediaController extends FrameLayout {
     protected ImageView mFullScreenView;
     // 屏幕锁
     protected ImageView mLockView;
+    // 底部进度条
+    protected FrameLayout mBottomSeekView;
+    // 底部进度条
+    protected SeekBar mBottomSeekBar;
 
     // 播放器控制
     protected MediaPlayerControl mMediaPlayer;
@@ -86,8 +93,8 @@ public abstract class BaseMediaController extends FrameLayout {
     protected boolean mPaused = false;
     protected boolean mIsFullScreen = false;
 
-    // 播放过程中总是显示控制器
-    protected boolean mIsShowAlways = false;
+    // 主内容总显示
+    protected boolean mIsMainContentAlwaysShow = false;
 
     // 监听回调
     protected OnFullScreenListener mFullScreenListener;
@@ -128,7 +135,9 @@ public abstract class BaseMediaController extends FrameLayout {
      * 初始化布局
      */
     protected void initControllerView() {
-        mControllerContent = mRootView.findViewById(R.id.controller_content);
+        mNormalControllerView = mRootView.findViewById(R.id.controller_normal_content);
+
+        mControllerMainContent = mRootView.findViewById(R.id.controller_content);
         mTopView = mRootView.findViewById(R.id.controller_top_view);
 
         mTitlePort = mRootView.findViewById(R.id.controller_title_port);
@@ -196,10 +205,11 @@ public abstract class BaseMediaController extends FrameLayout {
         mLockView = mRootView.findViewById(R.id.controller_lock);
         // 进度条
         mSeekBar = mRootView.findViewById(R.id.controller_seekbar);
-        if (mSeekBar != null){
-            mSeekBar.setOnSeekBarChangeListener(mSeekBarChangeListener);
-        }
-
+        mSeekBar.setOnSeekBarChangeListener(mSeekBarChangeListener);
+        // 底部进度条
+        mBottomSeekView = mRootView.findViewById(R.id.controller_seek_view_layout_bottom);
+        mBottomSeekBar = mRootView.findViewById(R.id.controller_seekbar_bottom);
+        mBottomSeekView.setVisibility(GONE);
     }
 
     /**
@@ -270,23 +280,59 @@ public abstract class BaseMediaController extends FrameLayout {
     };
 
     /**
-     * 主动设置 横屏 竖屏
+     * 主动设置 横屏/竖屏
      */
     protected void setRequestedOrientation(){
+        if (!isFullScreen()) {
+            enterFullScreen();
+        } else {
+            exitFullScreen();
+        }
+    }
+
+    /**
+     * 进入全屏
+     */
+    public void enterFullScreen(){
         Activity activity = PlayerUtils.scanForActivity(getContext());
         if (activity == null) {
             PlayerLog.d(TAG,"controller attached activity is null");
             return;
         }
-        if (isFullScreen()) {
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        } else {
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }
-        setFullScreenStatus(!mIsFullScreen);
+        // activity设置
+        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        // 控制器UI设置
+        setFullScreenStatus(true);
+
     }
+
+    /**
+     * 退出全屏
+     */
+    public void exitFullScreen(){
+        Activity activity = PlayerUtils.scanForActivity(getContext());
+        if (activity == null) {
+            PlayerLog.d(TAG,"controller attached activity is null");
+            return;
+        }
+        // activity设置
+        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
+        // 控制器UI设置
+        setFullScreenStatus(false);
+    }
+
+    /**
+     * 是否全屏
+     * @return
+     */
+    public boolean isFullScreen() {
+        return mIsFullScreen;
+    }
+
 
     /**
      * 设置全屏状态
@@ -296,7 +342,6 @@ public abstract class BaseMediaController extends FrameLayout {
     public void setFullScreenStatus(boolean isFullScreen){
         this.mIsFullScreen = isFullScreen;
         afterFullScreenChanged();
-
     }
 
     /**
@@ -348,13 +393,6 @@ public abstract class BaseMediaController extends FrameLayout {
 
     }
 
-    /**
-     * 是否全屏
-     * @return
-     */
-    public boolean isFullScreen() {
-        return mIsFullScreen;
-    }
 
     /**
      * 进度条 改变监听器
@@ -385,7 +423,7 @@ public abstract class BaseMediaController extends FrameLayout {
                 return;
             }
 
-            show();
+            startHide(sDefaultTimeout);
             mIsDraggingSeekBar = false;
             mMediaPlayer.seekTo(seekBar.getProgress() * 1000);
             if (mUpdateProgressHelper != null) {
@@ -402,38 +440,59 @@ public abstract class BaseMediaController extends FrameLayout {
         if (mMediaPlayer == null) {
             return;
         }
+        // 总时长
         long duration = mMediaPlayer.getDuration();
+        // 当前位置
         long currentPosition = mMediaPlayer.getCurrentPosition();
+        // 是否正在播放
         boolean isPlaying  = mMediaPlayer.isPlaying();
+        // 缓存进度
+        int percent = mMediaPlayer.getBufferedPercentage();
+
         // 更新按钮
         updatePlayPauseView();
 
+        int durationS = (int) (duration / 1000);
+        int currentPositionS = (int) currentPosition / 1000;
+        int secondPositionS = (int) (percent * (duration / 1000));
+
+        // 通知位置 s
+        notifyPlayerPosition(currentPositionS, secondPositionS, durationS);
+
         // 初始化总时长
         if (mTotalTime != null) {
-            mTotalTime.setText(DateUtils.formatElapsedTime(duration / 1000));
+            mTotalTime.setText(DateUtils.formatElapsedTime(durationS));
         }
 
         // 1、初始化最大进度 2、更新当前进度
         if (mSeekBar != null) {
-            if (duration > 0) {
+            if (durationS > 0) {
                 // 当前最大进度 != 当前音频时长
                 int max = mSeekBar.getMax();
-                int du = (int) duration / 1000;
                 // 设置最大进度
-                if (max != du) {
-                    mSeekBar.setMax(du);
+                if (max != durationS) {
+                    mSeekBar.setMax(durationS);
                 }
             }
-
             // 缓存进度
-            int percent = mMediaPlayer.getBufferedPercentage();
-            mSeekBar.setSecondaryProgress((int) (percent * (duration / 1000)));
-
+            mSeekBar.setSecondaryProgress(secondPositionS);
             // 设置当前进度
-            mSeekBar.setProgress((int) currentPosition / 1000);
+            mSeekBar.setProgress(currentPositionS);
+        }
 
-            // 通知位置 s
-            notifyPlayerPosition((int) currentPosition / 1000, (int) (percent * (duration / 1000)), (int) (duration / 1000));
+        if (mBottomSeekBar != null) {
+            if (durationS > 0) {
+                // 当前最大进度 != 当前音频时长
+                int max = mBottomSeekBar.getMax();
+                // 设置最大进度
+                if (max != durationS) {
+                    mBottomSeekBar.setMax(durationS);
+                }
+            }
+            // 缓存进度
+            mBottomSeekBar.setSecondaryProgress(secondPositionS);
+            // 设置当前进度
+            mBottomSeekBar.setProgress(currentPositionS);
         }
     }
 
@@ -496,10 +555,14 @@ public abstract class BaseMediaController extends FrameLayout {
     private Handler mMainHandler = new Handler(Looper.getMainLooper());
 
     /**
-     * 显示 控制器
+     * 显示 控制器内容
      */
     public void show() {
-        if (mIsShowAlways) {
+        if (!isNormalControllerShow()) {
+            return;
+        }
+
+        if (mIsMainContentAlwaysShow) {
             show(0);
         } else {
             show(sDefaultTimeout);
@@ -507,42 +570,62 @@ public abstract class BaseMediaController extends FrameLayout {
     }
 
     /**
-     * 显示 控制器
+     * 显示 控制器内容
      * @param timeOut 0 一直显示直到 hide 调用
      */
     public void show(int timeOut){
+        if (!isNormalControllerShow()) {
+            return;
+        }
+
         if (!isShowing()) {
-            setVisibility(VISIBLE);
+            mControllerMainContent.setVisibility(VISIBLE);
+            mBottomSeekView.setVisibility(GONE);
             if (mShownHiddenListener != null){
                 mShownHiddenListener.onShown();
             }
             updatePlayPauseView();
             mIsShowing = true;
             if (timeOut != 0) {
+                startHide(timeOut);
+            } else {
                 mMainHandler.removeCallbacks(mShowHideTask);
-                mShowHideTask = new Runnable() {
-                    @Override
-                    public void run() {
-                        hide();
-                    }
-                };
-                mMainHandler.postDelayed(mShowHideTask, timeOut);
             }
-
-            // 开启更新进度条
-//            if (mUpdateProgressHelper == null) {
-//                mUpdateProgressHelper = new UpdateProgressHelper();
-//            }
-//            mUpdateProgressHelper.startSeekBarUpdate();
         }
     }
 
     /**
-     * 隐藏控制器
+     * 开始隐藏
+     */
+    private void startHide(int timeOut) {
+        if (mIsMainContentAlwaysShow) {
+            return;
+        }
+        mMainHandler.removeCallbacks(mShowHideTask);
+        mShowHideTask = new Runnable() {
+            @Override
+            public void run() {
+                hide();
+            }
+        };
+        mMainHandler.postDelayed(mShowHideTask, timeOut);
+    }
+
+    /**
+     * 隐藏 控制器内容
      */
     public void hide() {
+        if (!isNormalControllerShow()) {
+            return;
+        }
+
+        if (mIsMainContentAlwaysShow) {
+            return;
+        }
+
         if (isShowing()) {
-            setVisibility(GONE);
+            mControllerMainContent.setVisibility(GONE);
+            mBottomSeekView.setVisibility(VISIBLE);
             if (mShownHiddenListener != null) {
                 mShownHiddenListener.onHidden();
             }
@@ -553,7 +636,7 @@ public abstract class BaseMediaController extends FrameLayout {
     }
 
     public boolean isShowing() {
-        mIsShowing = (getVisibility() == VISIBLE);
+        mIsShowing = (mControllerMainContent.getVisibility() == VISIBLE);
         return mIsShowing;
     }
 
@@ -593,7 +676,7 @@ public abstract class BaseMediaController extends FrameLayout {
     }
 
     /**
-     * 设置全屏
+     * 设置全屏 必须
      * @param fullScreenListener
      */
     public void setFullScreenListener(OnFullScreenListener fullScreenListener) {
@@ -607,11 +690,14 @@ public abstract class BaseMediaController extends FrameLayout {
 
         /**
          * 进入全屏
+         * 业务实现 必须
+         *
          */
         void onEnterFullScreen();
 
         /**
          * 退出全屏
+         * 业务实现 必须
          */
         void onExitFullScreen();
 
@@ -751,24 +837,66 @@ public abstract class BaseMediaController extends FrameLayout {
      * 一直显示控制器
      * @return
      */
-    public boolean isShowAlways() {
-        return mIsShowAlways;
+    public boolean isMainContentAlwaysShow() {
+        return mIsMainContentAlwaysShow;
     }
 
     /**
-     *
-     * @param showAlways
+     * 是否总是显示 控制器内容
+     * @param mainContentAlwaysShow
      */
-    public void setShowAlways(boolean showAlways) {
-        mIsShowAlways = showAlways;
+    public void setMainContentAlwaysShow(boolean mainContentAlwaysShow) {
+        mIsMainContentAlwaysShow = mainContentAlwaysShow;
+        if (!mIsMainContentAlwaysShow) {
+            startHide(sDefaultTimeout);
+        }
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        if (mMediaPlayer != null && isNormalControllerShow()) {
+            if (mIsMainContentAlwaysShow) {
+                show();
+            } else {
+                toggleMediaControllerVisibility();
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 开关显示隐藏 控制器
+     */
+    private void toggleMediaControllerVisibility() {
+        if (mIsMainContentAlwaysShow) {
+            return;
+        }
+        if (isShowing()) {
+            hide();
+        } else {
+            show();
+        }
+    }
+
+    /**
+     * 显示普通控制器
+     */
     public void showNormalController(){
-        mControllerContent.setVisibility(VISIBLE);
+        mNormalControllerView.setVisibility(VISIBLE);
     }
 
+    /**
+     * 隐藏普通控制器
+     */
     public void hideNormalController(){
-        mControllerContent.setVisibility(GONE);
+        mNormalControllerView.setVisibility(GONE);
+    }
+
+    /**
+     * @return 普通控制器 显示
+     */
+    protected boolean isNormalControllerShow() {
+        return mNormalControllerView.getVisibility() == VISIBLE;
     }
 
 }

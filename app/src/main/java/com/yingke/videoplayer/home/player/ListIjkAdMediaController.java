@@ -147,6 +147,17 @@ public class ListIjkAdMediaController extends ListIjkPipMediaController {
     }
 
     @Override
+    protected void afterFullScreenChanged() {
+        super.afterFullScreenChanged();
+        if (isFullScreen()) {
+            mImageBack.setVisibility(VISIBLE);
+        } else {
+            mImageBack.setVisibility(GONE);
+        }
+
+    }
+
+    @Override
     protected void notifyPlayerPosition(int currentPositionS, int secondPositionS, int durationS) {
         super.notifyPlayerPosition(currentPositionS, secondPositionS, durationS);
         String leftDuration = (durationS - currentPositionS)  + "";

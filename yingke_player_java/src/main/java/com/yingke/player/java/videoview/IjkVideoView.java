@@ -260,6 +260,7 @@ public class IjkVideoView extends IjkBaseVideoView {
         }
     }
 
+    @Deprecated
     @Override
     public void startTinyScreen() {
         // 这里和业务没关系，应该add和业务相关的播放器，很多业务情况不是很满足
@@ -294,6 +295,7 @@ public class IjkVideoView extends IjkBaseVideoView {
         notifyScreenModeChanged(SCREEN_MODE_TINY);
     }
 
+    @Deprecated
     @Override
     public void stopTinyScreen() {
         if (!mIsTinyScreen) {
@@ -326,5 +328,12 @@ public class IjkVideoView extends IjkBaseVideoView {
         return mIsTinyScreen;
     }
 
-
+    /**
+     * 设置小屏
+     * @param tinyScreen
+     */
+    public void setTinyScreen(boolean tinyScreen) {
+        mIsTinyScreen = tinyScreen;
+        notifyScreenModeChanged(tinyScreen ? SCREEN_MODE_TINY: SCREEN_MODE_NORMAL);
+    }
 }

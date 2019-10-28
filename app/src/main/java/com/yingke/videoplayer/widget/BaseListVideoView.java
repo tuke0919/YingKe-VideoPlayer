@@ -1,21 +1,30 @@
 package com.yingke.videoplayer.widget;
 
+import android.app.Activity;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
+import android.view.Gravity;
+import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.yingke.player.java.IVideoBean;
+import com.yingke.player.java.PlayerLog;
+import com.yingke.player.java.PlayerUtils;
 import com.yingke.player.java.controller.BaseMediaController;
 import com.yingke.player.java.controller.MediaController;
 import com.yingke.player.java.controller.MediaPlayerControl;
 import com.yingke.player.java.listener.OnPlayStateListener;
 import com.yingke.player.java.videoview.IjkVideoView;
 import com.yingke.videoplayer.R;
+import com.yingke.videoplayer.util.DeviceUtil;
 import com.yingke.videoplayer.util.NetUtils;
 import com.yingke.videoplayer.util.PlayerSetting;
 
@@ -31,6 +40,7 @@ import static com.yingke.player.java.videoview.IjkBaseVideoView.STATE_PLAYBACK_C
 import static com.yingke.player.java.videoview.IjkBaseVideoView.STATE_PLAYING;
 import static com.yingke.player.java.videoview.IjkBaseVideoView.STATE_PREPARED;
 import static com.yingke.player.java.videoview.IjkBaseVideoView.STATE_PREPARING;
+import static com.yingke.player.java.videoview.IjkBaseVideoView.TAG;
 
 /**
  * 功能：业务相关的 播放器控件
@@ -45,6 +55,8 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
     protected IjkVideoView mIjkVideoView;
     // 控制器
     protected MediaController mMediaController;
+    // 父容器
+    protected ViewParent mPlayerParent;
 
     public BaseListVideoView(@NonNull Context context) {
         super(context);
@@ -79,12 +91,12 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
         getControllerView().setFullScreenListener(new BaseMediaController.OnFullScreenListener() {
             @Override
             public void onEnterFullScreen() {
-
+                enterFullScreen();
             }
 
             @Override
             public void onExitFullScreen() {
-
+                exitFullScreen();
             }
         });
         getControllerView().setOnShareListener(new BaseMediaController.onShareListener() {
@@ -284,6 +296,8 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
     }
 
 
+
+
     @Override
     public void start() {
         if (mIjkVideoView != null) {
@@ -433,18 +447,103 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
         return new int[0];
     }
 
+    /**
+     * 进入全屏
+     */
+    public void enterFullScreen() {
+        // 添加到 contentView
+        ViewGroup contentView = getActivity().findViewById(android.R.id.content);
+        LayoutParams params = new LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+
+        mPlayerParent = getParent();
+        if (mPlayerParent instanceof ViewGroup) {
+            ((ViewGroup) mPlayerParent).removeView(this);
+        }
+        contentView.addView(this, params);
+
+
+    }
+
+    /**
+     * 退出全屏
+     */
+    public void exitFullScreen() {
+        if (mPlayerParent instanceof ViewGroup) {
+            ViewGroup contentView = getActivity().findViewById(android.R.id.content);
+            contentView.removeView(this);
+            LayoutParams params = new LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
+
+            ((ViewGroup) mPlayerParent).addView(this, params);
+        }
+    }
+
+    /**
+     * @return
+     */
+    public boolean isFullScreen() {
+        if (mIjkVideoView != null) {
+            return mIjkVideoView.isFullScreen();
+        }
+        return false;
+    }
+
     @Override
     public void startTinyScreen() {
-        if (mIjkVideoView != null) {
-            mIjkVideoView.startTinyScreen();
+        // 业务相关的小屏
+
+        if (mIjkVideoView == null) {
+            return;
         }
+
+        if (mIjkVideoView.isTinyScreen()) {
+            return;
+        }
+
+        mIjkVideoView.setTinyScreen(true);
+
+        // contentView添加
+        Activity activity = PlayerUtils.scanForActivity(getContext());
+        if (activity == null){
+            PlayerLog.d(TAG,"controller attached activity is null");
+            return;
+        }
+
+        // 实际是添加到contentView上
+        ViewGroup contentView = activity.findViewById(android.R.id.content);
+        int width = PlayerUtils.getScreenWidth(getContext()) / 2;
+        int height = width * 9 / 16;
+
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, height);
+        params.gravity = Gravity.TOP | Gravity.END;
+        params.topMargin = DeviceUtil.getStatusBarHeight(getContext());
+        // 添加到ContentView
+        contentView.addView(this, params);
     }
 
     @Override
     public void stopTinyScreen() {
-        if (mIjkVideoView != null) {
-            mIjkVideoView.stopTinyScreen();
+        if (mIjkVideoView == null) {
+            return;
         }
+
+        if (!mIjkVideoView.isTinyScreen()) {
+            return;
+        }
+
+        mIjkVideoView.setTinyScreen(false);
+
+        // contentView 移除
+        Activity activity = PlayerUtils.scanForActivity(getContext());
+        if (activity == null){
+            return;
+        }
+        ViewGroup contentView = activity.findViewById(android.R.id.content);
+        // 移除
+        contentView.removeView(this);
     }
 
     @Override
@@ -453,5 +552,13 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
             return mIjkVideoView.isTinyScreen();
         }
         return false;
+    }
+
+    public Activity getActivity() {
+        Activity activity = PlayerUtils.scanForActivity(getContext());
+        if (activity == null){
+            throw new IllegalArgumentException("BaseListVideoView attached activity is null");
+        }
+        return activity;
     }
 }

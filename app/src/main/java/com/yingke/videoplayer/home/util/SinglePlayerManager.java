@@ -240,21 +240,8 @@ public class SinglePlayerManager {
             mSuspensionView.addView(mCurrentListVideoView);
             mSuspensionView.attachToWindow();
         } else {
-            // contentView添加
-            Activity activity = PlayerUtils.scanForActivity(mRecyclerView.getContext());
-            if (activity == null){
-                return;
-            }
-            // 实际是添加到contentView上
-            ViewGroup contentView = activity.findViewById(android.R.id.content);
-            int width = PlayerUtils.getScreenWidth(mRecyclerView.getContext()) / 2;
-            int height = width * 9 / 16;
-
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, height);
-            params.gravity = Gravity.TOP | Gravity.END;
-            params.topMargin = DeviceUtil.getStatusBarHeight(mRecyclerView.getContext());
-            // 添加到ContentView
-            contentView.addView(mCurrentListVideoView, params);
+            // contentView 添加
+            mCurrentListVideoView.startTinyScreen();
         }
 
     }
@@ -288,13 +275,7 @@ public class SinglePlayerManager {
                 mSuspensionView.detachFromWindow();
             } else {
                 // contentView 移除
-                Activity activity = PlayerUtils.scanForActivity(mRecyclerView.getContext());
-                if (activity == null){
-                    return;
-                }
-                ViewGroup contentView = activity.findViewById(android.R.id.content);
-                // 移除
-                contentView.removeView(mCurrentListVideoView);
+                mCurrentListVideoView.stopTinyScreen();
             }
 
             mCurrentListVideoView = null;
@@ -323,13 +304,7 @@ public class SinglePlayerManager {
                 mSuspensionView.detachFromWindow();
             } else {
                 // contentView 移除
-                Activity activity = PlayerUtils.scanForActivity(mRecyclerView.getContext());
-                if (activity == null){
-                    return;
-                }
-                ViewGroup contentView = activity.findViewById(android.R.id.content);
-                // 移除
-                contentView.removeView(mCurrentListVideoView);
+                mCurrentListVideoView.stopTinyScreen();
             }
         }
     }

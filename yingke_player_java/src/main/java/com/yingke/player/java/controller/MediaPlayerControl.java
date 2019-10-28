@@ -135,6 +135,21 @@ public interface MediaPlayerControl {
      */
     void setRotation(float rotation);
 
+//    /**
+//     * 进入全屏
+//     */
+//    void enterFullScreen();
+//
+//    /**
+//     * 退出全屏
+//     */
+//    void exitFullScreen();
+//
+//    /**
+//     * @return 是否全屏
+//     */
+//    boolean isFullScreen();
+
     /**
      * 开始小屏
      */
