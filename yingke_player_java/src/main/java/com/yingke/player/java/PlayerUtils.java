@@ -37,4 +37,28 @@ public class PlayerUtils {
     public static int getScreenHeight(Context context) {
         return context.getResources().getDisplayMetrics().heightPixels;
     }
+
+    /**
+     * dip转pixel
+     *
+     * @param context
+     * @param dipValue
+     * @return
+     */
+    public static int dip2px(Context context, int dipValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dipValue * scale);
+    }
+
+    /**
+     * pixel转dip
+     *
+     * @param context
+     * @param pxValue
+     * @return
+     */
+    public static int px2dip(Context context, float pxValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (pxValue / scale + 0.5f);
+    }
 }

@@ -635,6 +635,10 @@ public abstract class BaseMediaController extends FrameLayout {
         }
     }
 
+    /**
+     * 控制器主内容 可见性
+     * @return
+     */
     public boolean isShowing() {
         mIsShowing = (mControllerMainContent.getVisibility() == VISIBLE);
         return mIsShowing;
@@ -854,27 +858,27 @@ public abstract class BaseMediaController extends FrameLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        if (mMediaPlayer != null && isNormalControllerShow()) {
-            if (mIsMainContentAlwaysShow) {
-                show();
-            } else {
-                toggleMediaControllerVisibility();
-            }
-        }
+
+        toggleMediaControllerVisibility();
         return false;
     }
 
     /**
      * 开关显示隐藏 控制器
      */
-    private void toggleMediaControllerVisibility() {
-        if (mIsMainContentAlwaysShow) {
-            return;
-        }
-        if (isShowing()) {
-            hide();
-        } else {
-            show();
+    protected void toggleMediaControllerVisibility() {
+
+        if (mMediaPlayer != null && isNormalControllerShow()) {
+            if (mIsMainContentAlwaysShow) {
+                show();
+            } else {
+                if (isShowing()) {
+                    hide();
+                } else {
+                    show();
+                }
+            }
+
         }
     }
 
