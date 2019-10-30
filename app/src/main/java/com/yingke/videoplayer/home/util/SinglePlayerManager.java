@@ -46,6 +46,10 @@ public class SinglePlayerManager {
     private IVideoBean mCurrentVideoBean;
     private BaseListVideoView mCurrentListVideoView;
 
+    /**
+     * 绑定列表
+     * @param recyclerView
+     */
     public void attachRecycleView(RecyclerView recyclerView) {
         this.mRecyclerView = recyclerView;
         if (recyclerView == null) {
@@ -68,7 +72,7 @@ public class SinglePlayerManager {
     }
 
     /**
-     * 释放播放器
+     * 移除并释放播放器
      */
     public void releaseVideoPlayer() {
         if (mCurrentListVideoView != null) {
@@ -100,9 +104,9 @@ public class SinglePlayerManager {
     }
 
     /**
-     * 移除但不释放 播放器
+     * 移除但不释放 播放器，恢复到封面状态
      */
-    private void removePlayerNotRelease() {
+    public void removePlayerNotRelease() {
         if (mCurrentListVideoView == null) {
             return;
         }
@@ -165,7 +169,7 @@ public class SinglePlayerManager {
         }
     }
 
-    //#### 画中画（悬浮窗/小屏）
+    //#### 画中画（悬浮窗/小屏）仅用于竖屏播放器，横屏时许关闭！
 
     public static final int PIP_TYPE_FLOAT_WINDOW = 0;
     public static final int PIP_TYPE_TINY_SCREEN = 1;
@@ -181,25 +185,21 @@ public class SinglePlayerManager {
 
 
     /**
-     * 启动画中画
-     * @param context
+     * 启动画中画 仅用于竖屏播放器，横屏时许关闭！
      * @param isPipEnable
      */
-    public void enablePip(Context context, boolean isPipEnable){
-        enablePip(context, isPipEnable, PIP_TYPE_FLOAT_WINDOW);
+    public void enablePip( boolean isPipEnable){
+        enablePip(isPipEnable, PIP_TYPE_FLOAT_WINDOW);
     }
 
     /**
-     * 启动画中画
-     * @param context
+     * 启动画中画 仅用于竖屏播放器，横屏时许关闭！
      * @param isPipEnable
+     * @param pipType
      */
-    public void enablePip(Context context, boolean isPipEnable, int pipType) {
+    public void enablePip( boolean isPipEnable, int pipType) {
         mIsPipEnable = isPipEnable;
         mPipType = pipType;
-        if (isSuspensionType()) {
-            mSuspensionView = new SuspensionView(context);
-        }
     }
 
     public boolean isPipEnable() {
@@ -237,13 +237,17 @@ public class SinglePlayerManager {
 
         if (isSuspensionType()) {
             // 悬浮窗添加
+
+            if (mSuspensionView == null) {
+                mSuspensionView = new SuspensionView(mRecyclerView.getContext());
+            }
+
             mSuspensionView.addView(mCurrentListVideoView);
             mSuspensionView.attachToWindow();
         } else {
             // contentView 添加
             mCurrentListVideoView.startTinyScreen();
         }
-
     }
 
     /**
@@ -271,8 +275,11 @@ public class SinglePlayerManager {
 
             if (isSuspensionType()) {
                 // 悬浮窗移除
-                mSuspensionView.removeAllViews();
-                mSuspensionView.detachFromWindow();
+                if (mSuspensionView != null) {
+                    mSuspensionView.removeAllViews();
+                    mSuspensionView.detachFromWindow();
+                }
+
             } else {
                 // contentView 移除
                 mCurrentListVideoView.stopTinyScreen();

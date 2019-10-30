@@ -17,15 +17,15 @@ import android.widget.TabWidget;
 import android.widget.TextView;
 
 import com.yingke.videoplayer.R;
-import com.yingke.videoplayer.base.BaseActivity;
 import com.yingke.videoplayer.center.CommunityFragment;
+import com.yingke.videoplayer.home.landscape.LandScapeActivity;
 import com.yingke.videoplayer.home.frag.HomeFragment;
 import com.yingke.videoplayer.personal.PersonalFragment;
 import com.yingke.videoplayer.tiktok.TiktokFragment;
 
 import java.util.HashMap;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends LandScapeActivity {
 
 
     public static final String TAB_HOME = "tab_home";

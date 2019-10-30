@@ -148,7 +148,7 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
         // 绑定列表
         SinglePlayerManager.getInstance().attachRecycleView(mRecyclerView);
         // 开启悬浮窗
-        SinglePlayerManager.getInstance().enablePip(getContext(), true);
+        SinglePlayerManager.getInstance().enablePip(true);
 
     }
 
@@ -253,7 +253,7 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
                 ListVideoVH listVideoVH = getListVideoVH(view);
                 if (listVideoVH != null) {
                     BaseListVideoView listVideoView = SinglePlayerManager.getInstance().getCurrentListVideoView();
-                    listVideoVH.addVideoPlayer(listVideoView);
+                    listVideoVH.attachVideoPlayer(listVideoView);
                 }
             }
         }

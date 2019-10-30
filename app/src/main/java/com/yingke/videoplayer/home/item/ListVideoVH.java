@@ -160,7 +160,7 @@ public class ListVideoVH implements View.OnClickListener {
      * 添加播放器
      * @param listVideoView
      */
-    public void addVideoPlayer(BaseListVideoView listVideoView) {
+    public void attachVideoPlayer(BaseListVideoView listVideoView) {
         clearVideoPlayer(mVideoContainer, true);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         mVideoContainer.addView(listVideoView, 0, params);

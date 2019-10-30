@@ -541,9 +541,11 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
         switch (what) {
             case AbstractPlayer.MEDIA_INFO_BUFFERING_START:
                 notifyPlayStateChanged(STATE_BUFFERING);
+                PlayerLog.d(TAG, "onInfo : tcpSpeed = " +  getTcpSpeed() );
                 break;
             case AbstractPlayer.MEDIA_INFO_BUFFERING_END:
                 notifyPlayStateChanged(STATE_BUFFERED);
+                PlayerLog.d(TAG, "onInfo : STATE_BUFFERED  " +  getTcpSpeed() );
                 break;
             case AbstractPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
                 // 视频开始渲染

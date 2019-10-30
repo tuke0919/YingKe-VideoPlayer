@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#ffffff"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <!--横屏视频容器-->
+    <FrameLayout
+        android:id="@+id/land_video_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
+    <!--封面-->
+    <RelativeLayout
+        android:id="@+id/land_cover_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        >
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/land_cover_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:actualImageResource="@drawable/videofeed_14"
+            app:actualImageScaleType="fitXY"
+            app:fadeDuration="100"
+            android:visibility="visible"
+            />
+
+        <!--竖屏 标题-->
+        <LinearLayout
+            android:id="@+id/land_title_view"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:orientation="horizontal"
+            android:layout_marginRight="16dip"
+            android:layout_marginLeft="16dp"
+            >
+
+            <ImageView
+                android:id="@+id/land_image_back"
+                android:layout_width="45dp"
+                android:layout_height="match_parent"
+                android:scaleType="center"
+                android:src="@drawable/icon_controller_back" />
+
+            <TextView
+                android:id="@+id/land_title"
+                android:layout_width="match_parent"
+                android:layout_height="45dip"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="2"
+                android:text="《极限挑战》未播：这三个人笑疯了，黄渤，孙红雷嘲讽宋小宝太黑看不见..."
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="17sp" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

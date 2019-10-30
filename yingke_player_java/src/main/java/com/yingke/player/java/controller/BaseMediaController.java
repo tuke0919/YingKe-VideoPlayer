@@ -162,7 +162,7 @@ public abstract class BaseMediaController extends FrameLayout {
         // 倍速
         mSpeedLandView = mRootView.findViewById(R.id.controller_speed_btn);
         if (mSpeedLandView != null){
-            mSpeedLandView.setText(mSpeedName[mSpeedPos]);
+//            mSpeedLandView.setText(mSpeedName[mSpeedPos]);
             mSpeedLandView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

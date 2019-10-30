@@ -5,13 +5,11 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -24,6 +22,8 @@ import com.yingke.player.java.controller.MediaPlayerControl;
 import com.yingke.player.java.listener.OnPlayStateListener;
 import com.yingke.player.java.videoview.IjkVideoView;
 import com.yingke.videoplayer.R;
+import com.yingke.videoplayer.home.landscape.LandScapeActivity;
+import com.yingke.videoplayer.home.util.SinglePlayerManager;
 import com.yingke.videoplayer.util.DeviceUtil;
 import com.yingke.videoplayer.util.NetUtils;
 import com.yingke.videoplayer.util.PlayerSetting;
@@ -451,7 +451,14 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
      * 进入全屏
      */
     public void enterFullScreen() {
+        PlayerLog.d("ListVideo", "enterFullScreen: ");
         // 添加到 contentView
+
+        if (getActivity() instanceof LandScapeActivity) {
+            SinglePlayerManager.getInstance().releaseVideoPlayer();
+            ((LandScapeActivity) getActivity()).enterFullScreen(this);
+            return;
+        }
         ViewGroup contentView = getActivity().findViewById(android.R.id.content);
         LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -462,14 +469,19 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
             ((ViewGroup) mPlayerParent).removeView(this);
         }
         contentView.addView(this, params);
-
-
     }
 
     /**
      * 退出全屏
      */
     public void exitFullScreen() {
+        PlayerLog.d("ListVideo", "exitFullScreen: ");
+
+        if (getActivity() instanceof LandScapeActivity) {
+            ((LandScapeActivity) getActivity()).exitFullScreen();
+            return;
+        }
+
         if (mPlayerParent instanceof ViewGroup) {
             ViewGroup contentView = getActivity().findViewById(android.R.id.content);
             contentView.removeView(this);

@@ -113,7 +113,9 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/icon_controller_play"
                 android:layout_centerInParent="true"
+                android:visibility="visible"
                 />
+
 
             <RelativeLayout
                 android:id="@+id/controller_bottom_view"
@@ -160,7 +162,7 @@
                         android:gravity="center"
                         android:paddingLeft="10dip"
                         android:paddingRight="10dip"
-                        android:text="1.0x"
+                        android:text="倍速"
                         android:textColor="@color/white"
                         android:textSize="10sp"
                         android:visibility="gone"
