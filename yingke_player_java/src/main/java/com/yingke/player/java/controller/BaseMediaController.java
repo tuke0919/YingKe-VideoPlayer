@@ -282,7 +282,7 @@ public abstract class BaseMediaController extends FrameLayout {
     /**
      * 主动设置 横屏/竖屏
      */
-    protected void setRequestedOrientation(){
+    public void setRequestedOrientation(){
         if (!isFullScreen()) {
             enterFullScreen();
         } else {

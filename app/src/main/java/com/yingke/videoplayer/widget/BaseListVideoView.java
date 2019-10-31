@@ -59,7 +59,7 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
     protected ViewParent mPlayerParent;
 
     // 单个视屏全屏
-    protected boolean mIsFullScreenSingle = false;
+    protected boolean mIsFullScreenSingle = true;
 
     public BaseListVideoView(@NonNull Context context) {
         super(context);
@@ -467,72 +467,17 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
      */
     public void enterFullScreen() {
         PlayerLog.d("ListVideo", "enterFullScreen: ");
-        if (mIsFullScreenSingle) {
-            enterFullScreenForSingle();
-        } else {
-            enterFullScreenForList();
-        }
-
-    }
-
-    /**
-     * 进入全屏 仅单个视频
-     */
-    public void enterFullScreenForSingle() {
-        ViewGroup contentView = getActivity().findViewById(android.R.id.content);
-        LayoutParams params = new LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
-
-        mPlayerParent = getParent();
-        if (mPlayerParent instanceof ViewGroup) {
-            ((ViewGroup) mPlayerParent).removeView(this);
-        }
-        contentView.addView(this, params);
-    }
-
-    /**
-     * 进入全屏 横屏视频列表
-     */
-    public void enterFullScreenForList() {
         if (getActivity() instanceof LandScapeActivity) {
             ((LandScapeActivity) getActivity()).enterFullScreen(this);
         }
-    }
 
+    }
 
     /**
      * 退出全屏
      */
     public void exitFullScreen() {
         PlayerLog.d("ListVideo", "exitFullScreen: ");
-        if (mIsFullScreenSingle){
-            exitFullScreenForSingle();
-        } else {
-            exitFullScreenForList();
-        }
-    }
-
-
-    /**
-     * 退出全屏 仅单个视频
-     */
-    public void exitFullScreenForSingle() {
-        if (mPlayerParent instanceof ViewGroup) {
-            ViewGroup contentView = getActivity().findViewById(android.R.id.content);
-            contentView.removeView(this);
-            LayoutParams params = new LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT);
-
-            ((ViewGroup) mPlayerParent).addView(this, params);
-        }
-    }
-
-    /**
-     * 退出全屏 横屏视频列表
-     */
-    public void exitFullScreenForList() {
         if (getActivity() instanceof LandScapeActivity) {
             ((LandScapeActivity) getActivity()).exitFullScreen();
         }

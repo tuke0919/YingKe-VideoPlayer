@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.yingke.player.java.IVideoBean;
 import com.yingke.player.java.PlayerLog;
+import com.yingke.player.java.controller.MediaController;
 import com.yingke.videoplayer.base.BaseActivity;
 import com.yingke.videoplayer.home.bean.ListVideoData;
 import com.yingke.videoplayer.home.frag.HomeFragment;
@@ -59,6 +60,15 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
     private IVideoBean mLandVideoBean;
     // 当前横屏的播放器
     private BaseListVideoView mCurrentLandVideoView;
+
+    // for single
+    // 父容器
+    protected ViewParent mPlayerParent;
+    // 单个视屏全屏
+    protected boolean mIsFullScreenSingle = true;
+
+    // 是否全屏状态
+    protected boolean mIsFullScreen = false;
 
 
     /**
@@ -129,7 +139,39 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
      */
     public void enterFullScreen(BaseListVideoView portListVideoView) {
         PlayerLog.e(TAG, "enterFullScreen: ");
+        mIsFullScreen = true;
+       if (mIsFullScreenSingle) {
+           enterFullScreenForSingle(portListVideoView);
+       } else {
+           enterFullScreenForList(portListVideoView);
+       }
+    }
 
+
+    /**
+     * 进入全屏 仅单个视频
+     * @param portListVideoView
+     */
+    public void enterFullScreenForSingle(BaseListVideoView portListVideoView) {
+        ViewGroup contentView = findViewById(android.R.id.content);
+
+        mCurrentLandVideoView = portListVideoView;
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+
+        mPlayerParent = portListVideoView.getParent();
+        if (mPlayerParent instanceof ViewGroup) {
+            ((ViewGroup) mPlayerParent).removeView(portListVideoView);
+        }
+        contentView.addView(portListVideoView, params);
+    }
+
+    /**
+     * 进入全屏 横屏视频列表
+     * @param portListVideoView
+     */
+    public void enterFullScreenForList(BaseListVideoView portListVideoView) {
         // 禁止画中画
         SinglePlayerManager.getInstance().enablePip(false);
 
@@ -156,14 +198,44 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
 
         // 更新成当前列表
         SinglePlayerManager.getInstance().attachRecycleView(mLandRecyclerView);
-
     }
+
 
     /**
      * 进入竖屏
      */
     public void exitFullScreen() {
         PlayerLog.e(TAG, "exitFullScreen: ");
+        mIsFullScreen = false;
+        if (mIsFullScreenSingle){
+            exitFullScreenForSingle();
+        } else {
+            exitFullScreenForList();
+        }
+    }
+
+    /**
+     * 退出全屏 仅单个视频
+     */
+    public void exitFullScreenForSingle() {
+        if (mPlayerParent instanceof ViewGroup) {
+            ViewGroup contentView = findViewById(android.R.id.content);
+            contentView.removeView(mCurrentLandVideoView);
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
+
+            ((ViewGroup) mPlayerParent).addView(mCurrentLandVideoView, params);
+
+            mPlayerParent = null;
+            mCurrentLandVideoView = null;
+        }
+    }
+
+    /**
+     * 退出全屏 横屏视频列表
+     */
+    public void exitFullScreenForList() {
         if (mCurrentLandVideoView != null) {
 
             ViewParent landVideoParent = mCurrentLandVideoView.getParent();
@@ -182,19 +254,19 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
             mLandRecyclerView = null;
             mLandListVideoAdapter = null;
             mLandVideoBean = null;
-            mCurrentPosition = -1;
+            mCurrentLandPosition = -1;
         }
-
     }
 
+
     // 当前位置
-    private int mCurrentPosition = -1;
+    private int mCurrentLandPosition = -1;
 
 
     @Override
     public void onFirstPageAttached(View itemView) {
         PlayerLog.e(TAG, "onFirstPageAttached: position = " + 0);
-        mCurrentPosition = 0;
+        mCurrentLandPosition = 0;
         mLandVideoBean = mLandListVideoAdapter.getItem(0);
 
         ViewParent landVideoParent = mCurrentLandVideoView.getParent();
@@ -211,8 +283,8 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
     public void onPageSelected(int position, View itemView, boolean isBottom) {
         PlayerLog.e(TAG, "onPageSelected: position = " + position);
 
-        if (mCurrentPosition != position) {
-            mCurrentPosition = position;
+        if (mCurrentLandPosition != position) {
+            mCurrentLandPosition = position;
             mLandVideoBean = mLandListVideoAdapter.getItem(position);
             if (mLandVideoBean != null) {
                 // 新生成播放器
@@ -239,7 +311,7 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
     @Override
     public void onPageDetached(boolean isNext, int position, View itemView) {
         PlayerLog.e(TAG, "onPageDetached: position = " + position);
-        if (mCurrentPosition == position) {
+        if (mCurrentLandPosition == position) {
             // 释放上一个播放器
             SinglePlayerManager.getInstance().releaseVideoPlayer();
         }
@@ -289,4 +361,16 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
     }
 
 
+    @Override
+    public void onBackPressed() {
+        if (mIsFullScreen && mCurrentLandVideoView != null) {
+            // 退出全屏
+            MediaController controller = mCurrentLandVideoView.getControllerView();
+            if (controller != null) {
+                mCurrentLandVideoView.getControllerView().setRequestedOrientation();
+            }
+        } else {
+            super.onBackPressed();
+        }
+    }
 }
