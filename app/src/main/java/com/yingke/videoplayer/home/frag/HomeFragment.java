@@ -2,6 +2,7 @@ package com.yingke.videoplayer.home.frag;
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -26,10 +27,6 @@ import java.util.List;
  * <p>Copyright corp.xxx.com 2019 All right reserved </p>
  *
  * @author tuke 时间 2019/9/16
- * @email tuke@corp.netease.com
- * <p>
- * 最后修改人：无
- * <p>
  */
 public class HomeFragment extends BaseFragment {
 
@@ -98,6 +95,13 @@ public class HomeFragment extends BaseFragment {
         }
         mTabAdapter.setTopTabData(topTabData);
         mTabAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * @return 当前fragment
+     */
+    public Fragment getCurrentFragment() {
+       return mTabAdapter.getCurrentFragment();
     }
 
     @Override

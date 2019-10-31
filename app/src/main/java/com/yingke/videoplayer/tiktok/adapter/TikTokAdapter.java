@@ -117,7 +117,7 @@ public class TikTokAdapter extends BaseRecycleViewAdapter<ListTiktokBean> {
                 mDraweeView.setVisibility(View.VISIBLE);
                 FrescoUtil.displayImage(mDraweeView, new File(thumbPath));
             } else {
-                File thumbFile = FileUtil.getVideoThumbFile(context, EncryptUtils.md5String(data.getUrl()));
+                File thumbFile = FileUtil.getVideoThumbFile(context,  data.getUrl(), EncryptUtils.TIKTOK_VIDEO);
                 if (thumbFile.exists()) {
                     data.setCoverImage(thumbFile.getAbsolutePath());
                 }

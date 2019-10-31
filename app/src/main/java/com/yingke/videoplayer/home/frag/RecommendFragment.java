@@ -35,6 +35,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
@@ -59,6 +60,8 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
     }
 
     private boolean isInited = false;
+    // 点击视频位置 横竖屏切换用
+    private int mPortPosition = -1;
 
     @Override
     protected int getLayoutResId() {
@@ -120,12 +123,12 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
                 // 设置首播类型
                 data.setCurrentType(data.getFirstType());
 
-                File thumbFile = FileUtil.getVideoThumbFile(getContext(), EncryptUtils.md5String(data.getUrl()));
+                File thumbFile = FileUtil.getVideoThumbFile(getContext(), data.getUrl(), EncryptUtils.PORT_REC_VIDEO);
                 if (thumbFile.exists()) {
                     data.setThumbPath(thumbFile.getAbsolutePath());
                 }
 
-                File thumbAdFile = FileUtil.getVideoThumbFile(getContext(), EncryptUtils.md5String(data.getAdUrl()));
+                File thumbAdFile = FileUtil.getVideoThumbFile(getContext(), data.getAdUrl(), EncryptUtils.AD_REC_VIDEO);
                 if (thumbAdFile.exists()) {
                     data.setAdThumbPath(thumbAdFile.getAbsolutePath());
                 }
@@ -156,8 +159,9 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
 
 
     @Override
-    public void onListVideoPlay(View rootView, FrameLayout videoContainer, ListVideoData videoData) {
+    public void onListVideoPlay(FrameLayout videoContainer, ListVideoData videoData, int position) {
         // 点击播放视频
+        mPortPosition = position;
 
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         ListIjkVideoView ijkVideoView = new ListIjkVideoView(getContext());
@@ -168,6 +172,21 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
         videoContainer.addView(ijkVideoView, 0,  params);
         ijkVideoView.setVideoOnline(videoData);
 
+    }
+
+    /**
+     * 点击位置 横竖屏切换用
+     * @return
+     */
+    public int getPortPosition() {
+        return mPortPosition;
+    }
+
+    /**
+     * @param portPosition
+     */
+    public void setPortPosition(int portPosition) {
+        mPortPosition = portPosition;
     }
 
     @Override

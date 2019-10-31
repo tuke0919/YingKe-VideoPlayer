@@ -21,7 +21,7 @@ public  class DefaultWorkerCenter implements IWorkerCenter {
 	private static final String TAG = DefaultWorkerCenter.class.getSimpleName();
 
 	// 线程池定义
-	private static final int THREADPOOL_COUNT = 3;
+	private static final int THREADPOOL_COUNT = 10;
 	private static final int MSG_NORMAL_TASK_DELAY = 1;
 
 	//单例

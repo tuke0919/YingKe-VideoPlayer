@@ -229,7 +229,7 @@ public class ListIjkVideoView extends BaseListVideoView {
      * @param isAd
      */
     public void setCoverImage(ListVideoData videoData, boolean isAd) {
-        String thumbPath = videoData.getThumbPath();;
+        String thumbPath = videoData.getThumbPath();
         if (isAd) {
             thumbPath = videoData.getAdThumbPath();
         }
@@ -241,14 +241,28 @@ public class ListIjkVideoView extends BaseListVideoView {
                 url = videoData.getAdUrl();
             }
             if (!TextUtils.isEmpty(url)) {
-                File thumbFile = FileUtil.getVideoThumbFile(getContext(), EncryptUtils.md5String(url));
-                if (thumbFile.exists()) {
-                    if (isAd) {
+                if (isAd) {
+                    // 广告
+                    File thumbFile = FileUtil.getVideoThumbFile(getContext(), url, EncryptUtils.AD_REC_VIDEO);
+                    if (thumbFile.exists()) {
                         videoData.setAdThumbPath(thumbFile.getAbsolutePath());
-                    } else {
-                        videoData.setThumbPath(thumbFile.getAbsolutePath());
+                        FrescoUtil.displayImage(mCoverImage, thumbFile);
                     }
-                    FrescoUtil.displayImage(mCoverImage, thumbFile);
+
+                } else {
+                    // 视频
+                    File thumbFile = FileUtil.getVideoThumbFile(getContext(), url, EncryptUtils.PORT_REC_VIDEO);
+                    if (thumbFile.exists()) {
+                        videoData.setThumbPath(thumbFile.getAbsolutePath());
+                        FrescoUtil.displayImage(mCoverImage, thumbFile);
+                        return;
+                    }
+                    thumbFile = FileUtil.getVideoThumbFile(getContext(), url, EncryptUtils.LAND_REC_VIDEO);
+                    if (thumbFile.exists()) {
+                        videoData.setThumbPath(thumbFile.getAbsolutePath());
+                        FrescoUtil.displayImage(mCoverImage, thumbFile);
+                        return;
+                    }
                 }
             }
         }

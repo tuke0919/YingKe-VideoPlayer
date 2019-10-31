@@ -68,7 +68,7 @@ public class ListVideoAdapter extends BaseRecycleViewAdapter<ListVideoData> {
 
     public interface OnListVideoClickListener{
 
-        void onListVideoPlay(View rootView, FrameLayout videoContainer, ListVideoData videoData);
+        void onListVideoPlay(FrameLayout videoContainer, ListVideoData videoData, int position);
 
         void onMoreClick(ListVideoData videoData);
     }

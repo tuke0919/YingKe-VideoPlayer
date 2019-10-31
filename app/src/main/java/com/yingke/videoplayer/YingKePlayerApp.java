@@ -13,6 +13,7 @@ import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
+import com.yingke.player.java.PlayerLog;
 import com.yingke.videoplayer.util.Constants;
 import com.yingke.videoplayer.util.PlayerUtil;
 
@@ -41,6 +42,7 @@ public class YingKePlayerApp extends Application {
 
         // 获取列表网络视频的帧
         PlayerUtil.listRecVideoFrames(this);
+        PlayerUtil.listRecLandVideoFrames(this);
         PlayerUtil.listTiktokVideoFrames(this);
     }
 

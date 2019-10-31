@@ -18,7 +18,17 @@ import java.security.NoSuchAlgorithmException;
  */
 public class EncryptUtils {
 
-    public static String md5String(String string){
+    public static final String PORT_REC_VIDEO = "port";
+    public static final String LAND_REC_VIDEO = "land";
+    public static final String TIKTOK_VIDEO = "tiktok";
+    public static final String AD_REC_VIDEO = "ad";
+
+    /**
+     * @param string
+     * @param prefix
+     * @return
+     */
+    public static String md5String(String string, String prefix){
         if (TextUtils.isEmpty(string)) {
             return "";
         }
@@ -35,6 +45,7 @@ public class EncryptUtils {
                 }
                 result += temp;
             }
+            result = prefix + "_"+ result;
             return result;
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();

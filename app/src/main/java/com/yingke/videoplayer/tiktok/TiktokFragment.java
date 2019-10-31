@@ -76,7 +76,7 @@ public class TiktokFragment extends BaseFragment implements PagerLayoutManager.O
         if (!TextUtils.isEmpty(videoListJson)) {
             List<ListTiktokBean> listVideoData = new Gson().fromJson(videoListJson, new TypeToken<List<ListTiktokBean>>() {}.getType());
             for (ListTiktokBean data : listVideoData) {
-                File thumbFile = FileUtil.getVideoThumbFile(getContext(), EncryptUtils.md5String(data.getUrl()));
+                File thumbFile = FileUtil.getVideoThumbFile(getContext(), data.getUrl(), EncryptUtils.TIKTOK_VIDEO);
                 if (thumbFile.exists()) {
                     data.setCoverImage(thumbFile.getAbsolutePath());
                 }

@@ -16,6 +16,7 @@ import com.yingke.videoplayer.home.player.ListIjkVideoView;
 import com.yingke.videoplayer.util.EncryptUtils;
 import com.yingke.videoplayer.util.FileUtil;
 import com.yingke.videoplayer.util.FrescoUtil;
+import com.yingke.videoplayer.util.ToastUtil;
 import com.yingke.videoplayer.widget.BaseListVideoView;
 
 import java.io.File;
@@ -48,9 +49,11 @@ public class LandListVideoVH {
     private int position;
     private ListVideoData mListVideoData;
 
+    private LandListVideoAdapter.OnBackListener mListener;
 
-    public LandListVideoVH(View itemView){
+    public LandListVideoVH(View itemView, LandListVideoAdapter.OnBackListener listener){
         this.itemView = itemView;
+        this.mListener = listener;
         mLandVideoContainer = itemView.findViewById(R.id.land_video_view_container);
         mLandCoverView = itemView.findViewById(R.id.land_cover_view);
         mDraweeView = itemView.findViewById(R.id.land_cover_image);
@@ -60,7 +63,9 @@ public class LandListVideoVH {
         mImageBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+               if (mListener != null) {
+                   mListener.onBack();
+               }
             }
         });
     }
@@ -73,22 +78,33 @@ public class LandListVideoVH {
         this.position = position;
         mListVideoData = data;
 
-        mLandCoverView.setVisibility(View.VISIBLE);
-        mDraweeView.setVisibility(View.VISIBLE);
-        mLandTitle.setVisibility(View.VISIBLE);
-        // 标题
-        mLandTitle.setText(data.getTitle());
         // 封面图
         String thumbPath = data.getThumbPath();
         if (!TextUtils.isEmpty(thumbPath)){
             FrescoUtil.displayImage(mDraweeView, new File(thumbPath));
         } else {
-            File thumbFile = FileUtil.getVideoThumbFile(this.itemView.getContext(), EncryptUtils.md5String(data.getUrl()));
+            File thumbFile = FileUtil.getVideoThumbFile(this.itemView.getContext(), data.getUrl(), EncryptUtils.LAND_REC_VIDEO);
             if (thumbFile.exists()) {
                 data.setThumbPath(thumbFile.getAbsolutePath());
             }
+
+            if (TextUtils.isEmpty(data.getThumbPath())) {
+                ToastUtil.showToast("暂无数据（视频封面未完成）");
+                if (mListener != null) {
+                    mListener.onBack();
+                }
+                return;
+            }
+
             FrescoUtil.displayImage(mDraweeView, thumbFile);
         }
+
+        mLandCoverView.setVisibility(View.VISIBLE);
+        mDraweeView.setVisibility(View.VISIBLE);
+        mLandTitle.setVisibility(View.VISIBLE);
+        // 标题
+        mLandTitle.setText(data.getTitle());
+
     }
 
     /**
@@ -155,6 +171,9 @@ public class LandListVideoVH {
             mLandCoverView.setVisibility(View.GONE);
         }
     }
+
+
+
 
 
 

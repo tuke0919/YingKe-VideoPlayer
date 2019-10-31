@@ -20,6 +20,11 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.yingke.videoplayer.util.EncryptUtils.AD_REC_VIDEO;
+import static com.yingke.videoplayer.util.EncryptUtils.LAND_REC_VIDEO;
+import static com.yingke.videoplayer.util.EncryptUtils.PORT_REC_VIDEO;
+import static com.yingke.videoplayer.util.EncryptUtils.TIKTOK_VIDEO;
+
 /**
  * 功能：
  * </p>
@@ -64,7 +69,6 @@ public class PlayerUtil {
         } finally {
             retriever.release();
         }
-//        Log.e("getNetVideoBitmap","cost time:" + (System.currentTimeMillis() - startTime));
         return bitmap;
     }
 
@@ -78,7 +82,7 @@ public class PlayerUtil {
         List<ListVideoData> listVideoData = new Gson().fromJson(videoListJson, new TypeToken<List<ListVideoData>>() {}.getType());
         for (final ListVideoData videoData: listVideoData) {
             // 有缓存文件
-            File thumbImage = FileUtil.getVideoThumbFile(context, EncryptUtils.md5String(videoData.getUrl()));
+            File thumbImage = FileUtil.getVideoThumbFile(context, videoData.getUrl(), PORT_REC_VIDEO);
             if (!thumbImage.exists()) {
                 // 无缓存文件
                 WorkerCenter.getInstance().submitNormalTask(new WorkerTask<String>("workTask",true){
@@ -91,7 +95,8 @@ public class PlayerUtil {
                         PlayerLog.e(TAG, "listRecVideoFrames: " + "title = " + data.getTitle() + "\n");
 
                         long startTime = System.currentTimeMillis();
-                        File thumbImageFile = FileUtil.getVideoThumbFile(context, EncryptUtils.md5String(videoUrl));
+                        File thumbImageFile = FileUtil.getVideoThumbFile(context, videoUrl, PORT_REC_VIDEO);
+
                         Bitmap bitmap = PlayerUtil.getNetVideoBitmap(videoUrl, false);
                         FileUtil.saveBitmapToFile(bitmap, thumbImageFile.getAbsolutePath());
 
@@ -102,7 +107,6 @@ public class PlayerUtil {
                     @Override
                     protected void notifyResult(String result) {
                         data.setThumbPath(result);
-                        PlayerLog.e(TAG, "listRecVideoFrames: " + "postSticky..." );
                         // 发送粘性事件
                         EventBus.getDefault().postSticky(new ListVideoStickEvent(data, false));
                     }
@@ -110,7 +114,8 @@ public class PlayerUtil {
             }
 
             if (!TextUtils.isEmpty(videoData.getAdUrl())) {
-                File thumbAdImage = FileUtil.getVideoThumbFile(context, EncryptUtils.md5String(videoData.getAdUrl()));
+
+                File thumbAdImage =  FileUtil.getVideoThumbFile(context, videoData.getAdUrl(), AD_REC_VIDEO);
                 if (!thumbAdImage.exists()) {
                     // 无缓存文件
                     WorkerCenter.getInstance().submitNormalTask(new WorkerTask<String>("workTask1",true){
@@ -120,10 +125,10 @@ public class PlayerUtil {
                         @Override
                         protected String execute() {
                             // 截取网络视频帧
-                            PlayerLog.e(TAG, "listRecVideoFrames: " + "title = " + data.getTitle() + "\n");
+                            PlayerLog.e(TAG, "listRecAdVideoFrames: " + "title = " + data.getTitle() + "\n");
 
                             long startTime = System.currentTimeMillis();
-                            File thumbImageFile = FileUtil.getVideoThumbFile(context, EncryptUtils.md5String(videoUrl));
+                            File thumbImageFile = FileUtil.getVideoThumbFile(context, videoUrl, AD_REC_VIDEO);
                             Bitmap bitmap = PlayerUtil.getNetVideoBitmap(videoUrl, true);
                             FileUtil.saveBitmapToFile(bitmap, thumbImageFile.getAbsolutePath());
 
@@ -134,7 +139,6 @@ public class PlayerUtil {
                         @Override
                         protected void notifyResult(String result) {
                             data.setAdThumbPath(result);
-                            PlayerLog.e(TAG, "listRecVideoFrames: " + "postSticky..." );
                             // 发送粘性事件
                             EventBus.getDefault().postSticky(new ListVideoStickEvent(data, true));
                         }
@@ -146,6 +150,46 @@ public class PlayerUtil {
     }
 
     /**
+     * 推荐列表 横屏网络视频的帧
+     */
+    public static void listRecLandVideoFrames(final Context context){
+        String videoListJson = StringUtil.getJsonData(context, "list_rec_land_video.json");
+
+        List<ListVideoData> listVideoData = new Gson().fromJson(videoListJson, new TypeToken<List<ListVideoData>>() {}.getType());
+        for (final ListVideoData videoData: listVideoData) {
+            // 有缓存文件
+            File thumbImage = FileUtil.getVideoThumbFile(context, videoData.getUrl(), LAND_REC_VIDEO);
+            if (!thumbImage.exists()) {
+                // 无缓存文件
+                WorkerCenter.getInstance().submitNormalTask(new WorkerTask<String>("workTask_land",true){
+
+                    ListVideoData data = videoData;
+                    String videoUrl = data.getUrl();
+                    @Override
+                    protected String execute() {
+                        // 截取网络视频帧
+                        PlayerLog.e(TAG, "listRecLandVideoFrames: " + "title = " + data.getTitle() + "\n");
+
+                        long startTime = System.currentTimeMillis();
+                        File thumbImageFile = FileUtil.getVideoThumbFile(context, videoUrl, LAND_REC_VIDEO);
+                        Bitmap bitmap = PlayerUtil.getNetVideoBitmap(videoUrl, false);
+                        FileUtil.saveBitmapToFile(bitmap, thumbImageFile.getAbsolutePath());
+
+                        PlayerLog.e(TAG,"cost time:" + (System.currentTimeMillis() - startTime));
+                        return thumbImageFile.getAbsolutePath();
+                    }
+
+                    @Override
+                    protected void notifyResult(String result) {
+                        data.setThumbPath(result);
+                    }
+                });
+            }
+        }
+    }
+
+
+    /**
      * 抖音列表网络视频的帧
      */
     public static void listTiktokVideoFrames(final Context context){
@@ -154,12 +198,12 @@ public class PlayerUtil {
         List<ListTiktokBean> listVideoData = new Gson().fromJson(videoListJson, new TypeToken<List<ListTiktokBean>>() {}.getType());
         for (final ListTiktokBean videoData: listVideoData) {
             // 有缓存文件
-            File thumbImage = FileUtil.getVideoThumbFile(context, EncryptUtils.md5String(videoData.getUrl()));
+            File thumbImage = FileUtil.getVideoThumbFile(context, videoData.getUrl(), TIKTOK_VIDEO);
             if (thumbImage.exists()) {
                 return;
             }
             // 无缓存文件
-            WorkerCenter.getInstance().submitNormalTask(new WorkerTask<String>("workTask",true){
+            WorkerCenter.getInstance().submitNormalTask(new WorkerTask<String>("workTask_tiktok",true){
 
                 ListTiktokBean data = videoData;
                 String videoUrl = data.getUrl();
@@ -169,7 +213,7 @@ public class PlayerUtil {
                     PlayerLog.e(TAG, "listTiktokVideoFrames: " + "title = " + data.getUserName() + "\n");
 
                     long startTime = System.currentTimeMillis();
-                    File thumbImageFile = FileUtil.getVideoThumbFile(context, EncryptUtils.md5String(videoUrl));
+                    File thumbImageFile = FileUtil.getVideoThumbFile(context, videoUrl, TIKTOK_VIDEO);
                     Bitmap bitmap = PlayerUtil.getNetVideoBitmap(videoUrl, true);
                     FileUtil.saveBitmapToFile(bitmap, thumbImageFile.getAbsolutePath());
 
@@ -181,7 +225,6 @@ public class PlayerUtil {
                 protected void notifyResult(String result) {
                     // 设置封面路径
                     data.setCoverImage(result);
-                    PlayerLog.e(TAG, "listTiktokVideoFrames: " + "postSticky..." );
                     // 发送粘性事件
                     EventBus.getDefault().postSticky(data);
                 }

@@ -107,7 +107,7 @@ public class ListVideoVH implements View.OnClickListener {
         if (!TextUtils.isEmpty(thumbPath)){
             FrescoUtil.displayImage(mCoverImage, new File(thumbPath));
         } else {
-            File thumbFile = FileUtil.getVideoThumbFile(this.itemView.getContext(), EncryptUtils.md5String(data.getUrl()));
+            File thumbFile = FileUtil.getVideoThumbFile(this.itemView.getContext(), data.getUrl(), EncryptUtils.PORT_REC_VIDEO);
             if (thumbFile.exists()) {
                 data.setThumbPath(thumbFile.getAbsolutePath());
             }
@@ -188,7 +188,7 @@ public class ListVideoVH implements View.OnClickListener {
                 mCoverView.setVisibility(View.GONE);
                 if (mListener != null) {
                     clearVideoPlayer(mVideoContainer, true);
-                    mListener.onListVideoPlay(ListVideoVH.this.itemView, mVideoContainer, mListVideoData);
+                    mListener.onListVideoPlay(mVideoContainer, mListVideoData, position);
                 }
                 break;
             case R.id.iv_share_view:

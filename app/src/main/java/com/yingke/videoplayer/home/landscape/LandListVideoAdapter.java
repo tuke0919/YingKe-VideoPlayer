@@ -49,7 +49,7 @@ public class LandListVideoAdapter extends BaseRecycleViewAdapter<ListVideoData> 
 
         public LandVideoViewHolder(View itemView) {
             super(itemView);
-            mLandListVideoVH = new LandListVideoVH(itemView);
+            mLandListVideoVH = new LandListVideoVH(itemView, mListener);
         }
 
         @Override
@@ -61,4 +61,21 @@ public class LandListVideoAdapter extends BaseRecycleViewAdapter<ListVideoData> 
             return mLandListVideoVH;
         }
     }
+
+
+    private OnBackListener mListener;
+
+    public void setListener(OnBackListener listener) {
+        mListener = listener;
+    }
+
+    /**
+     * 返回监听
+     */
+    public interface OnBackListener{
+        void onBack();
+    }
+
+
+
 }

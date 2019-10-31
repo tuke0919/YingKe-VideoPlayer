@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import static com.yingke.videoplayer.util.EncryptUtils.PORT_REC_VIDEO;
+
 /**
  * 功能：
  * </p>
@@ -27,6 +29,12 @@ public class FileUtil {
     public static File getVideoThumbFile(Context context, String fileName){
         return new File(context.getCacheDir() + "/" + VIDEO_THUMB_DIRECTORY + "/" + fileName + SUFFIX);
     }
+
+    public static File getVideoThumbFile(Context context, String videoUrl, String prefix){
+        return getVideoThumbFile(context, EncryptUtils.md5String(videoUrl, prefix));
+    }
+
+
 
     /**
      * 将bitmap保存到文件

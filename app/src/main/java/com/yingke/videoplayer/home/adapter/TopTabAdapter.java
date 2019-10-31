@@ -1,6 +1,8 @@
 package com.yingke.videoplayer.home.adapter;
 
 import android.graphics.Color;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -9,6 +11,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.view.ViewGroup;
 
 import com.yingke.player.java.PlayerLog;
 import com.yingke.videoplayer.home.bean.TopTabData;
@@ -33,7 +36,7 @@ import java.util.List;
 public class TopTabAdapter extends FragmentPagerAdapter {
 
     private List<TopTabData> mTopTabData;
-
+    private Fragment mCurrentFragment;
 
     public TopTabAdapter(FragmentManager fm) {
         super(fm);
@@ -75,6 +78,16 @@ public class TopTabAdapter extends FragmentPagerAdapter {
     @Override
     public long getItemId(int position) {
         return mTopTabData.get(position).getId();
+    }
+
+    @Override
+    public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+        mCurrentFragment = (Fragment) object;
+        super.setPrimaryItem(container, position, object);
+    }
+
+    public Fragment getCurrentFragment() {
+        return mCurrentFragment;
     }
 
     @Nullable

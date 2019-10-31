@@ -12,6 +12,8 @@ import com.yingke.player.java.IVideoBean;
 import com.yingke.player.java.PlayerLog;
 import com.yingke.videoplayer.base.BaseActivity;
 import com.yingke.videoplayer.home.bean.ListVideoData;
+import com.yingke.videoplayer.home.frag.HomeFragment;
+import com.yingke.videoplayer.home.frag.RecommendFragment;
 import com.yingke.videoplayer.home.player.ListIjkVideoView;
 import com.yingke.videoplayer.home.util.SinglePlayerManager;
 import com.yingke.videoplayer.tiktok.PagerLayoutManager;
@@ -25,8 +27,11 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.File;
 import java.util.List;
 
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.OrientationHelper;
 import androidx.recyclerview.widget.RecyclerView;
+
+import static com.yingke.videoplayer.main.MainActivity.TAB_HOME;
 
 /**
  * 功能：视频播放器 横屏播放器
@@ -70,7 +75,14 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
         layoutManager.setListener(this);
 
         mLandListVideoAdapter = new LandListVideoAdapter(this);
+        mLandListVideoAdapter.setListener(new LandListVideoAdapter.OnBackListener() {
+            @Override
+            public void onBack() {
+                exitFullScreen();
+            }
+        });
         mLandRecyclerView.setAdapter(mLandListVideoAdapter);
+
     }
 
     /**
@@ -79,29 +91,33 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
     private void initDatas(){
         PlayerLog.e(TAG, "initDatas: ");
         // 模拟网络数据
-        String videoListJson = StringUtil.getJsonData(this, "list_rec_video.json");
+        String videoListJson = StringUtil.getJsonData(this, "list_rec_land_video.json");
         if (!TextUtils.isEmpty(videoListJson)) {
             List<ListVideoData> listVideoData = new Gson().fromJson(videoListJson, new TypeToken<List<ListVideoData>>() {}.getType());
             for (ListVideoData data : listVideoData) {
                 // 设置首播类型
                 data.setCurrentType(data.getFirstType());
 
-                File thumbFile = FileUtil.getVideoThumbFile(this, EncryptUtils.md5String(data.getUrl()));
+                File thumbFile = FileUtil.getVideoThumbFile(this,  data.getUrl(), EncryptUtils.LAND_REC_VIDEO);
                 if (thumbFile.exists()) {
                     data.setThumbPath(thumbFile.getAbsolutePath());
                 }
 
-                File thumbAdFile = FileUtil.getVideoThumbFile(this, EncryptUtils.md5String(data.getAdUrl()));
+                File thumbAdFile = FileUtil.getVideoThumbFile(this,  data.getUrl(), EncryptUtils.AD_REC_VIDEO);
                 if (thumbAdFile.exists()) {
                     data.setAdThumbPath(thumbAdFile.getAbsolutePath());
                 }
             }
             // 第一个视频是竖屏过来的
-            ListVideoData mPortCurrentVideoData = (ListVideoData) SinglePlayerManager.getInstance().getCurrentVideoBean();
-            if (mPortCurrentVideoData != null) {
-                listVideoData.add(0, mPortCurrentVideoData);
+            ListVideoData portCurrentVideoData = (ListVideoData) SinglePlayerManager.getInstance().getCurrentVideoBean();
+            if (portCurrentVideoData != null) {
+                int index = listVideoData.indexOf(portCurrentVideoData);
+                if (index != -1) {
+                    // 去掉重复
+                    listVideoData.remove(index);
+                }
+                listVideoData.add(0, portCurrentVideoData);
             }
-
             mLandListVideoAdapter.addAllDatas(listVideoData);
         }
     }
@@ -117,8 +133,14 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
         // 禁止画中画
         SinglePlayerManager.getInstance().enablePip(false);
 
-        // 点击竖屏视频位置
-        mOldPortPosition = SinglePlayerManager.getInstance().getCurrentPos();
+        Fragment bottomFragment = getSupportFragmentManager().findFragmentByTag(TAB_HOME);
+        if (bottomFragment instanceof HomeFragment) {
+            Fragment currentFragment = ((HomeFragment) bottomFragment).getCurrentFragment();
+            if (currentFragment instanceof RecommendFragment) {
+                // 点击竖屏视频位置
+                mOldPortPosition = ((RecommendFragment) currentFragment).getPortPosition();
+            }
+        }
 
         PlayerLog.e(TAG, "enterFullScreen: mOldPortPosition = " + mOldPortPosition);
 
@@ -141,7 +163,7 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
      * 进入竖屏
      */
     public void exitFullScreen() {
-        PlayerLog.e(TAG, "enterFullScreen: ");
+        PlayerLog.e(TAG, "exitFullScreen: ");
         if (mCurrentLandVideoView != null) {
 
             ViewParent landVideoParent = mCurrentLandVideoView.getParent();
