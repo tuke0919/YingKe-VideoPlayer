@@ -65,7 +65,7 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
     // 父容器
     protected ViewParent mPlayerParent;
     // 单个视屏全屏
-    protected boolean mIsFullScreenSingle = true;
+    protected boolean mIsFullScreenSingle = false;
 
     // 是否全屏状态
     protected boolean mIsFullScreen = false;
@@ -358,6 +358,17 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
         public BaseListVideoView getLandVideoView() {
             return mLandVideoView;
         }
+    }
+
+    /**
+     * 显示更多
+     */
+    public void showMore() {
+        PlayerLog.e(TAG, "showMore: ");
+//        HalfTransDialog dialogFragment = new HalfTransDialog(this);
+//        dialogFragment.show();
+        HalfTransDialogFragment dialogFragment = new HalfTransDialogFragment();
+        dialogFragment.show(getSupportFragmentManager(), "tag");
     }
 
 

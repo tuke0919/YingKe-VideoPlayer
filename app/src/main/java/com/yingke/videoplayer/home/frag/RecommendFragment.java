@@ -279,12 +279,12 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
     @Override
     public void onPause() {
         super.onPause();
-        SinglePlayerManager.getInstance().onPause();
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        SinglePlayerManager.getInstance().onPause();
     }
 
     @Override

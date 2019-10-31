@@ -373,9 +373,9 @@ public abstract class BaseMediaController extends FrameLayout {
             mShareLand.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mMediaPlayer != null && mMediaPlayer.isPlaying()){
-                        mMediaPlayer.pause();
-                    }
+//                    if (mMediaPlayer != null && mMediaPlayer.isPlaying()){
+//                        mMediaPlayer.pause();
+//                    }
                     // 更多/分享回调
                     if (mOnShareListener != null) {
                         mOnShareListener.onShare();

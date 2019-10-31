@@ -55,11 +55,6 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
     protected IjkVideoView mIjkVideoView;
     // 控制器
     protected MediaController mMediaController;
-    // 父容器
-    protected ViewParent mPlayerParent;
-
-    // 单个视屏全屏
-    protected boolean mIsFullScreenSingle = true;
 
     public BaseListVideoView(@NonNull Context context) {
         super(context);
@@ -107,7 +102,8 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
         getControllerView().setOnShareListener(new BaseMediaController.onShareListener() {
             @Override
             public void onShare() {
-
+                // 分享/更多
+                showMore();
             }
         });
         getControllerView().setControllerShownHidedListener(new BaseMediaController.OnShownHiddenListener() {
@@ -470,7 +466,6 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
         if (getActivity() instanceof LandScapeActivity) {
             ((LandScapeActivity) getActivity()).enterFullScreen(this);
         }
-
     }
 
     /**
@@ -480,6 +475,16 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
         PlayerLog.d("ListVideo", "exitFullScreen: ");
         if (getActivity() instanceof LandScapeActivity) {
             ((LandScapeActivity) getActivity()).exitFullScreen();
+        }
+    }
+
+    /**
+     * 显示更多
+     */
+    public void showMore() {
+        PlayerLog.d("ListVideo", "showMore: ");
+        if (getActivity() instanceof LandScapeActivity) {
+            ((LandScapeActivity) getActivity()).showMore();
         }
     }
 
