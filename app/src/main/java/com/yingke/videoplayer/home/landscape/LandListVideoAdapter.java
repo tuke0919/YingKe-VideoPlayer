@@ -4,8 +4,8 @@ import android.content.Context;
 import android.view.View;
 
 import com.yingke.videoplayer.R;
-import com.yingke.videoplayer.base.BaseRecycleViewAdapter;
 import com.yingke.videoplayer.home.bean.ListVideoData;
+import com.yingke.widget.base.BaseRecycleViewAdapter;
 
 import java.util.List;
 

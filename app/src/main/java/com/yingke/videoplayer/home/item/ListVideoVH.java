@@ -149,7 +149,8 @@ public class ListVideoVH implements View.OnClickListener {
                 ListIjkVideoView videoView = (ListIjkVideoView) videoContainer.getChildAt(0);
                 if (videoView != null) {
                     videoView.release();
-                    videoView = null;
+                    // 修改成最初类型
+                    mListVideoData.setCurrentType(mListVideoData.getFirstType());
                 }
             }
             videoContainer.removeAllViews();

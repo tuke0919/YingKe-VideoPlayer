@@ -127,7 +127,10 @@ public class LandListVideoVH {
                 ListIjkVideoView videoView = (ListIjkVideoView) videoContainer.getChildAt(0);
                 if (videoView != null) {
                     videoView.release();
-                    videoView = null;
+                    // 修改成最初类型
+                    if (mListVideoData != null) {
+                        mListVideoData.setCurrentType(mListVideoData.getFirstType());
+                    }
                 }
             }
             videoContainer.removeAllViews();

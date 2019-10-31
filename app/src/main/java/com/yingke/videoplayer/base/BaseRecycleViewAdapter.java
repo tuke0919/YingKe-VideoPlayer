@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
  * <p>
  * 最后修改人：无
  */
+@Deprecated
 public abstract class BaseRecycleViewAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public Context context;
@@ -75,6 +76,22 @@ public abstract class BaseRecycleViewAdapter<T> extends RecyclerView.Adapter<Rec
             return null;
         }
         return mDataList.get(position);
+    }
+
+    /**
+     * 获取当前位置
+     * @param data
+     * @return
+     */
+    public int getPosition(T data) {
+        if (mDataList == null) {
+            mDataList = new ArrayList<>();
+        }
+
+        if (data != null) {
+            return mDataList.indexOf(data);
+        }
+        return -1;
     }
 
     /**

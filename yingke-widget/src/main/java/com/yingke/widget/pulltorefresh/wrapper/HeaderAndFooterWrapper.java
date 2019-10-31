@@ -205,9 +205,17 @@ public class HeaderAndFooterWrapper extends RecyclerView.Adapter<RecyclerView.Vi
         return mFootViews.size();
     }
 
+    /**
+     * @return 真实数据数量
+     */
     public int getInnerCount() {
         return mInnerAdapter == null ? 0 : mInnerAdapter.getItemCount();
     }
 
-
+    /**
+     * @return 内部适配器
+     */
+    public RecyclerView.Adapter getInnerAdapter() {
+        return mInnerAdapter;
+    }
 }

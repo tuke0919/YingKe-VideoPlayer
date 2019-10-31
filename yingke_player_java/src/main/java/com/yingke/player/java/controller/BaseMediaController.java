@@ -302,6 +302,12 @@ public abstract class BaseMediaController extends FrameLayout {
         // activity设置
         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        // 回调到外面 具体实现
+        if (mFullScreenListener != null) {
+            mFullScreenListener.onEnterFullScreen();
+        }
+
         // 控制器UI设置
         setFullScreenStatus(true);
 
@@ -320,6 +326,10 @@ public abstract class BaseMediaController extends FrameLayout {
         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        // 回调到外面 具体实现
+        if (mFullScreenListener != null) {
+            mFullScreenListener.onExitFullScreen();
+        }
 
         // 控制器UI设置
         setFullScreenStatus(false);
@@ -375,20 +385,11 @@ public abstract class BaseMediaController extends FrameLayout {
             mSpeedLandView.setVisibility(VISIBLE);
             mResolutionLandView.setVisibility(VISIBLE);
 
-            // 回调到外面
-            if (mFullScreenListener != null) {
-                mFullScreenListener.onEnterFullScreen();
-            }
         } else {
             mTitlePort.setVisibility(VISIBLE);
             mTitleLandView.setVisibility(GONE);
             mSpeedLandView.setVisibility(GONE);
             mResolutionLandView.setVisibility(GONE);
-
-            // 回调到外面
-            if (mFullScreenListener != null) {
-                mFullScreenListener.onExitFullScreen();
-            }
         }
 
     }

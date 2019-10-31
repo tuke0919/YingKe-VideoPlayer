@@ -29,14 +29,15 @@ public class ListVideoData extends IVideoBean {
     private int commentCount;
     private int voteCount;
     private boolean isVote;
+
     // 广告
     private AdBean ad;
 
     @Override
     public int getFirstType() {
-        if (ad != null && !TextUtils.isEmpty(ad.getAdUrl())) {
-            return TYPE_AD;
-        }
+//        if (ad != null && !TextUtils.isEmpty(ad.getAdUrl())) {
+//            return TYPE_AD;
+//        }
         return TYPE_REAL;
     }
 
@@ -193,7 +194,6 @@ public class ListVideoData extends IVideoBean {
         if (o == null || getClass() != o.getClass()) return false;
         ListVideoData videoData = (ListVideoData) o;
         return Objects.equals(url, videoData.url);
-
     }
 
     @Override

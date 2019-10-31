@@ -8,15 +8,19 @@ import android.widget.FrameLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.yingke.player.java.IVideoBean;
 import com.yingke.player.java.PlayerLog;
 import com.yingke.videoplayer.base.BaseActivity;
 import com.yingke.videoplayer.home.bean.ListVideoData;
+import com.yingke.videoplayer.home.player.ListIjkVideoView;
 import com.yingke.videoplayer.home.util.SinglePlayerManager;
 import com.yingke.videoplayer.tiktok.PagerLayoutManager;
 import com.yingke.videoplayer.util.EncryptUtils;
 import com.yingke.videoplayer.util.FileUtil;
 import com.yingke.videoplayer.util.StringUtil;
 import com.yingke.videoplayer.widget.BaseListVideoView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.List;
@@ -39,17 +43,22 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
 
     public static final String TAG = "LandScapeActivity";
 
-    // 视频父容器
-    private ViewParent mPlayerParent;
-    // 当前横屏的播放器
-    private BaseListVideoView mCurrentLandVideoView;
 
+    // 竖屏时的位置
+    private int mOldPortPosition = -1;
     // 列表
     private RecyclerView mLandRecyclerView;
     // 适配器
     private LandListVideoAdapter mLandListVideoAdapter;
+    // 横屏播放数据
+    private IVideoBean mLandVideoBean;
+    // 当前横屏的播放器
+    private BaseListVideoView mCurrentLandVideoView;
 
 
+    /**
+     * 初始化列表
+     */
     private void initRecyclerView() {
         PlayerLog.e(TAG, "initRecyclerView: ");
         mLandRecyclerView = new RecyclerView(this);
@@ -64,6 +73,9 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
         mLandRecyclerView.setAdapter(mLandListVideoAdapter);
     }
 
+    /**
+     * 初始化数据 实际项目中，此处可添加网络数据
+     */
     private void initDatas(){
         PlayerLog.e(TAG, "initDatas: ");
         // 模拟网络数据
@@ -84,6 +96,12 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
                     data.setAdThumbPath(thumbAdFile.getAbsolutePath());
                 }
             }
+            // 第一个视频是竖屏过来的
+            ListVideoData mPortCurrentVideoData = (ListVideoData) SinglePlayerManager.getInstance().getCurrentVideoBean();
+            if (mPortCurrentVideoData != null) {
+                listVideoData.add(0, mPortCurrentVideoData);
+            }
+
             mLandListVideoAdapter.addAllDatas(listVideoData);
         }
     }
@@ -91,22 +109,24 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
 
     /**
      * 进入横屏
-     * @param baseListVideoView 当前播放器
+     * @param portListVideoView 当前播放器，此时还是竖屏播放器
      */
-    public void enterFullScreen(BaseListVideoView baseListVideoView) {
+    public void enterFullScreen(BaseListVideoView portListVideoView) {
         PlayerLog.e(TAG, "enterFullScreen: ");
 
         // 禁止画中画
         SinglePlayerManager.getInstance().enablePip(false);
 
+        // 点击竖屏视频位置
+        mOldPortPosition = SinglePlayerManager.getInstance().getCurrentPos();
 
-        mCurrentLandVideoView = baseListVideoView;
-        mPlayerParent = baseListVideoView.getParent();
+        PlayerLog.e(TAG, "enterFullScreen: mOldPortPosition = " + mOldPortPosition);
 
+        mCurrentLandVideoView = portListVideoView;
         // 移除竖屏播放器
         SinglePlayerManager.getInstance().removePlayerNotRelease();
 
-
+        // 添加列表
         ViewGroup contentView = findViewById(android.R.id.content);
         initRecyclerView();
         initDatas();
@@ -115,16 +135,6 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
         // 更新成当前列表
         SinglePlayerManager.getInstance().attachRecycleView(mLandRecyclerView);
 
-//
-//        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-//                ViewGroup.LayoutParams.MATCH_PARENT,
-//                ViewGroup.LayoutParams.MATCH_PARENT);
-//
-//        mPlayerParent = mCurrentLandVideoView.getParent();
-//        if (mPlayerParent instanceof ViewGroup) {
-//            ((ViewGroup) mPlayerParent).removeView(mCurrentLandVideoView);
-//        }
-//        contentView.addView(mCurrentLandVideoView, params);
     }
 
     /**
@@ -134,24 +144,42 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
         PlayerLog.e(TAG, "enterFullScreen: ");
         if (mCurrentLandVideoView != null) {
 
+            ViewParent landVideoParent = mCurrentLandVideoView.getParent();
+            if (landVideoParent instanceof ViewGroup) {
+                ((ViewGroup) landVideoParent).removeView(mCurrentLandVideoView);
+            }
+
+            // 发送事件 竖屏列表更新更新数据
+            EventBus.getDefault().post(new LandScapeVideoEvent(mOldPortPosition, mLandVideoBean, mCurrentLandVideoView));
+
+            // 销毁横屏列表
+            ViewGroup contentView = findViewById(android.R.id.content);
+            contentView.removeView(mLandRecyclerView);
+
+            mCurrentLandVideoView = null;
+            mLandRecyclerView = null;
+            mLandListVideoAdapter = null;
+            mLandVideoBean = null;
+            mCurrentPosition = -1;
         }
 
-
-//        if (mPlayerParent instanceof ViewGroup) {
-//            ViewGroup contentView = findViewById(android.R.id.content);
-//            contentView.removeView(baseListVideoView);
-//            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-//                    ViewGroup.LayoutParams.MATCH_PARENT,
-//                    ViewGroup.LayoutParams.MATCH_PARENT);
-//
-//            ((ViewGroup) mPlayerParent).addView(baseListVideoView, params);
-//        }
     }
+
+    // 当前位置
+    private int mCurrentPosition = -1;
 
 
     @Override
     public void onFirstPageAttached(View itemView) {
         PlayerLog.e(TAG, "onFirstPageAttached: position = " + 0);
+        mCurrentPosition = 0;
+        mLandVideoBean = mLandListVideoAdapter.getItem(0);
+
+        ViewParent landVideoParent = mCurrentLandVideoView.getParent();
+        if (landVideoParent instanceof ViewGroup) {
+            ((ViewGroup) landVideoParent).removeView(mCurrentLandVideoView);
+        }
+
         LandListVideoVH landListVideoVH = getLandListVideoVH(itemView);
         landListVideoVH.attachVideoPlayer(mCurrentLandVideoView);
 
@@ -160,11 +188,39 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
     @Override
     public void onPageSelected(int position, View itemView, boolean isBottom) {
         PlayerLog.e(TAG, "onPageSelected: position = " + position);
+
+        if (mCurrentPosition != position) {
+            mCurrentPosition = position;
+            mLandVideoBean = mLandListVideoAdapter.getItem(position);
+            if (mLandVideoBean != null) {
+                // 新生成播放器
+                ListIjkVideoView landIjkVideoView = new ListIjkVideoView(this);
+                landIjkVideoView.setTag("land_ijkVideoView");
+                landIjkVideoView.setFullScreenStatus(true);
+
+                mCurrentLandVideoView = landIjkVideoView;
+                // 绑定播放器
+                LandListVideoVH landListVideoVH = getLandListVideoVH(itemView);
+                landListVideoVH.attachVideoPlayer(mCurrentLandVideoView);
+                // 绑定播放器 到管理器 同时释放上一个播放器
+                SinglePlayerManager.getInstance().attachVideoPlayer(mLandVideoBean, landIjkVideoView);
+                // 设置数据
+                landIjkVideoView.setVideoOnline(mLandVideoBean);
+
+                // 发送数据更新竖屏列表的数据
+                EventBus.getDefault().post(new LandScapeVideoEvent(mOldPortPosition, mLandVideoBean, null));
+            }
+        }
+
     }
 
     @Override
     public void onPageDetached(boolean isNext, int position, View itemView) {
         PlayerLog.e(TAG, "onPageDetached: position = " + position);
+        if (mCurrentPosition == position) {
+            // 释放上一个播放器
+            SinglePlayerManager.getInstance().releaseVideoPlayer();
+        }
     }
 
 
@@ -182,6 +238,33 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
         return null;
     }
 
+
+    /**
+     * 横屏发送给竖屏的数据
+     */
+    public class LandScapeVideoEvent {
+        private int mOldPosition;
+        private IVideoBean mLandVideoBean;
+        private BaseListVideoView mLandVideoView;
+
+        public LandScapeVideoEvent(int oldPosition, IVideoBean landVideoBean, BaseListVideoView landVideoView) {
+            mOldPosition = oldPosition;
+            mLandVideoBean = landVideoBean;
+            mLandVideoView = landVideoView;
+        }
+
+        public int getOldPosition() {
+            return mOldPosition;
+        }
+
+        public IVideoBean getLandVideoBean() {
+            return mLandVideoBean;
+        }
+
+        public BaseListVideoView getLandVideoView() {
+            return mLandVideoView;
+        }
+    }
 
 
 }

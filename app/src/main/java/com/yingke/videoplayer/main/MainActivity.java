@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTabHost;
 
 import android.text.TextUtils;
@@ -75,6 +76,15 @@ public class MainActivity extends LandScapeActivity {
     private void initData(){
         addTabHostTab();
         mTabHost.setCurrentTab(0);
+    }
+
+    /**
+     * 获取底部的Tab对应的Frag
+     * @param tag
+     * @return
+     */
+    public Fragment getBottomTabFragment(String tag) {
+        return getSupportFragmentManager().findFragmentByTag(tag);
     }
 
     private void addTabHostTab(){

@@ -58,6 +58,9 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
     // 父容器
     protected ViewParent mPlayerParent;
 
+    // 单个视屏全屏
+    protected boolean mIsFullScreenSingle = false;
+
     public BaseListVideoView(@NonNull Context context) {
         super(context);
     }
@@ -91,11 +94,13 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
         getControllerView().setFullScreenListener(new BaseMediaController.OnFullScreenListener() {
             @Override
             public void onEnterFullScreen() {
+                // 控制器回调的 进入全屏
                 enterFullScreen();
             }
 
             @Override
             public void onExitFullScreen() {
+                // 控制器回调的 退出全屏
                 exitFullScreen();
             }
         });
@@ -126,6 +131,16 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
             getIjkVideoView().setMediaController(getControllerView());
         }
         getIjkVideoView().addPlayStateListener(this);
+    }
+
+    /**
+     * 设置播放器初始化时全屏状态 仅用在初始化
+     * @param isFullScreen
+     */
+    public void setFullScreenStatus(boolean isFullScreen){
+        if (getControllerView() != null) {
+            getControllerView().setFullScreenStatus(isFullScreen);
+        }
     }
 
 
@@ -452,13 +467,18 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
      */
     public void enterFullScreen() {
         PlayerLog.d("ListVideo", "enterFullScreen: ");
-        // 添加到 contentView
-
-        if (getActivity() instanceof LandScapeActivity) {
-            SinglePlayerManager.getInstance().releaseVideoPlayer();
-            ((LandScapeActivity) getActivity()).enterFullScreen(this);
-            return;
+        if (mIsFullScreenSingle) {
+            enterFullScreenForSingle();
+        } else {
+            enterFullScreenForList();
         }
+
+    }
+
+    /**
+     * 进入全屏 仅单个视频
+     */
+    public void enterFullScreenForSingle() {
         ViewGroup contentView = getActivity().findViewById(android.R.id.content);
         LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -472,16 +492,32 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
     }
 
     /**
+     * 进入全屏 横屏视频列表
+     */
+    public void enterFullScreenForList() {
+        if (getActivity() instanceof LandScapeActivity) {
+            ((LandScapeActivity) getActivity()).enterFullScreen(this);
+        }
+    }
+
+
+    /**
      * 退出全屏
      */
     public void exitFullScreen() {
         PlayerLog.d("ListVideo", "exitFullScreen: ");
-
-        if (getActivity() instanceof LandScapeActivity) {
-            ((LandScapeActivity) getActivity()).exitFullScreen();
-            return;
+        if (mIsFullScreenSingle){
+            exitFullScreenForSingle();
+        } else {
+            exitFullScreenForList();
         }
+    }
 
+
+    /**
+     * 退出全屏 仅单个视频
+     */
+    public void exitFullScreenForSingle() {
         if (mPlayerParent instanceof ViewGroup) {
             ViewGroup contentView = getActivity().findViewById(android.R.id.content);
             contentView.removeView(this);
@@ -490,6 +526,15 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
                     ViewGroup.LayoutParams.MATCH_PARENT);
 
             ((ViewGroup) mPlayerParent).addView(this, params);
+        }
+    }
+
+    /**
+     * 退出全屏 横屏视频列表
+     */
+    public void exitFullScreenForList() {
+        if (getActivity() instanceof LandScapeActivity) {
+            ((LandScapeActivity) getActivity()).exitFullScreen();
         }
     }
 

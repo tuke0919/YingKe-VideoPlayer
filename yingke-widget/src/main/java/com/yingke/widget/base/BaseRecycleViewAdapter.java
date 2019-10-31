@@ -119,6 +119,22 @@ public abstract class BaseRecycleViewAdapter<T> extends RecyclerView.Adapter<Rec
     }
 
     /**
+     * 获取当前位置
+     * @param data
+     * @return
+     */
+    public int getPosition(T data) {
+        if (mDataList == null) {
+            mDataList = new ArrayList<>();
+        }
+
+        if (data != null) {
+            return mDataList.indexOf(data);
+        }
+        return -1;
+    }
+
+    /**
      * 初始化时获取布局文件id
      *
      * @param itemViewType item子项类型 不区分类型可忽略

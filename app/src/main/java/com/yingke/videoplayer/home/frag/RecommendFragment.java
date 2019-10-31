@@ -8,12 +8,14 @@ import android.widget.FrameLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.yingke.player.java.IVideoBean;
 import com.yingke.player.java.PlayerLog;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.home.ListVideoStickEvent;
 import com.yingke.videoplayer.home.adapter.ListVideoAdapter;
 import com.yingke.videoplayer.home.bean.ListVideoData;
 import com.yingke.videoplayer.home.item.ListVideoVH;
+import com.yingke.videoplayer.home.landscape.LandScapeActivity;
 import com.yingke.videoplayer.home.util.SinglePlayerManager;
 import com.yingke.videoplayer.util.EncryptUtils;
 import com.yingke.videoplayer.util.FileUtil;
@@ -152,6 +154,7 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
 
     }
 
+
     @Override
     public void onListVideoPlay(View rootView, FrameLayout videoContainer, ListVideoData videoData) {
         // 点击播放视频
@@ -175,7 +178,7 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void doEventMainThread(ListVideoStickEvent event) {
-        PlayerLog.e(TAG, "doEventMainThread: ");
+        PlayerLog.e(TAG, "ListVideoStickEvent: ");
         if (event == null ||  mDataList == null) {
             return;
         }
@@ -200,6 +203,53 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
                 realVideoData.setAdThumbPath(videoData.getAdThumbPath());
             }
         }
+    }
+
+    // 横屏滑动时背后更新竖屏列表数据
+    private boolean mIsLandUpdatePort= false;
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = false)
+    public void doEventMainThread(LandScapeActivity.LandScapeVideoEvent event) {
+        PlayerLog.e(TAG, "LandScapeVideoEvent: ");
+        // 横屏切竖屏 通信
+        if (event == null) {
+            return;
+        }
+
+        int oldPosition = event.getOldPosition();
+        IVideoBean landVideoBean = event.getLandVideoBean();
+        BaseListVideoView landVideoView = event.getLandVideoView();
+
+        PlayerLog.e(TAG, "oldPosition: " + oldPosition);
+        PlayerLog.e(TAG, "landVideoBean: " + landVideoBean.getTitle());
+
+        if (oldPosition != -1) {
+            if (landVideoView != null) {
+                mIsLandUpdatePort = false;
+                PlayerLog.e(TAG, "landVideoView: " + landVideoView);
+                // 绑定新的播放器
+                RecyclerView.ViewHolder holder = mRecyclerView.findViewHolderForAdapterPosition(oldPosition);
+                if (holder instanceof  ListVideoAdapter.ListVideoHolder) {
+                    ListVideoVH listVideoVH = ((ListVideoAdapter.ListVideoHolder) holder).getListVideoVH();
+                    if (listVideoVH != null) {
+                        listVideoVH.attachVideoPlayer(landVideoView);
+                    }
+
+                    // 更新成当前列表
+                    SinglePlayerManager.getInstance().attachRecycleView(mRecyclerView);
+                    // 开启画中画（可选）
+//                    SinglePlayerManager.getInstance().enablePip(true);
+
+                }
+            } else {
+                // 更新竖屏位置
+                mIsLandUpdatePort = true;
+                mAdapter.mDataList.set(oldPosition, (ListVideoData) landVideoBean);
+                mAdapter.notifyItemChanged(oldPosition);
+            }
+        }
+
+
     }
 
     @Override
@@ -238,7 +288,7 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
     @Override
     public void onChildViewAttachedToWindow(@NonNull View view) {
         int position  = mRecyclerView.getChildAdapterPosition(view);
-        if (position <= RecyclerView.NO_POSITION) {
+        if (position <= RecyclerView.NO_POSITION || mIsLandUpdatePort) {
             return;
         }
         ListVideoData videoBean = mDataList.get(position);
@@ -262,7 +312,7 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
     @Override
     public void onChildViewDetachedFromWindow(@NonNull View view) {
         int position  = mRecyclerView.getChildAdapterPosition(view);
-        if (position <= RecyclerView.NO_POSITION) {
+        if (position <= RecyclerView.NO_POSITION || mIsLandUpdatePort) {
             return;
         }
 

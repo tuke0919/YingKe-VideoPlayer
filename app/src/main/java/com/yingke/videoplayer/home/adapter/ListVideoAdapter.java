@@ -1,34 +1,15 @@
 package com.yingke.videoplayer.home.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.yingke.player.java.PlayerLog;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.home.bean.ListVideoData;
 import com.yingke.videoplayer.home.item.ListVideoVH;
-import com.yingke.videoplayer.home.player.ListIjkVideoView;
-import com.yingke.videoplayer.util.EncryptUtils;
-import com.yingke.videoplayer.util.FileUtil;
-import com.yingke.videoplayer.util.FrescoUtil;
-import com.yingke.videoplayer.util.PlayerUtil;
-import com.yingke.videoplayer.widget.BaseListVideoView;
 import com.yingke.widget.base.BaseRecycleViewAdapter;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.File;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**

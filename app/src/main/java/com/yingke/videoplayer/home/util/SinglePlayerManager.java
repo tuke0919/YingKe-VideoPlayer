@@ -1,22 +1,21 @@
 package com.yingke.videoplayer.home.util;
 
-import android.app.Activity;
-import android.content.Context;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
 
 import com.yingke.player.java.IVideoBean;
-import com.yingke.player.java.PlayerUtils;
 import com.yingke.player.java.controller.MediaController;
 import com.yingke.videoplayer.home.adapter.ListVideoAdapter;
 import com.yingke.videoplayer.home.item.ListVideoVH;
+import com.yingke.videoplayer.home.landscape.LandListVideoAdapter;
+import com.yingke.videoplayer.home.landscape.LandListVideoVH;
 import com.yingke.videoplayer.home.pip.SuspensionView;
 import com.yingke.videoplayer.home.player.ListIjkAdMediaController;
-import com.yingke.videoplayer.util.DeviceUtil;
 import com.yingke.videoplayer.widget.BaseListVideoView;
+import com.yingke.widget.base.BaseRecycleViewAdapter;
+import com.yingke.widget.pulltorefresh.wrapper.HeaderAndFooterWrapper;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,6 +31,8 @@ import androidx.recyclerview.widget.RecyclerView;
  * <p>
  */
 public class SinglePlayerManager {
+
+    public static final String TAG = "SinglePlayerManager";
 
 
     public static SinglePlayerManager getInstance() {
@@ -66,6 +67,7 @@ public class SinglePlayerManager {
         if (isEnableAndShowing()) {
             stopFloatWindow(true);
         }
+        // 上一个播放器释放
         releaseVideoPlayer();
         mCurrentVideoBean = bean;
         mCurrentListVideoView = listVideoView;
@@ -130,8 +132,13 @@ public class SinglePlayerManager {
         }
         RecyclerView.ViewHolder holder = mRecyclerView.findContainingViewHolder(itemView);
         if (holder instanceof ListVideoAdapter.ListVideoHolder) {
+            // 竖屏播放器时 显示空闲页
             ListVideoVH listVideoVH = ((ListVideoAdapter.ListVideoHolder) holder).getListVideoVH();
             listVideoVH.showIdleView(releasePlayer);
+        } else if (holder instanceof LandListVideoAdapter.LandVideoViewHolder){
+            // 横屏播放器时 显示空闲页
+            LandListVideoVH landListVideoVH = ((LandListVideoAdapter.LandVideoViewHolder) holder).getLandListVideoVH();
+            landListVideoVH.showIdleView(true);
         }
     }
 
@@ -147,6 +154,26 @@ public class SinglePlayerManager {
      */
     public BaseListVideoView getCurrentListVideoView() {
         return mCurrentListVideoView;
+    }
+
+    /**
+     * @return 当前数据的位置
+     */
+    public int getCurrentPos() {
+        int position = -1;
+
+        if (mCurrentVideoBean != null && mRecyclerView != null) {
+            RecyclerView.Adapter adapter = mRecyclerView.getAdapter();
+            if (adapter instanceof BaseRecycleViewAdapter) {
+                position = ((BaseRecycleViewAdapter) adapter).getPosition(mCurrentVideoBean);
+            } else if (adapter instanceof HeaderAndFooterWrapper) {
+                RecyclerView.Adapter innerAdapter  = ((HeaderAndFooterWrapper) adapter).getInnerAdapter();
+                if (innerAdapter instanceof BaseRecycleViewAdapter) {
+                    position = ((BaseRecycleViewAdapter) innerAdapter).getPosition(mCurrentVideoBean);
+                }
+            }
+        }
+        return position;
     }
 
     /**
@@ -271,6 +298,7 @@ public class SinglePlayerManager {
         if (releasePlayer) {
             // 完全销毁
             mCurrentListVideoView.release();
+            // 修改成最初类型
             mCurrentVideoBean.setCurrentType(mCurrentVideoBean.getFirstType());
 
             if (isSuspensionType()) {

@@ -16,7 +16,7 @@ import com.yingke.player.java.R;
 import com.yingke.player.java.widget.GestureView;
 
 /**
- * 功能：控制器基类  与业务无关
+ * 功能：控制器基类  与业务无关，有手势实现亮度，音量，快进快退功能
  * </p>
  * <p>Copyright corp.xxx.com 2019 All right reserved </p>
  *

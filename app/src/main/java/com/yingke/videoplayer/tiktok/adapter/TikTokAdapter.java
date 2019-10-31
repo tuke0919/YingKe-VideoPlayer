@@ -11,13 +11,13 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.yingke.player.java.PlayerLog;
 import com.yingke.videoplayer.R;
-import com.yingke.videoplayer.base.BaseRecycleViewAdapter;
 import com.yingke.videoplayer.tiktok.player.ListTiktokVideoView;
 import com.yingke.videoplayer.tiktok.bean.ListTiktokBean;
 import com.yingke.videoplayer.util.EncryptUtils;
 import com.yingke.videoplayer.util.FileUtil;
 import com.yingke.videoplayer.util.FrescoUtil;
 import com.yingke.videoplayer.util.StringUtil;
+import com.yingke.widget.base.BaseRecycleViewAdapter;
 import com.yingke.widget.textview.ScrollTextView;
 
 import java.io.File;
