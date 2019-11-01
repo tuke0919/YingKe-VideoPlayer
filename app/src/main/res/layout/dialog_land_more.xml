@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/trans_alpha_60"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <!-- 上半部分-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:weightSum="5"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                >
+
+                <TextView
+                    android:id="@+id/land_share"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="分享"
+                    android:textSize="12dp"
+                    android:textColor="@color/white"
+                    android:drawableTop="@mipmap/icon_land_share"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:drawablePadding="5dp"
+                    />
+
+                <TextView
+                    android:id="@+id/land_collect"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="收藏"
+                    android:textSize="12dp"
+                    android:textColor="@color/white"
+                    android:drawableTop="@mipmap/icon_five_star_1"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:drawablePadding="5dp"
+                    />
+
+                <TextView
+                    android:id="@+id/land_cache"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="缓存"
+                    android:textSize="12dp"
+                    android:textColor="@color/white"
+                    android:drawableTop="@mipmap/icon_cache"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:drawablePadding="5dp"
+                    />
+
+                <TextView
+                    android:id="@+id/land_no_interest"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="不感兴趣"
+                    android:textSize="12dp"
+                    android:textColor="@color/white"
+                    android:drawableTop="@mipmap/icon_no_interest"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:drawablePadding="5dp"
+                    />
+
+                <TextView
+                    android:id="@+id/land_jubao"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="举报"
+                    android:textSize="12dp"
+                    android:textColor="@color/white"
+                    android:drawableTop="@mipmap/icon_jubao"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:drawablePadding="5dp"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:weightSum="5"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:drawablePadding="5dp"
+                >
+
+                <TextView
+                    android:id="@+id/land_back_play"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="后台播放"
+                    android:textSize="12dp"
+                    android:textColor="@color/white"
+                    android:drawableTop="@mipmap/icon_back_play"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:drawablePadding="5dp"
+                    />
+
+                <TextView
+                    android:id="@+id/land_screen_mode"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="屏幕比例"
+                    android:textSize="12dp"
+                    android:textColor="@color/white"
+                    android:drawableTop="@mipmap/icon_screen_mode"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:drawablePadding="5dp"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:weightSum="5"
+                android:visibility="gone"
+                android:gravity="center_vertical"
+                >
+
+                <TextView
+                    android:id="@+id/land_screen_43"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="4:3"
+                    android:textSize="12dp"
+                    android:textColor="@color/white"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    />
+
+                <TextView
+                    android:id="@+id/land_screen_origin"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="原始大小"
+                    android:textSize="12dp"
+                    android:textColor="@color/white"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    />
+
+                <TextView
+                    android:id="@+id/land_screen_full"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="铺满"
+                    android:textSize="12dp"
+                    android:textColor="@color/white"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    />
+
+                <TextView
+                    android:id="@+id/land_screen_crop"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="居中裁切"
+                    android:textSize="12dp"
+                    android:textColor="@color/white"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    />
+
+                <TextView
+                    android:id="@+id/land_screen_mirror"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="镜像"
+                    android:textSize="12dp"
+                    android:textColor="@color/white"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:visibility="gone"
+                android:background="@color/white_alpha_70"/>
+
+
+        </LinearLayout>
+
+        <!-- 倍速-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="10dp"
+            >
+
+            <TextView
+                android:id="@+id/land_speed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="倍速:"
+                android:textColor="@color/white"
+                android:textSize="12dp"
+                android:gravity="center"
+                />
+
+            <TextView
+                android:id="@+id/land_speed_0.7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.7x"
+                android:textColor="@color/white"
+                android:textSize="12dp"
+                android:layout_marginLeft="20dp"
+                />
+
+
+            <TextView
+                android:id="@+id/land_speed_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1.0x"
+                android:textColor="@color/white"
+                android:textSize="12dp"
+                android:layout_marginLeft="20dp"
+                />
+
+            <TextView
+                android:id="@+id/land_speed_1.5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1.5x"
+                android:textColor="@color/white"
+                android:textSize="12dp"
+                android:layout_marginLeft="20dp"
+                />
+
+            <TextView
+                android:id="@+id/land_speed_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2.0x"
+                android:textColor="@color/white"
+                android:textSize="12dp"
+                android:layout_marginLeft="20dp"
+                />
+
+        </LinearLayout>
+
+        <!-- 音量-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            >
+
+            <ImageView
+                android:id="@+id/volume_off"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@mipmap/icon_volume_off"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+
+                />
+
+            <LinearLayout
+                android:id="@+id/seek_view_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/volume_on"
+                android:layout_toRightOf="@+id/volume_off"
+                >
+
+                <SeekBar
+                    android:id="@+id/volume_seekbar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxHeight="3dp"
+                    android:minHeight="3dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:progress="30"
+                    android:secondaryProgress="0"
+                    android:progressDrawable="@drawable/bg_controller_seekbar"
+                    android:thumb="@drawable/icon_controller_seekbar_thumb_red"
+                    android:thumbOffset="0dp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/volume_on"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@mipmap/icon_volume_on"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                />
+        </RelativeLayout>
+
+        <!-- 亮度-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            >
+
+            <ImageView
+                android:id="@+id/lightness_off"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@mipmap/icon_lightness_1"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+
+                />
+
+            <LinearLayout
+                android:id="@+id/lightness_seek_view_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/lightness_on"
+                android:layout_toRightOf="@+id/lightness_off"
+                >
+
+                <SeekBar
+                    android:id="@+id/lightness_seekbar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxHeight="3dp"
+                    android:minHeight="3dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:progress="30"
+                    android:secondaryProgress="0"
+                    android:progressDrawable="@drawable/bg_controller_seekbar"
+                    android:thumb="@drawable/icon_controller_seekbar_thumb_red"
+                    android:thumbOffset="0dp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/lightness_on"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@mipmap/icon_lightness_2"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                />
+        </RelativeLayout>
+
+
+
+
+
+    </LinearLayout>
+
+</ScrollView>

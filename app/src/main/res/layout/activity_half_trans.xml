@@ -6,11 +6,18 @@
     android:background="@color/trans"
     >
 
+   <!-- 内容：分辨率，分享/更多，评论列表等   -->
     <FrameLayout
-        android:layout_width="300dp"
+        android:id="@+id/trans_view"
+        android:layout_width="340dp"
         android:layout_height="match_parent"
         android:background="@color/trans_alpha_60"
         android:layout_alignParentRight="true"
-        />
+        >
+
+
+
+
+    </FrameLayout>
 
 </RelativeLayout>

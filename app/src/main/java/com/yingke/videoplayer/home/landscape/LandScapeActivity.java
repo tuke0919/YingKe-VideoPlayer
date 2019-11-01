@@ -15,6 +15,8 @@ import com.yingke.videoplayer.base.BaseActivity;
 import com.yingke.videoplayer.home.bean.ListVideoData;
 import com.yingke.videoplayer.home.frag.HomeFragment;
 import com.yingke.videoplayer.home.frag.RecommendFragment;
+import com.yingke.videoplayer.home.landscape.dialog.MoreDialog;
+import com.yingke.videoplayer.home.landscape.dialog.ResolutionDialog;
 import com.yingke.videoplayer.home.player.ListIjkVideoView;
 import com.yingke.videoplayer.home.util.SinglePlayerManager;
 import com.yingke.videoplayer.tiktok.PagerLayoutManager;
@@ -365,10 +367,10 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
      */
     public void showMore() {
         PlayerLog.e(TAG, "showMore: ");
-//        HalfTransDialog dialogFragment = new HalfTransDialog(this);
-//        dialogFragment.show();
-        HalfTransDialogFragment dialogFragment = new HalfTransDialogFragment();
-        dialogFragment.show(getSupportFragmentManager(), "tag");
+        MoreDialog dialogFragment = new MoreDialog(this);
+        dialogFragment.show();
+//        HalfTransDialogFragment dialogFragment = new HalfTransDialogFragment();
+//        dialogFragment.show(getSupportFragmentManager(), "tag");
     }
 
 

@@ -1,4 +1,4 @@
-package com.yingke.videoplayer.home.landscape;
+package com.yingke.videoplayer.home.landscape.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -41,13 +41,11 @@ public class HalfTransDialog extends Dialog {
         init();
     }
 
-    protected HalfTransDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
-        super(context, cancelable, cancelListener);
-    }
 
     public void init() {
         setCanceledOnTouchOutside(true);
         View rootView = LayoutInflater.from(getContext()).inflate(R.layout.activity_half_trans, null, false);
+        adjustParams(rootView);
         setContentView(rootView);
         Window window = getWindow();
         WindowManager.LayoutParams wlp = window.getAttributes();
@@ -55,6 +53,10 @@ public class HalfTransDialog extends Dialog {
         wlp.width = WindowManager.LayoutParams.WRAP_CONTENT;
         wlp.height = WindowManager.LayoutParams.MATCH_PARENT;
         window.setAttributes(wlp);
+    }
+
+    protected void adjustParams(View rootView) {
+
     }
 
 }
