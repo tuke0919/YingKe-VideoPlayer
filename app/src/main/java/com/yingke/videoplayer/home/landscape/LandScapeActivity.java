@@ -23,6 +23,7 @@ import com.yingke.videoplayer.tiktok.PagerLayoutManager;
 import com.yingke.videoplayer.util.EncryptUtils;
 import com.yingke.videoplayer.util.FileUtil;
 import com.yingke.videoplayer.util.StringUtil;
+import com.yingke.videoplayer.util.ToastUtil;
 import com.yingke.videoplayer.widget.BaseListVideoView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -47,7 +48,10 @@ import static com.yingke.videoplayer.main.MainActivity.TAB_HOME;
  * 最后修改人：无
  * <p>
  */
-public class LandScapeActivity extends BaseActivity implements PagerLayoutManager.OnPageChangedListener{
+public class LandScapeActivity extends BaseActivity implements
+        PagerLayoutManager.OnPageChangedListener,
+        MoreDialog.OnMoreListener,
+        ResolutionDialog.OnResolutionListener{
 
     public static final String TAG = "LandScapeActivity";
 
@@ -167,6 +171,8 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
             ((ViewGroup) mPlayerParent).removeView(portListVideoView);
         }
         contentView.addView(portListVideoView, params);
+        // 设置倍速
+        setSpeedPos(mCurrentLandVideoView.getControllerView().getSpeedPos());
     }
 
     /**
@@ -279,6 +285,9 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
         LandListVideoVH landListVideoVH = getLandListVideoVH(itemView);
         landListVideoVH.attachVideoPlayer(mCurrentLandVideoView);
 
+        // 设置倍速
+        setSpeedPos(mCurrentLandVideoView.getControllerView().getSpeedPos());
+
     }
 
     @Override
@@ -287,6 +296,7 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
 
         if (mCurrentLandPosition != position) {
             mCurrentLandPosition = position;
+            isMirrorEnable = false;
             mLandVideoBean = mLandListVideoAdapter.getItem(position);
             if (mLandVideoBean != null) {
                 // 新生成播放器
@@ -295,6 +305,9 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
                 landIjkVideoView.setFullScreenStatus(true);
 
                 mCurrentLandVideoView = landIjkVideoView;
+                // 设置当前倍速
+                mCurrentLandVideoView.getControllerView().setSpeed(getSpeedPos());
+
                 // 绑定播放器
                 LandListVideoVH landListVideoVH = getLandListVideoVH(itemView);
                 landListVideoVH.attachVideoPlayer(mCurrentLandVideoView);
@@ -307,7 +320,6 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
                 EventBus.getDefault().post(new LandScapeVideoEvent(mOldPortPosition, mLandVideoBean, null));
             }
         }
-
     }
 
     @Override
@@ -318,7 +330,6 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
             SinglePlayerManager.getInstance().releaseVideoPlayer();
         }
     }
-
 
     /**
      *
@@ -334,23 +345,22 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
         return null;
     }
 
-
     /**
      * 横屏发送给竖屏的数据
      */
     public class LandScapeVideoEvent {
-        private int mOldPosition;
+        private int mOldPortPosition;
         private IVideoBean mLandVideoBean;
         private BaseListVideoView mLandVideoView;
 
-        public LandScapeVideoEvent(int oldPosition, IVideoBean landVideoBean, BaseListVideoView landVideoView) {
-            mOldPosition = oldPosition;
+        public LandScapeVideoEvent(int oldPortPosition, IVideoBean landVideoBean, BaseListVideoView landVideoView) {
+            mOldPortPosition = oldPortPosition;
             mLandVideoBean = landVideoBean;
             mLandVideoView = landVideoView;
         }
 
-        public int getOldPosition() {
-            return mOldPosition;
+        public int getOldPortPosition() {
+            return mOldPortPosition;
         }
 
         public IVideoBean getLandVideoBean() {
@@ -362,15 +372,108 @@ public class LandScapeActivity extends BaseActivity implements PagerLayoutManage
         }
     }
 
+
     /**
      * 显示更多
      */
-    public void showMore() {
-        PlayerLog.e(TAG, "showMore: ");
-        MoreDialog dialogFragment = new MoreDialog(this);
-        dialogFragment.show();
-//        HalfTransDialogFragment dialogFragment = new HalfTransDialogFragment();
-//        dialogFragment.show(getSupportFragmentManager(), "tag");
+    public void showMoreView() {
+        PlayerLog.e(TAG, "showMoreView: ");
+        mCurrentLandVideoView.getControllerView().hide();
+        MoreDialog dialog = new MoreDialog(this);
+        // 更新倍速
+        dialog.updateSpeed(getSpeedPos());
+        // 更新屏幕缩放
+        int screenScale = mCurrentLandVideoView.getIjkVideoView().getCurrentScreenScale();
+        dialog.updateScreenScale(screenScale);
+        // 设置监听
+        dialog.setListener(this);
+        dialog.show();
+    }
+
+
+
+    @Override
+    public void onLandShare() {
+        ToastUtil.showToast("分享");
+    }
+
+    @Override
+    public void onLandCollect() {
+        ToastUtil.showToast("收藏");
+    }
+
+    @Override
+    public void onLandCache() {
+        ToastUtil.showToast("缓存");
+    }
+
+    @Override
+    public void onLandNoInterest() {
+        ToastUtil.showToast("不感兴趣");
+    }
+
+    @Override
+    public void onLandJubao() {
+        ToastUtil.showToast("举报");
+    }
+
+    @Override
+    public void onLandPlayBack() {
+        ToastUtil.showToast("后台播放");
+    }
+
+    @Override
+    public void onLandScreenMode(int screenMode) {
+       if (mCurrentLandVideoView != null) {
+          mCurrentLandVideoView.setScreenScale(screenMode);
+       }
+    }
+
+    boolean isMirrorEnable = false;
+    @Override
+    public void onLandMirror() {
+        if (mCurrentLandVideoView != null) {
+            isMirrorEnable = !isMirrorEnable ;
+            mCurrentLandVideoView.setMirrorRotation(isMirrorEnable);
+        }
+    }
+
+    public int mSpeedPos = 1;
+
+    public int getSpeedPos() {
+        return mSpeedPos;
+    }
+
+    public void setSpeedPos(int mSpeedPos) {
+        this.mSpeedPos = mSpeedPos;
+    }
+
+    @Override
+    public void onSpeed(int speedPos) {
+        setSpeedPos(speedPos);
+        mCurrentLandVideoView.getControllerView().setSpeed(speedPos);
+    }
+
+
+    /**
+     * 显示分辨率
+     */
+    public void showResolution() {
+        // 暂时没有多个分辨率的资源
+        PlayerLog.e(TAG, "showMoreView: ");
+        mCurrentLandVideoView.getControllerView().hide();
+
+        ResolutionDialog dialog = new ResolutionDialog(this);
+        // 清晰度位置
+        int resolutionPos = mCurrentLandVideoView.getControllerView().getResolutionPos();
+        dialog.updateResolution(resolutionPos);
+        dialog.setListener(this);
+        dialog.show();
+    }
+
+    @Override
+    public void OnResolutionSelected(int pos) {
+        mCurrentLandVideoView.getControllerView().setResolution(pos);
     }
 
 

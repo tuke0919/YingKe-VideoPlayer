@@ -71,7 +71,7 @@ public abstract class BaseMediaController extends FrameLayout {
     protected TextView mTotalTime;
     // 进度条
     protected SeekBar mSeekBar;
-    // 倍速
+    // 倍速 暂不要
     protected TextView mSpeedLandView;
     // 清晰度
     protected TextView mResolutionLandView;
@@ -162,13 +162,9 @@ public abstract class BaseMediaController extends FrameLayout {
         // 倍速
         mSpeedLandView = mRootView.findViewById(R.id.controller_speed_btn);
         if (mSpeedLandView != null){
-//            mSpeedLandView.setText(mSpeedName[mSpeedPos]);
             mSpeedLandView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mSpeedPos++;
-                    if (mSpeedPos == 3)
-                        mSpeedPos = 0;
                     if (mOnSpeedAction != null) {
                         mOnSpeedAction.onSpeedClick(mSpeedPos);
                     }
@@ -184,9 +180,6 @@ public abstract class BaseMediaController extends FrameLayout {
             mResolutionLandView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mResolutionPos++;
-                    if (mResolutionPos == 3)
-                        mResolutionPos = 0;
                     if (mResolutionAction != null) {
                         mResolutionAction.onResolutionClick(mResolutionPos);
                     }
@@ -383,7 +376,9 @@ public abstract class BaseMediaController extends FrameLayout {
                 }
             });
             mSpeedLandView.setVisibility(VISIBLE);
+            mSpeedLandView.setText(mSpeedName[getSpeedPos()]);
             mResolutionLandView.setVisibility(VISIBLE);
+            mResolutionLandView.setText(mResolutionName[mResolutionPos]);
 
         } else {
             mTitlePort.setVisibility(VISIBLE);
@@ -732,10 +727,15 @@ public abstract class BaseMediaController extends FrameLayout {
 
     // 倍速相关
     public static final String mSpeedName[] = new String[]{
-            "1.0x", "1.25x", "1.5x"
+            "0.75x",  "1.0x", "1.5x", "2.0x"
     };
 
-    private int mSpeedPos = 0;
+    public static final float mSpeedValue[] = new float[]{
+            0.75f,  1.0f, 1.5f, 2.0f
+    };
+
+
+    private int mSpeedPos = 1;
 
     /**
      * 设置倍速 外部
@@ -745,6 +745,24 @@ public abstract class BaseMediaController extends FrameLayout {
     public void setSpeed(int pos) {
         this.mSpeedPos = pos;
         mSpeedLandView.setText(mSpeedName[mSpeedPos]);
+        if (mMediaPlayer != null) {
+            mMediaPlayer.setSpeed(mSpeedValue[mSpeedPos]);
+        }
+    }
+
+    /**
+     * @return 倍速位置
+     */
+    public int getSpeedPos() {
+        return mSpeedPos;
+    }
+
+    /**
+     * 获取播放速度值
+     * @return
+     */
+    public float getSpeed() {
+        return mSpeedValue[mSpeedPos];
     }
 
     private OnSpeedAction mOnSpeedAction = null;
@@ -773,10 +791,10 @@ public abstract class BaseMediaController extends FrameLayout {
     // 清晰度相关
 
     public static final String mResolutionName[] = new String[]{
-            "标清", "高清", "超清"
+            "标清", "高清", "超清", "蓝光"
     };
 
-    private int mResolutionPos = 0;
+    private int mResolutionPos = 1;
 
     /**
      * 设置清晰度 外部
@@ -786,6 +804,17 @@ public abstract class BaseMediaController extends FrameLayout {
     public void setResolution(int pos) {
         this.mResolutionPos = pos;
         mResolutionLandView.setText(mResolutionName[mResolutionPos]);
+        // TODO 设置分辨率
+        if (mMediaPlayer != null) {
+
+        }
+    }
+
+    /**
+     * @return 清晰度位置
+     */
+    public int getResolutionPos() {
+        return mResolutionPos;
     }
 
     public OnResolutionAction mResolutionAction;

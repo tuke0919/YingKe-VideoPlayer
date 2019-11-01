@@ -183,6 +183,13 @@ public class IjkVideoView extends IjkBaseVideoView {
     }
 
     /**
+     * @return 屏幕缩放
+     */
+    public int getCurrentScreenScale() {
+        return mCurrentScreenScale;
+    }
+
+    /**
      * 旋转视频画面
      *
      * @param rotation 角度
@@ -222,6 +229,12 @@ public class IjkVideoView extends IjkBaseVideoView {
     public void setMirrorRotation(boolean enable) {
         if (mTextureView != null) {
             mTextureView.setScaleX(enable ? -1 : 1);
+            return;
+        }
+
+        if (mSurfaceView != null) {
+            mSurfaceView.setScaleX(enable ? -1 : 1);
+            return;
         }
     }
 

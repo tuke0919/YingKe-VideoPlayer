@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/trans_alpha_60"
+    android:scrollbars="none"
     >
 
     <LinearLayout
@@ -100,8 +101,6 @@
                 android:layout_height="80dp"
                 android:weightSum="5"
                 android:gravity="center_vertical"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
                 android:drawablePadding="5dp"
                 >
 
@@ -119,13 +118,13 @@
                     />
 
                 <TextView
-                    android:id="@+id/land_screen_mode"
+                    android:id="@+id/land_screen_scale"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="屏幕比例"
                     android:textSize="12dp"
                     android:textColor="@color/white"
-                    android:drawableTop="@mipmap/icon_screen_mode"
+                    android:drawableTop="@mipmap/icon_screen_mode_1"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:drawablePadding="5dp"
@@ -134,8 +133,9 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/land_screen_view"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="30dp"
                 android:weightSum="5"
                 android:visibility="gone"
                 android:gravity="center_vertical"
@@ -144,19 +144,8 @@
                 <TextView
                     android:id="@+id/land_screen_43"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:text="4:3"
-                    android:textSize="12dp"
-                    android:textColor="@color/white"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    />
-
-                <TextView
-                    android:id="@+id/land_screen_origin"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="原始大小"
                     android:textSize="12dp"
                     android:textColor="@color/white"
                     android:layout_weight="1"
@@ -166,8 +155,19 @@
                 <TextView
                     android:id="@+id/land_screen_full"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="铺满"
+                    android:layout_height="match_parent"
+                    android:text="铺满全屏"
+                    android:textSize="12dp"
+                    android:textColor="@color/white"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    />
+
+                <TextView
+                    android:id="@+id/land_screen_origin"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="原始大小"
                     android:textSize="12dp"
                     android:textColor="@color/white"
                     android:layout_weight="1"
@@ -177,7 +177,7 @@
                 <TextView
                     android:id="@+id/land_screen_crop"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:text="居中裁切"
                     android:textSize="12dp"
                     android:textColor="@color/white"
@@ -188,8 +188,8 @@
                 <TextView
                     android:id="@+id/land_screen_mirror"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="镜像"
+                    android:layout_height="match_parent"
+                    android:text="镜像旋转"
                     android:textSize="12dp"
                     android:textColor="@color/white"
                     android:layout_weight="1"
@@ -213,9 +213,9 @@
             android:layout_height="50dp"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginLeft="27dp"
+            android:layout_marginRight="27dp"
+            android:layout_marginTop="0dp"
             >
 
             <TextView
@@ -229,10 +229,10 @@
                 />
 
             <TextView
-                android:id="@+id/land_speed_0.7"
+                android:id="@+id/land_speed_0_7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0.7x"
+                android:text="0.75x"
                 android:textColor="@color/white"
                 android:textSize="12dp"
                 android:layout_marginLeft="20dp"
@@ -250,7 +250,7 @@
                 />
 
             <TextView
-                android:id="@+id/land_speed_1.5"
+                android:id="@+id/land_speed_1_5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1.5x"
@@ -276,8 +276,8 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginLeft="27dp"
+            android:layout_marginRight="27dp"
             >
 
             <ImageView
@@ -295,8 +295,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:layout_toLeftOf="@+id/volume_on"
                 android:layout_toRightOf="@+id/volume_off"
                 >
@@ -310,6 +310,7 @@
                     android:minHeight="3dp"
                     android:paddingStart="0dp"
                     android:paddingEnd="0dp"
+                    android:max="100"
                     android:progress="30"
                     android:secondaryProgress="0"
                     android:progressDrawable="@drawable/bg_controller_seekbar"
@@ -332,8 +333,8 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginLeft="27dp"
+            android:layout_marginRight="27dp"
             >
 
             <ImageView
@@ -351,8 +352,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:layout_toLeftOf="@+id/lightness_on"
                 android:layout_toRightOf="@+id/lightness_off"
                 >
@@ -366,6 +367,7 @@
                     android:minHeight="3dp"
                     android:paddingStart="0dp"
                     android:paddingEnd="0dp"
+                    android:max="100"
                     android:progress="30"
                     android:secondaryProgress="0"
                     android:progressDrawable="@drawable/bg_controller_seekbar"

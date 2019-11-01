@@ -45,8 +45,8 @@ public class HalfTransDialog extends Dialog {
     public void init() {
         setCanceledOnTouchOutside(true);
         View rootView = LayoutInflater.from(getContext()).inflate(R.layout.activity_half_trans, null, false);
-        adjustParams(rootView);
         setContentView(rootView);
+        adjustParams(rootView);
         Window window = getWindow();
         WindowManager.LayoutParams wlp = window.getAttributes();
         wlp.gravity = Gravity.RIGHT;

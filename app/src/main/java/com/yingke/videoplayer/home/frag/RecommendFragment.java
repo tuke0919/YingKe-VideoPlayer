@@ -35,7 +35,6 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
@@ -235,7 +234,7 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
             return;
         }
 
-        int oldPosition = event.getOldPosition();
+        int oldPosition = event.getOldPortPosition();
         IVideoBean landVideoBean = event.getLandVideoBean();
         BaseListVideoView landVideoView = event.getLandVideoView();
 

@@ -491,6 +491,8 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
        openVideo();
     }
 
+    // 暂时模拟清晰度
+    public int mTempResolution = 1;
 
     /**
      * 视频播放器内部 视频缓冲完毕，准备开始播放时回调
@@ -499,13 +501,37 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
     public void onPrepared() {
         PlayerLog.d(TAG, "onPrepared : " );
         mIsPrepared = true;
-        notifyPlayStateChanged(STATE_PREPARED);
         if (mBaseMediaController != null) {
             mBaseMediaController.setEnabled(true);
+            // 设置倍速
+            setSpeed(mBaseMediaController.getSpeed());
+            // 设置清晰度
+            mBaseMediaController.setResolution(getResolutionPos());
         }
+
         if (mCurrentPosition > 0) {
             seekTo(mCurrentPosition);
         }
+
+        notifyPlayStateChanged(STATE_PREPARED);
+    }
+
+
+    /**
+     * 获取清晰度位置
+     * 暂时模拟清晰度
+     */
+    private int getResolutionPos() {
+        // TODO 进行计算
+        return 1;
+    }
+
+    /**
+     * 设置 清晰度
+     * @param videoUrl
+     */
+    private void setResolution(String videoUrl) {
+        // TODO 实现
     }
 
     @Override
@@ -603,6 +629,9 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
         if (videoBean == null) {
             notifyPlayStateChanged(STATE_ERROR);
         }
+        // 设置清晰度
+        setResolution(videoBean.getSource());
+
         setVideoUrl(videoBean.getSource());
         if (mBaseMediaController != null) {
             mBaseMediaController.setTitle(videoBean.getTitle());

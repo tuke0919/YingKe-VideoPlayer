@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -23,7 +22,6 @@ import com.yingke.player.java.listener.OnPlayStateListener;
 import com.yingke.player.java.videoview.IjkVideoView;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.home.landscape.LandScapeActivity;
-import com.yingke.videoplayer.home.util.SinglePlayerManager;
 import com.yingke.videoplayer.util.DeviceUtil;
 import com.yingke.videoplayer.util.NetUtils;
 import com.yingke.videoplayer.util.PlayerSetting;
@@ -103,7 +101,7 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
             @Override
             public void onShare() {
                 // 分享/更多
-                showMore();
+                showMoreView();
             }
         });
         getControllerView().setControllerShownHidedListener(new BaseMediaController.OnShownHiddenListener() {
@@ -115,6 +113,21 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
             @Override
             public void onHidden() {
 
+            }
+        });
+        getControllerView().setOnSpeedAction(new BaseMediaController.OnSpeedAction() {
+            @Override
+            public void onSpeedClick(int speedPos) {
+                // 倍速
+                showMoreView();
+            }
+        });
+
+        getControllerView().setResolutionAction(new BaseMediaController.OnResolutionAction() {
+            @Override
+            public void onResolutionClick(int resolutionPos) {
+                // 分辨率
+                showResolution();
             }
         });
     }
@@ -479,16 +492,6 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
     }
 
     /**
-     * 显示更多
-     */
-    public void showMore() {
-        PlayerLog.d("ListVideo", "showMore: ");
-        if (getActivity() instanceof LandScapeActivity) {
-            ((LandScapeActivity) getActivity()).showMore();
-        }
-    }
-
-    /**
      * @return
      */
     public boolean isFullScreen() {
@@ -497,6 +500,27 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
         }
         return false;
     }
+
+    /**
+     * 显示更多
+     */
+    public void showMoreView() {
+        PlayerLog.d("ListVideo", "showMoreView: ");
+        if (getActivity() instanceof LandScapeActivity) {
+            ((LandScapeActivity) getActivity()).showMoreView();
+        }
+    }
+
+    /**
+     * 显示分辨率
+     */
+    public void showResolution() {
+        if (getActivity() instanceof LandScapeActivity) {
+            ((LandScapeActivity) getActivity()).showResolution();
+        }
+    }
+
+
 
     @Override
     public void startTinyScreen() {

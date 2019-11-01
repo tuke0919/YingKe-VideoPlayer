@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="340dp"
     android:layout_height="match_parent"
-    android:background="@color/trans"
+    android:background="@color/red"
     >
 
    <!-- 内容：分辨率，分享/更多，评论列表等   -->
     <FrameLayout
         android:id="@+id/trans_view"
-        android:layout_width="340dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/trans_alpha_60"
         android:layout_alignParentRight="true"
         >
 
+<!--        <include-->
+<!--            layout="@layout/dialog_land_more" />-->
 
 
 
