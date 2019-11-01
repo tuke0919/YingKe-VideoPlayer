@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="340dp"
     android:layout_height="match_parent"
-    android:background="@color/red"
+    android:background="@color/trans"
     >
 
    <!-- 内容：分辨率，分享/更多，评论列表等   -->
