@@ -110,7 +110,7 @@ public class ResolutionDialog extends HalfTransDialog implements View.OnClickLis
             case R.id.land_chaoqing:
                 if (mListener != null) {
                     updateResolution(2);
-                    mListener.OnResolutionSelected(3);
+                    mListener.OnResolutionSelected(2);
                     dismissDelay();
                 }
                 break;

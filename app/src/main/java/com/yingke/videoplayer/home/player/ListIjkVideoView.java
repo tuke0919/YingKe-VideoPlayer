@@ -109,6 +109,7 @@ public class ListIjkVideoView extends BaseListVideoView {
             @Override
             public void onClick(View v) {
                 // 重新加载
+                setVideoOnline(mVideoBean);
             }
         });
 
@@ -118,6 +119,7 @@ public class ListIjkVideoView extends BaseListVideoView {
             @Override
             public void onClick(View v) {
                 // 继续播放
+                start();
             }
         });
 
@@ -126,6 +128,7 @@ public class ListIjkVideoView extends BaseListVideoView {
             @Override
             public void onClick(View v) {
                 // 绑定免流卡
+                ToastUtil.showToast("绑定免流卡");
             }
         });
 
@@ -138,7 +141,7 @@ public class ListIjkVideoView extends BaseListVideoView {
             @Override
             public void onClick(View v) {
                 // 重播
-
+                setVideoOnline(mVideoBean);
             }
         });
 

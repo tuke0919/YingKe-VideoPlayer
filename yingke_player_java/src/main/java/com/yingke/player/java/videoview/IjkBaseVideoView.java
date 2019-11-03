@@ -13,9 +13,13 @@ import android.view.OrientationEventListener;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import com.danikula.videocache.CacheListener;
+import com.danikula.videocache.HttpProxyCacheServer;
+import com.danikula.videocache.file.Md5FileNameGenerator;
 import com.yingke.player.java.IVideoBean;
 import com.yingke.player.java.PlayerLog;
 import com.yingke.player.java.PlayerUtils;
+import com.yingke.player.java.StorageUtil;
 import com.yingke.player.java.controller.BaseMediaController;
 import com.yingke.player.java.controller.MediaPlayerControl;
 import com.yingke.player.java.manager.MediaPlayerManager;
@@ -26,6 +30,7 @@ import com.yingke.player.java.R;
 import com.yingke.player.java.player.AbstractPlayer;
 import com.yingke.player.java.player.IjkPlayer;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -120,6 +125,11 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
 
     // 视频数据
     protected IVideoBean mVideoBean;
+
+    // 边下边播 视频缓存相关
+    protected boolean mIsCacheEnabled = true;
+    protected int mCachedBufferedPercentage;
+    protected HttpProxyCacheServer mHttpProxyCacheServer;
 
 
     public IjkBaseVideoView(Context context) {
@@ -231,7 +241,24 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
         if (mAssetFileDescriptor != null) {
             mMediaPlayer.setDataSource(mAssetFileDescriptor);
         } else {
-            mMediaPlayer.setDataSource(mCurrentUrl, mHeaders);
+
+            if (mIsCacheEnabled && mCurrentUrl.startsWith("http")) {
+                // 获取 本地代理服务器
+                mHttpProxyCacheServer = HttpCacheServerManager.getProxy(getContext());
+                // 网络链接 转化成 本地
+                String proxyPath = mHttpProxyCacheServer.getProxyUrl(mCurrentUrl);
+                // 注册监听
+                registerCacheListener(mCurrentUrl);
+                // 是否完全缓存
+                if (mHttpProxyCacheServer.isCached(mCurrentUrl)) {
+                    mCachedBufferedPercentage = 100;
+                }
+                // 设置本地地址
+                mMediaPlayer.setDataSource(proxyPath, mHeaders);
+
+            } else {
+                mMediaPlayer.setDataSource(mCurrentUrl, mHeaders);
+            }
         }
         // 准备播放
         mMediaPlayer.prepareAsync();
@@ -325,6 +352,9 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
         if (mMediaPlayer != null) {
             mMediaPlayer.release();
             mMediaPlayer = null;
+            // 结束缓存监听
+            unregisterCacheListener();
+
             notifyPlayStateChanged(STATE_IDLE);
             if (mAudioFocusHelper != null)
                 mAudioFocusHelper.abandonFocus();
@@ -422,7 +452,7 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
      */
     @Override
     public int getBufferedPercentage() {
-        int bufferPercent = mMediaPlayer != null ? mMediaPlayer.getBufferedPercent() : 0;
+        int bufferPercent = mIsCacheEnabled ? mCachedBufferedPercentage :(mMediaPlayer != null ? mMediaPlayer.getBufferedPercent() : 0);
         PlayerLog.d(TAG, "getBufferedPercentage : bufferPercent " + bufferPercent );
         return bufferPercent;
     }
@@ -657,9 +687,9 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
      * @param headers 请求头
      */
     public void setVideoUrl(String url, Map<String, String> headers) {
-        mCurrentUrl = url;
         mHeaders = headers;
-        openVideo();
+        setVideoUrl(url);
+
     }
 
     /**
@@ -747,6 +777,90 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
      */
     public void setCustomMediaPlayer(AbstractPlayer abstractPlayer) {
         mTempMediaPlayer = abstractPlayer;
+    }
+
+    /**
+     * 是否打开缓存，默认打开
+     */
+    public void setCacheEnabled(boolean isEnabled) {
+        mIsCacheEnabled = isEnabled;
+    }
+
+    /**
+     * 注销视频缓存监听
+     */
+    private void unregisterCacheListener() {
+        if (mHttpProxyCacheServer != null) {
+            mHttpProxyCacheServer.unregisterCacheListener(mHttpCacheListener);
+        }
+    }
+
+    /**
+     * 注册视频缓存 监听
+     * @param url
+     */
+    private void registerCacheListener(String url){
+        if (mHttpProxyCacheServer != null) {
+            mHttpProxyCacheServer.registerCacheListener(mHttpCacheListener, url);
+        }
+    }
+
+    /**
+     * 视频缓存 监听器
+     */
+    public CacheListener mHttpCacheListener = new CacheListener() {
+        @Override
+        public void onCacheAvailable(File cacheFile, String url, int percentsAvailable) {
+            mCachedBufferedPercentage = percentsAvailable;
+        }
+    };
+
+    /**
+     * 缓存服务器管理
+     */
+    public static class HttpCacheServerManager {
+
+        private static HttpProxyCacheServer mStaticProxyCacheServer;
+
+        public static HttpProxyCacheServer getProxy(Context context) {
+            return mStaticProxyCacheServer == null ? (mStaticProxyCacheServer = newProxy(context)) : mStaticProxyCacheServer;
+        }
+
+        public static HttpProxyCacheServer newProxy(Context context) {
+            return new HttpProxyCacheServer.Builder(context)
+                    .maxCacheSize(1024 * 1024 * 1024)
+                    // 缓存路径，不设置默认在sd_card/Android/data/[app_package_name]/cache中
+                    //.cacheDirectory()
+                    .build();
+        }
+
+        /**
+         * 删除所有缓存文件
+         * @param context
+         * @return 返回缓存是否删除成功
+         */
+        public static boolean clearAllCache(Context context) {
+            File cacheDirectory = StorageUtil.getIndividualCacheDirectory(context);
+            return StorageUtil.deleteFiles(cacheDirectory);
+        }
+
+        /**
+         * 删除url对应默认缓存文件
+         * @param context
+         * @param url
+         * @return 返回缓存是否删除成功
+         */
+        public static boolean clearDefaultCache(Context context, String url) {
+            Md5FileNameGenerator md5FileNameGenerator = new Md5FileNameGenerator();
+            String name = md5FileNameGenerator.generate(url);
+
+            // sd_card/Android/data/[app_package_name]/cache/name.download
+            String pathTmp = StorageUtil.getIndividualCacheDirectory(context.getApplicationContext()).getAbsolutePath() + File.separator + name + ".download";
+            // sd_card/Android/data/[app_package_name]/cache/name
+            String path = StorageUtil.getIndividualCacheDirectory(context.getApplicationContext()).getAbsolutePath() + File.separator + name;
+            // 删除
+            return StorageUtil.deleteFile(pathTmp) && StorageUtil.deleteFile(path);
+        }
     }
 
     /**

@@ -31,6 +31,13 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.0'
     api "tv.danmaku.ijk.media:ijkplayer-java:$rootProject.ext.ijkPlayerVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // 网络视频缓存
+    implementation 'com.danikula:videocache:2.7.1'
+
+    // B站弹幕
+    implementation 'com.github.ctiao:DanmakuFlameMaster:0.9.25'
+    implementation 'com.github.ctiao:ndkbitmap-armv7a:0.9.21'
 }
 repositories {
     mavenCentral()
