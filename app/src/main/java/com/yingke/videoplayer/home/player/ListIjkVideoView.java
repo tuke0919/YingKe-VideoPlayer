@@ -363,7 +363,8 @@ public class ListIjkVideoView extends BaseListVideoView {
                 break;
             case TYPE_REAL:
                 mRePlayView.setVisibility(View.VISIBLE);
-                mVideoBean.setCurrentType(TYPE_AD);
+                // 重置类型
+                mVideoBean.setCurrentType(mVideoBean.getFirstType());
                 break;
         }
     }
