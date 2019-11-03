@@ -72,7 +72,7 @@ public class IjkVideoView extends IjkBaseVideoView {
     protected int[] mTinyScreenSize = {0, 0};
 
     // 弹幕实现相关
-    protected boolean mIsDanmakuEnable = false;
+    protected boolean mIsDanmakuEnable = true;
     protected DanmakuHelper mDanmakuHelper;
 
 
@@ -109,6 +109,7 @@ public class IjkVideoView extends IjkBaseVideoView {
         } else {
             addTextureView();
         }
+        // 添加弹幕View
         if (mIsDanmakuEnable) {
             if (mDanmakuHelper != null) {
                 mDanmakuHelper.releaseDanmaku();
@@ -179,6 +180,7 @@ public class IjkVideoView extends IjkBaseVideoView {
 
             @Override
             public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int width, int height) {
+
             }
 
             @Override
@@ -212,6 +214,19 @@ public class IjkVideoView extends IjkBaseVideoView {
             if (mDanmakuHelper != null) {
                 mDanmakuHelper.prepareDanmaku();
             }
+        }
+    }
+
+    @Override
+    public void notifyPlayStateChanged(int playState) {
+        super.notifyPlayStateChanged(playState);
+        switch (playState) {
+            case STATE_PREPARED:
+                // 模拟弹幕
+                if (mIsDanmakuEnable) {
+                    mDanmakuHelper.simulateDanmu();
+                }
+                break;
         }
     }
 

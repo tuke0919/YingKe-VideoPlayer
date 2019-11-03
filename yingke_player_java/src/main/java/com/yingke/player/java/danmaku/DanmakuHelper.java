@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -55,7 +56,6 @@ public class DanmakuHelper {
     private DanmakuContext mDanmakuContext;
     private BaseDanmakuParser mDanmakuParser;
 
-
     /**
      * 初始化弹幕
      * @param context
@@ -67,7 +67,7 @@ public class DanmakuHelper {
         mContext = context;
 
         initDammakuContext();
-        initDamakuParser(0);
+        initDamakuParser(0, true);
 
         mDanmakuView.setCallback(new DrawHandler.Callback() {
             @Override
@@ -150,15 +150,19 @@ public class DanmakuHelper {
     /**
      * 初始化弹幕解析器
      * @param resId 弹幕文件资源id 可以是http，file
+     * @param isTest 是否 是测试demo
      */
-    public void initDamakuParser(int resId) {
-        int danmuFile = R.raw.your_name;
-        if (resId != 0) {
-            danmuFile = resId;
+    public void initDamakuParser(int resId, boolean isTest) {
+        if (isTest) {
+            mDanmakuParser = createParser(null);
+        } else {
+            int danmuResId = R.raw.your_name;
+            if (resId != 0) {
+                danmuResId = resId;
+            }
+            // 加载弹幕资源文件
+            mDanmakuParser = createParser(mDanmakuView.getContext().getResources().openRawResource(danmuResId));
         }
-        // 加载弹幕资源文件
-        mDanmakuParser = createParser(mDanmakuView.getContext().getResources().openRawResource(R.raw.your_name));
-
     }
 
     /**
@@ -242,14 +246,21 @@ public class DanmakuHelper {
 
     /**
      * 添加文字弹幕
+     * @param text
+     * @param isUser
      */
-    private void addDanmaku() {
+    private void addDanmaku(String text, boolean isUser) {
+        if (mDanmakuView == null) {
+            return;
+        }
+        mDanmakuContext.setCacheStuffer(new SpannedCacheStuffer(), null);
+        // 创建弹幕
         BaseDanmaku danmaku = mDanmakuContext.mDanmakuFactory.createDanmaku(BaseDanmaku.TYPE_SCROLL_RL);
         if (danmaku == null || mDanmakuView == null) {
             return;
         }
 
-        danmaku.text = "这是一条弹幕" + System.nanoTime();
+        danmaku.text = text;
         danmaku.padding = 5;
         // 可能会被各种过滤器过滤并隐藏显示
         danmaku.priority = 0;
@@ -259,7 +270,7 @@ public class DanmakuHelper {
         danmaku.textColor = Color.RED;
         danmaku.textShadowColor = Color.WHITE;
         // danmaku.underlineColor = Color.GREEN;
-        danmaku.borderColor = Color.GREEN;
+        danmaku.borderColor = isUser ? Color.GREEN : Color.TRANSPARENT;
         mDanmakuView.addDanmaku(danmaku);
 
     }
@@ -376,11 +387,18 @@ public class DanmakuHelper {
         return mDanmakuView;
     }
 
-    public DanmakuContext getDanmakuContext() {
-        return mDanmakuContext;
-    }
+    private Handler mHandler = new Handler();
 
-    public BaseDanmakuParser getDanmakuParser() {
-        return mDanmakuParser;
+    /**
+     * 模拟弹幕
+     */
+    public void simulateDanmu() {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                addDanmaku("666666", false);
+                mHandler.postDelayed(this, 100);
+            }
+        });
     }
 }
