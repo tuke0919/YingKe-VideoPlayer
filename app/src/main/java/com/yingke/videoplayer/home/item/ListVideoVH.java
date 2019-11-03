@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.yingke.player.java.IVideoBean;
-import com.yingke.player.java.PlayerLog;
+import com.yingke.player.java.util.PlayerLog;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.home.adapter.ListVideoAdapter;
 import com.yingke.videoplayer.home.bean.ListVideoData;

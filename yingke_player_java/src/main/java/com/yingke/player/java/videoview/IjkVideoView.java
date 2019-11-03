@@ -12,19 +12,36 @@ import android.view.Gravity;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.TextureView;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.yingke.player.java.PlayerUtils;
+import com.yingke.player.java.danmaku.BiliDanmukuParser;
+import com.yingke.player.java.danmaku.DanmakuHelper;
+import com.yingke.player.java.util.PlayerUtils;
+import com.yingke.player.java.R;
 import com.yingke.player.java.controller.BaseMediaController;
 import com.yingke.player.java.widget.ResizedSurfaceView;
 import com.yingke.player.java.widget.ResizedTextureView;
 
+import java.io.InputStream;
+import java.util.HashMap;
+
+import master.flame.danmaku.danmaku.loader.ILoader;
+import master.flame.danmaku.danmaku.loader.IllegalDataException;
+import master.flame.danmaku.danmaku.loader.android.DanmakuLoaderFactory;
+import master.flame.danmaku.danmaku.model.BaseDanmaku;
+import master.flame.danmaku.danmaku.model.IDisplayer;
+import master.flame.danmaku.danmaku.model.android.DanmakuContext;
+import master.flame.danmaku.danmaku.model.android.Danmakus;
+import master.flame.danmaku.danmaku.model.android.SpannedCacheStuffer;
+import master.flame.danmaku.danmaku.parser.BaseDanmakuParser;
+import master.flame.danmaku.danmaku.parser.IDataSource;
+import master.flame.danmaku.ui.widget.DanmakuView;
+
 import static com.yingke.player.java.ScreenScale.SCREEN_SCALE_DEFAULT;
 
 /**
- * 功能：播放器视图 添加Surface View 和 小屏播放逻辑
+ * 功能：播放器视图 添加Surface View ，弹幕相关 和 小屏播放逻辑
  *
  * 与业务无关
  *
@@ -53,6 +70,10 @@ public class IjkVideoView extends IjkBaseVideoView {
     protected boolean mIsTinyScreen;
     // 小屏尺寸
     protected int[] mTinyScreenSize = {0, 0};
+
+    // 弹幕实现相关
+    protected boolean mIsDanmakuEnable = false;
+    protected DanmakuHelper mDanmakuHelper;
 
 
     public IjkVideoView(Context context) {
@@ -88,13 +109,26 @@ public class IjkVideoView extends IjkBaseVideoView {
         } else {
             addTextureView();
         }
+        if (mIsDanmakuEnable) {
+            if (mDanmakuHelper != null) {
+                mDanmakuHelper.releaseDanmaku();
+                mDanmakuHelper = null;
+            }
+
+            mDanmakuHelper = new DanmakuHelper();
+            mDanmakuHelper.initDanMuView(getContext());
+
+            // 添加弹幕库
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            mPlayerContainer.addView(mDanmakuHelper.getDanmakuView(), params);
+        }
     }
 
     /**
      * 添加SurfaceView
      */
     private void addSurfaceView() {
-        mPlayerContainer.removeView(mSurfaceView);
+        mPlayerContainer.removeAllViews();
         mSurfaceView = new ResizedSurfaceView(getContext());
         SurfaceHolder surfaceHolder = mSurfaceView.getHolder();
         surfaceHolder.addCallback(new SurfaceHolder.Callback() {
@@ -169,12 +203,59 @@ public class IjkVideoView extends IjkBaseVideoView {
         super.setMediaController(baseMediaController);
     }
 
+    @Override
+    protected void preparePlayer(boolean needReset) {
+        super.preparePlayer(needReset);
+
+        // 开始准备弹幕
+        if (mIsDanmakuEnable) {
+            if (mDanmakuHelper != null) {
+                mDanmakuHelper.prepareDanmaku();
+            }
+        }
+    }
+
+    @Override
+    public void pause() {
+        super.pause();
+        if (mIsDanmakuEnable && isInPlaybackState()) {
+            if (mDanmakuHelper != null) {
+                mDanmakuHelper.pauseDanmaku();
+            }
+        }
+    }
+
+    @Override
+    public void start() {
+        super.start();
+        if (mIsDanmakuEnable && isInPlaybackState()) {
+            if (mDanmakuHelper != null) {
+                mDanmakuHelper.resumeDanmaku();
+            }
+        }
+    }
+
+    @Override
+    public void seekTo(long pos) {
+        super.seekTo(pos);
+        if (mIsDanmakuEnable && isInPlaybackState()) {
+            if (mDanmakuHelper != null) {
+                mDanmakuHelper.seekToDanmaku(pos);
+            }
+        }
+    }
 
     @Override
     public void release() {
         super.release();
         mPlayerContainer.removeView(mTextureView);
         mPlayerContainer.removeView(mSurfaceView);
+        // 释放弹幕
+        if (mDanmakuHelper != null) {
+            mDanmakuHelper.releaseDanmaku();
+            mDanmakuHelper = null;
+        }
+        mPlayerContainer.removeAllViews();
         if (mSurfaceTexture != null) {
             mSurfaceTexture.release();
             mSurfaceTexture = null;
@@ -270,6 +351,33 @@ public class IjkVideoView extends IjkBaseVideoView {
         } else {
             mTextureView.setScreenScale(mCurrentScreenScale);
             mTextureView.setTextureSize(width, height);
+        }
+    }
+
+    /**
+     * 设置是否启用弹幕 非显示和隐藏
+     * @param danmakuEnable
+     */
+    public void setDanmakuEnable(boolean danmakuEnable) {
+        mIsDanmakuEnable = danmakuEnable;
+    }
+
+
+    /**
+     * 显示弹幕 已经启动才是 外部调用
+     */
+    public void showDamaku() {
+        if (mIsDanmakuEnable && mDanmakuHelper != null) {
+            mDanmakuHelper.showDanmaku();
+        }
+    }
+
+    /**
+     * 隐藏弹幕 已经启动才是 外部调用
+     */
+    public void hideDamaku() {
+        if (mIsDanmakuEnable && mDanmakuHelper != null) {
+            mDanmakuHelper.hideDanmaku();
         }
     }
 

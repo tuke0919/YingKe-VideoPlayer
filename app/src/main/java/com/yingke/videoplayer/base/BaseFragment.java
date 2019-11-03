@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.yingke.player.java.PlayerLog;
+import com.yingke.player.java.util.PlayerLog;
 
 
 /**

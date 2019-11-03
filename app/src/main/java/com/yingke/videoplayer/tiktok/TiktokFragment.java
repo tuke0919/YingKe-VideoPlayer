@@ -5,7 +5,7 @@ import android.view.View;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.yingke.player.java.PlayerLog;
+import com.yingke.player.java.util.PlayerLog;
 import com.yingke.player.java.ScreenScale;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.base.BaseFragment;

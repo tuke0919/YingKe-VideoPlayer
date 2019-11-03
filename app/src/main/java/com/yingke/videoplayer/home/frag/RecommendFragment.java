@@ -9,7 +9,7 @@ import android.widget.FrameLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.yingke.player.java.IVideoBean;
-import com.yingke.player.java.PlayerLog;
+import com.yingke.player.java.util.PlayerLog;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.home.ListVideoStickEvent;
 import com.yingke.videoplayer.home.adapter.ListVideoAdapter;

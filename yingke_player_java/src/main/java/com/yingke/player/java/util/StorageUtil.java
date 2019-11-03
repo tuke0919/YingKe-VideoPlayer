@@ -1,4 +1,4 @@
-package com.yingke.player.java;
+package com.yingke.player.java.util;
 
 import android.content.Context;
 import android.os.Environment;

@@ -1,4 +1,4 @@
-package com.yingke.player.java;
+package com.yingke.player.java.util;
 
 import android.util.Log;
 

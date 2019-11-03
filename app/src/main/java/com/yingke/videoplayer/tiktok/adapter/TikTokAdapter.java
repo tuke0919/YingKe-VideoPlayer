@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.yingke.player.java.PlayerLog;
+import com.yingke.player.java.util.PlayerLog;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.tiktok.player.ListTiktokVideoView;
 import com.yingke.videoplayer.tiktok.bean.ListTiktokBean;

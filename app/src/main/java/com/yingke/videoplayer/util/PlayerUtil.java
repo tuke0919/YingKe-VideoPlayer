@@ -7,7 +7,7 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.yingke.player.java.PlayerLog;
+import com.yingke.player.java.util.PlayerLog;
 import com.yingke.videoplayer.home.ListVideoStickEvent;
 import com.yingke.videoplayer.home.bean.ListVideoData;
 import com.yingke.videoplayer.tiktok.bean.ListTiktokBean;

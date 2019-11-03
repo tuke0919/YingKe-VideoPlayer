@@ -13,7 +13,7 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.ViewGroup;
 
-import com.yingke.player.java.PlayerLog;
+import com.yingke.player.java.util.PlayerLog;
 import com.yingke.videoplayer.home.bean.TopTabData;
 import com.yingke.videoplayer.home.frag.CategoryContentFragment;
 import com.yingke.videoplayer.home.frag.RecommendFragment;

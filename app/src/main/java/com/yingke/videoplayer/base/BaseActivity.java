@@ -10,7 +10,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.yingke.player.java.PlayerLog;
+import com.yingke.player.java.util.PlayerLog;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.YingKePlayerApp;
 

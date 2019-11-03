@@ -13,8 +13,8 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.yingke.player.java.IVideoBean;
-import com.yingke.player.java.PlayerLog;
-import com.yingke.player.java.PlayerUtils;
+import com.yingke.player.java.util.PlayerLog;
+import com.yingke.player.java.util.PlayerUtils;
 import com.yingke.player.java.controller.BaseMediaController;
 import com.yingke.player.java.controller.MediaController;
 import com.yingke.player.java.controller.MediaPlayerControl;

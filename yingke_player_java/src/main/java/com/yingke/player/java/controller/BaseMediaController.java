@@ -17,8 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.yingke.player.java.PlayerLog;
-import com.yingke.player.java.PlayerUtils;
+import com.yingke.player.java.util.PlayerLog;
+import com.yingke.player.java.util.PlayerUtils;
 import com.yingke.player.java.R;
 
 import java.util.concurrent.Executors;
