@@ -3,7 +3,7 @@ package com.yingke.player.java.listener;
 /**
  * 功能：播放器事件回调
  * </p>
- * <p>Copyright corp.netease.com 2019 All right reserved </p>
+ * <p>Copyright corp.xxx.com 2019 All right reserved </p>
  *
  * @author tuke 时间 2019/9/11
  */

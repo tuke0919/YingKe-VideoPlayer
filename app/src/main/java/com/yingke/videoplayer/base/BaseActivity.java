@@ -1,5 +1,6 @@
 package com.yingke.videoplayer.base;
 
+import android.app.Application;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,7 +13,7 @@ import android.view.WindowManager;
 
 import com.yingke.player.java.util.PlayerLog;
 import com.yingke.videoplayer.R;
-import com.yingke.videoplayer.YingKePlayerApp;
+import com.yingke.videoplayer.YingKePlayerAppLike;
 
 
 /**
@@ -23,7 +24,7 @@ public class BaseActivity extends AppCompatActivity  {
     private static final String TAG = "BaseActivity";
 
     // 上下文
-    public YingKePlayerApp mApp;
+    public Application mApp;
     // 工具栏
     protected Toolbar mToolbar = null;
 
@@ -33,7 +34,7 @@ public class BaseActivity extends AppCompatActivity  {
         PlayerLog.d(getClass().getSimpleName(), "onCreate");
         super.onCreate(savedInstanceState);
 
-        mApp = (YingKePlayerApp) this.getApplicationContext();
+        mApp = YingKePlayerAppLike.getContext();
     }
 
     @Override
@@ -62,23 +63,23 @@ public class BaseActivity extends AppCompatActivity  {
      * 初始化toolbar
      */
     protected void initActionbar() {
-//        mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
-//        if (mToolbar == null) {
-//            throw new IllegalStateException("Toolbar_actionbar mToolbar has not be found in layout,be sure you have define mToolbar in the layout");
-//        } else {
-//            setSupportActionBar(mToolbar);
-//            getSupportActionBar().setDisplayShowHomeEnabled(false);
-//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//            mToolbar.setBackgroundResource(getActionBarBg());
-//            mToolbar.setNavigationIcon(R.mipmap.left_back);
-//            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    onBack(v);
-//                }
-//            });
-//            mToolbar.setTitleTextAppearance(this, R.style.toolbar_title_style);
-//        }
+        mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
+        if (mToolbar == null) {
+            throw new IllegalStateException("Toolbar_actionbar mToolbar has not be found in layout,be sure you have define mToolbar in the layout");
+        } else {
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setDisplayShowHomeEnabled(false);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            mToolbar.setBackgroundResource(getActionBarBg());
+            mToolbar.setNavigationIcon(R.mipmap.left_back);
+            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBack(v);
+                }
+            });
+            mToolbar.setTitleTextAppearance(this, R.style.toolbar_title_style);
+        }
     }
 
     /**

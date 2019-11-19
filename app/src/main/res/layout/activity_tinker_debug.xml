@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="?attr/colorPrimary">
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tinker热更新助手"
+            android:textColor="@color/color_333333"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="installPatch"
+                android:text="Install Patch"
+                android:textAllCaps="false"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="uninstallPatch"
+                android:text="UninstallPatch"
+                android:textAllCaps="false"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="showInfo"
+                android:text="ShowInfo"
+                android:textAllCaps="false"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="killMySelf"
+                android:text="KillMySelf"
+                android:textAllCaps="false"/>
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tv_my_abi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="你当前手机的CPU架构："
+            android:textColor="@color/color_333333"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="loadLibraryHack"
+                android:text="Load Library(Hack)"
+                android:textAllCaps="false"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="loadLibraryNoHack"
+                android:text="Load Library(No Hack)"
+                android:textAllCaps="false"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="loadLibraryArmeabi"
+                android:text="Load Armeabi Library"
+                android:textAllCaps="false"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="loadLibraryArmeabi_V7a"
+                android:text="Load armeabi-v7a Library"
+                android:textAllCaps="false"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tinker热更新测试"
+            android:textColor="@color/color_333333"
+            android:layout_marginTop="10dp"
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="testFixedJavaCode"
+            android:text="Test Fixed Java Code"
+            android:textAllCaps="false"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="testFixedLibSo"
+            android:text="Test Fixed Lib So(暂未测试)"
+            android:textAllCaps="false"
+            />
+
+        <ImageView
+            android:id="@+id/iv_test_res_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/debug_tinker_image_1"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="testFixedRecourse"
+            android:text="Test Fixed Resource"
+            android:textAllCaps="false"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>
+

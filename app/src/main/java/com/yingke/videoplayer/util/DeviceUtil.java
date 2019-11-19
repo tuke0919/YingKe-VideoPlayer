@@ -101,8 +101,7 @@ public class DeviceUtil {
      * 除状态栏标题栏的屏幕高度
      */
     public static int getAppInnerHeight(Activity mContext) {
-        return DeviceUtil.SCREEN_HEIGHT - getStatusBarHeight(mContext)
-                - DeviceUtil.dip2px(mContext, 46);
+        return DeviceUtil.SCREEN_HEIGHT - getStatusBarHeight(mContext) - DeviceUtil.dip2px(mContext, 46);
     }
 
     /**

@@ -19,3 +19,9 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# 防止TinkerApplicationInlineFence的构造函数混淆。 解决TINKER_VERSION  = 1.9.14.3 引入的bug
+-keep public class com.tencent.tinker.entry.TinkerApplicationInlineFence {
+    <init>(...);
+    void attachBaseContext(com.tencent.tinker.loader.app.TinkerApplication, android.content.Context);
+}

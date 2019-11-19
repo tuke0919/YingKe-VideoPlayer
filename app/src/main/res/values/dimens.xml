@@ -13,5 +13,9 @@
     <!--  底部导航栏的高，非抖音TAB需paddingBottom  -->
     <dimen name="bottom_tab_host_height">48dp</dimen>
 
+    <!--首页-->
+    <dimen name="toolbar_height">48dp</dimen>
+    <!--首页API 23以下不显示沉浸式状态栏-->
+    <dimen name="status_bar_height_api_23">0dp</dimen>
 
 </resources>

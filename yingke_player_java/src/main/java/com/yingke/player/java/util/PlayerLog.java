@@ -5,10 +5,10 @@ import android.util.Log;
 /**
  * 功能：
  * </p>
- * <p>Copyright corp.netease.com 2018 All right reserved </p>
+ * <p>Copyright corp.xxx.com 2018 All right reserved </p>
  *
  * @author tuke 时间 2019/8/9
- * @email tuke@corp.netease.com
+ * @email
  * <p>
  * 最后修改人：无
  * <p>
@@ -54,6 +54,20 @@ public class PlayerLog {
             Log.i(tag, message);
         }
     }
+
+    public static void v(String message){
+        if (DEBUG) {
+            Log.v(TAG, message);
+        }
+    }
+
+    public static void v(String tag, String message){
+        if (DEBUG) {
+            Log.v(tag, message);
+        }
+    }
+
+
 
     public static void w(String message){
         if (DEBUG) {

@@ -1,1 +1,21 @@
 include ':app', ':yingke_player_java', ':yingke-widget'
+
+
+// 以下是调试tinker源码使用 是tinker依赖库的本地文件路径
+//include ':tinker-commons'
+//project(':tinker-commons').projectDir = new File('/Users/tuke/products/tinker/demo/tinkerloaderlib/tinker-commons')
+//
+//include ':tinker-android-loader'
+//project(':tinker-android-loader').projectDir = new File('/Users/tuke/products/tinker/demo/tinkerloaderlib/tinker-android-loader')
+//
+//include ':tinker-android-lib'
+//project(':tinker-android-lib').projectDir = new File('/Users/tuke/products/tinker/demo/tinkerloaderlib/tinker-android-lib')
+//
+//include ':aosp-dexutils'
+//project(':aosp-dexutils').projectDir = new File('/Users/tuke/products/tinker/demo/tinkerloaderlib/third-party/aosp-dexutils')
+//
+//include ':bsdiff-util'
+//project(':bsdiff-util').projectDir = new File('/Users/tuke/products/tinker/demo/tinkerloaderlib/third-party/bsdiff-util')
+//
+//include ':tinker-ziputils'
+//project(':tinker-ziputils').projectDir = new File('/Users/tuke/products/tinker/demo/tinkerloaderlib/third-party/tinker-ziputils')

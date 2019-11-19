@@ -5,7 +5,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.yingke.videoplayer.YingKePlayerApp;
+import com.yingke.videoplayer.YingKePlayerAppLike;
 
 /**
  * <br/>网络工具类.
@@ -37,7 +37,7 @@ public class NetUtils {
      * @return
      */
     public static boolean isMobileNetwork() {
-        ConnectivityManager cm = (ConnectivityManager) YingKePlayerApp.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) YingKePlayerAppLike.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
         return (info != null && info.getType() == ConnectivityManager.TYPE_MOBILE);
     }

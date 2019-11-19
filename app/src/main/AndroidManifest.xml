@@ -39,6 +39,30 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+
+        <!-- Tinker 调试 -->
+        <activity
+            android:name=".tinker.TinkerDebugActivity"
+            android:label="Tinker"
+            android:screenOrientation="portrait" />
+
+        <!-- Tinker 需要 -->
+        <service
+            android:name=".tinker.service.SampleResultService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <!-- 下载 tinker patch -->
+        <service
+            android:name=".tinker.request.TinkerDownloadService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE">
+            <intent-filter>
+                <action android:name="com.yingke.videoplayer.DOWNLOAD" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

@@ -17,12 +17,14 @@ import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
+import com.yingke.videoplayer.NetConstants;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.center.CommunityFragment;
 import com.yingke.videoplayer.home.landscape.LandScapeActivity;
 import com.yingke.videoplayer.home.frag.HomeFragment;
 import com.yingke.videoplayer.personal.PersonalFragment;
 import com.yingke.videoplayer.tiktok.TiktokFragment;
+import com.yingke.videoplayer.tinker.TinkerDebugActivity;
 
 import java.util.HashMap;
 
@@ -59,6 +61,15 @@ public class MainActivity extends LandScapeActivity {
 
     private void initViews(){
         initTabHost();
+        if (NetConstants.TEST) {
+            findViewById(R.id.tinker_debug).setVisibility(View.VISIBLE);
+            findViewById(R.id.tinker_debug).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TinkerDebugActivity.start(MainActivity.this);
+                }
+            });
+        }
     }
 
     private void initTabHost(){

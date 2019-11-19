@@ -13,6 +13,8 @@
 
     <string name="list_video_ad_time">%1$s秒</string>
 
+    <string name="debug_tinker_string">测试渠道包，6.0,7.0, 8.1, 9.1</string>
+
     <string name="top_data_json">[
     {
         "id": 1222,

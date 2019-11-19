@@ -29,9 +29,9 @@ import java.io.File;
  * 最后修改人：无
  * <p>
  */
-public class YingKePlayerApp extends Application {
+public class YingKePlayerApp1 extends Application {
 
-    private static YingKePlayerApp mYingKePlayerApp;
+    private static YingKePlayerApp1 mYingKePlayerApp;
 
     @Override
     public void onCreate() {

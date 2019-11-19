@@ -133,11 +133,11 @@ public class DanmakuHelper {
         // 设置是否合并重复弹幕
         mDanmakuContext.setDuplicateMergingEnabled(false);
         // 设置弹幕滚动速度
-        mDanmakuContext.setScrollSpeedFactor(1.2f);
+        mDanmakuContext.setScrollSpeedFactor(1f);
         // 设置弹幕字体大小
-        mDanmakuContext.setScaleTextSize(1.2f);
+        mDanmakuContext.setScaleTextSize(2.5f);
         // 设置弹幕间隔
-        mDanmakuContext.setDanmakuMargin(40);
+        mDanmakuContext.setDanmakuMargin(10);
         // 设置缓存绘制填充器 图文混排使用SpannedCacheStuffer
         mDanmakuContext.setCacheStuffer(new SpannedCacheStuffer(), mCacheStufferAdapter);
         // 设置最大行数
@@ -266,7 +266,7 @@ public class DanmakuHelper {
         danmaku.priority = 0;
         danmaku.isLive = false;
         danmaku.setTime(mDanmakuView.getCurrentTime() + 1200);
-        danmaku.textSize = 25f * (mDanmakuParser.getDisplayer().getDensity() - 0.6f);
+        danmaku.textSize = 10f * (mDanmakuParser.getDisplayer().getDensity() - 0.6f);
         danmaku.textColor = Color.RED;
         danmaku.textShadowColor = Color.WHITE;
         // danmaku.underlineColor = Color.GREEN;
@@ -289,7 +289,7 @@ public class DanmakuHelper {
         danmaku.priority = 1;
         danmaku.isLive = false;
         danmaku.setTime(mDanmakuView.getCurrentTime() + 1200);
-        danmaku.textSize = 25f * (mDanmakuParser.getDisplayer().getDensity() - 0.6f);
+        danmaku.textSize = 10f * (mDanmakuParser.getDisplayer().getDensity() - 0.6f);
         danmaku.textColor = Color.RED;
         // 重要：如果有图文混排，最好不要设置描边(设textShadowColor=0)，否则会进行两次复杂的绘制导致运行效率降低
         danmaku.textShadowColor = 0;
