@@ -1,6 +1,8 @@
 package com.yingke.videoplayer.base;
 
+import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -8,12 +10,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
+
 import android.view.View;
 import android.view.WindowManager;
 
 import com.yingke.player.java.util.PlayerLog;
 import com.yingke.videoplayer.R;
 import com.yingke.videoplayer.YingKePlayerAppLike;
+import com.yingke.videoplayer.home.seamless.TransitionHelper;
 
 
 /**
@@ -268,5 +274,34 @@ public class BaseActivity extends AppCompatActivity  {
         }
     }
 
+    /**
+     * 过渡动画 启动
+     * @param activity
+     * @param i
+     */
+    public static void transitionToActivity(Activity activity, Intent i) {
+        transitionToActivity(activity, i, null);
+    }
+
+    /**
+     * 过渡动画 启动
+     * @param activity
+     * @param i
+     * @param shareElements
+     */
+    public static void transitionToActivity(Activity activity, Intent i, Pair... shareElements) {
+        final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(activity, true, shareElements);
+        ActivityOptionsCompat transitionActivityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, pairs);
+        activity.startActivity(i, transitionActivityOptions.toBundle());
+    }
+
+
+    /**
+     * 是否 Android 5.0 以上
+     * @return
+     */
+    public static boolean isUpperV21(){
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    }
 
 }

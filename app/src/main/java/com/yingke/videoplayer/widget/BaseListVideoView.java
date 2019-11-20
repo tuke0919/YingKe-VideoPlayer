@@ -5,10 +5,13 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -25,6 +28,7 @@ import com.yingke.videoplayer.home.landscape.LandScapeActivity;
 import com.yingke.videoplayer.util.DeviceUtil;
 import com.yingke.videoplayer.util.NetUtils;
 import com.yingke.videoplayer.util.PlayerSetting;
+import com.yingke.videoplayer.util.PlayerUtil;
 
 import static com.yingke.player.java.videoview.IjkBaseVideoView.SCREEN_MODE_FULL;
 import static com.yingke.player.java.videoview.IjkBaseVideoView.SCREEN_MODE_NORMAL;
@@ -64,6 +68,7 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
 
     public BaseListVideoView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
     }
 
 
@@ -81,6 +86,7 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
      * 初始化 控制器
      */
     protected void initControllerView(){
+
         if (!hasController()) {
             return;
         }
@@ -307,7 +313,6 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
         if (checkNetWork()) {
             beforeSetVideoOnline(videoBean);
             getIjkVideoView().setVideoBean(videoBean);
-
         }
     }
 
@@ -476,8 +481,9 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
      */
     public void enterFullScreen() {
         PlayerLog.d("ListVideo", "enterFullScreen: ");
-        if (getActivity() instanceof LandScapeActivity) {
-            ((LandScapeActivity) getActivity()).enterFullScreen(this);
+        Activity activity = PlayerUtils.getAttachedActivity(this);
+        if (activity instanceof LandScapeActivity) {
+            ((LandScapeActivity) activity).enterFullScreen(this);
         }
     }
 
@@ -486,8 +492,9 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
      */
     public void exitFullScreen() {
         PlayerLog.d("ListVideo", "exitFullScreen: ");
-        if (getActivity() instanceof LandScapeActivity) {
-            ((LandScapeActivity) getActivity()).exitFullScreen();
+        Activity activity = PlayerUtils.getAttachedActivity(this);
+        if (activity instanceof LandScapeActivity) {
+            ((LandScapeActivity) activity).exitFullScreen();
         }
     }
 
@@ -506,8 +513,10 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
      */
     public void showMoreView() {
         PlayerLog.d("ListVideo", "showMoreView: ");
-        if (getActivity() instanceof LandScapeActivity) {
-            ((LandScapeActivity) getActivity()).showMoreView();
+        Activity activity = PlayerUtils.getAttachedActivity(this);
+
+        if (activity instanceof LandScapeActivity) {
+            ((LandScapeActivity)activity).showMoreView();
         }
     }
 
@@ -515,8 +524,9 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
      * 显示分辨率
      */
     public void showResolution() {
-        if (getActivity() instanceof LandScapeActivity) {
-            ((LandScapeActivity) getActivity()).showResolution();
+        Activity activity = PlayerUtils.getAttachedActivity(this);
+        if (activity instanceof LandScapeActivity) {
+            ((LandScapeActivity) activity).showResolution();
         }
     }
 
@@ -585,11 +595,4 @@ public abstract class BaseListVideoView extends FrameLayout implements OnPlaySta
         return false;
     }
 
-    public Activity getActivity() {
-        Activity activity = PlayerUtils.scanForActivity(getContext());
-        if (activity == null){
-            throw new IllegalArgumentException("BaseListVideoView attached activity is null");
-        }
-        return activity;
-    }
 }

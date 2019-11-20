@@ -66,11 +66,33 @@ public class ListVideoAdapter extends BaseRecycleViewAdapter<ListVideoData> {
         mListener = listener;
     }
 
+    /**
+     * 列表点击事件
+     */
     public interface OnListVideoClickListener{
 
+        /**
+         * 点击播放
+         * @param videoContainer
+         * @param videoData
+         * @param position
+         */
         void onListVideoPlay(FrameLayout videoContainer, ListVideoData videoData, int position);
 
+        /**
+         * 更多点击
+         * @param videoData
+         */
         void onMoreClick(ListVideoData videoData);
+
+        /**
+         * 进入视频详情
+         * @param itemView
+         * @param videoContainer
+         * @param videoData
+         */
+        void onVideoDetailClick(View itemView, FrameLayout videoContainer, ListVideoData videoData, int position);
+
     }
 
 }

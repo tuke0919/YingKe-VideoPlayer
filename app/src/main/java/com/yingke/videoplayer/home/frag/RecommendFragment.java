@@ -1,5 +1,6 @@
 package com.yingke.videoplayer.home.frag;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -16,11 +17,13 @@ import com.yingke.videoplayer.home.adapter.ListVideoAdapter;
 import com.yingke.videoplayer.home.bean.ListVideoData;
 import com.yingke.videoplayer.home.item.ListVideoVH;
 import com.yingke.videoplayer.home.landscape.LandScapeActivity;
+import com.yingke.videoplayer.home.seamless.SeamlessPlayActivity;
 import com.yingke.videoplayer.home.util.SinglePlayerManager;
 import com.yingke.videoplayer.util.EncryptUtils;
 import com.yingke.videoplayer.util.FileUtil;
 import com.yingke.videoplayer.util.StringUtil;
 import com.yingke.videoplayer.home.player.ListIjkVideoView;
+import com.yingke.videoplayer.util.ToastUtil;
 import com.yingke.videoplayer.widget.BaseListVideoView;
 import com.yingke.widget.base.BaseRecycleViewAdapter;
 import com.yingke.widget.pulltorefresh.PullToRefreshBase;
@@ -35,10 +38,11 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.util.Pair;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * 功能：
+ * 功能：推荐视频列表页
  * </p>
  * <p>Copyright xxx.com 2019 All right reserved </p>
  *
@@ -60,7 +64,7 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
 
     private boolean isInited = false;
     // 点击视频位置 横竖屏切换用
-    private int mPortPosition = -1;
+    private static int mPortPosition = -1;
 
     @Override
     protected int getLayoutResId() {
@@ -156,16 +160,21 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
 
     }
 
-
+    /**
+     * 点击播放
+     * @param videoContainer
+     * @param videoData
+     * @param position
+     */
     @Override
     public void onListVideoPlay(FrameLayout videoContainer, ListVideoData videoData, int position) {
         // 点击播放视频
-        mPortPosition = position;
+        setPortPosition(position);
 
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         ListIjkVideoView ijkVideoView = new ListIjkVideoView(getContext());
         ijkVideoView.setTag("ijkVideoView");
-
+        // 绑定视频管理器单例
         SinglePlayerManager.getInstance().attachVideoPlayer(videoData, ijkVideoView);
         // 设置数据
         videoContainer.addView(ijkVideoView, 0,  params);
@@ -174,29 +183,69 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
     }
 
     /**
+     * 更多点击
+     *
+     * @param videoData
+     */
+    @Override
+    public void onMoreClick(ListVideoData videoData) {
+        // 开启悬浮窗，有些手机有权限问题
+        SinglePlayerManager.getInstance().startFloatWindow();
+    }
+
+    /**
+     * 进入视频详情
+     *
+     * @param videoContainer
+     * @param videoData
+     */
+    @Override
+    public void onVideoDetailClick(View itemView, FrameLayout videoContainer, ListVideoData videoData, int position) {
+        if (SinglePlayerManager.getInstance().isShowing()) {
+            ToastUtil.showToast("悬浮窗视频不支持看详情，请回到列表播放");
+            return;
+        }
+
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            setPortPosition(position);
+
+            if (SinglePlayerManager.getInstance().getCurrentListVideoView() == null) {
+                ListIjkVideoView ijkVideoView = new ListIjkVideoView(getContext());
+                ijkVideoView.setTag("ijkVideoView");
+                ijkVideoView.setVideoOnline(videoData);
+                // 绑定视频管理器单例
+                SinglePlayerManager.getInstance().attachVideoPlayer(videoData, ijkVideoView);
+            }
+            // 去掉播放器父类
+            ListVideoVH listVideoVH = getListVideoVH(itemView);
+            listVideoVH.showIdleView(false);
+            SeamlessPlayActivity.SEAMLESS_PLAYING = true;
+            SeamlessPlayActivity.start(getContext(), new Pair<>(videoContainer, videoData.getUrl()));
+        }
+    }
+
+    /**
      * 点击位置 横竖屏切换用
      * @return
      */
-    public int getPortPosition() {
+    public static int getPortPosition() {
         return mPortPosition;
     }
 
     /**
      * @param portPosition
      */
-    public void setPortPosition(int portPosition) {
+    public static void setPortPosition(int portPosition) {
         mPortPosition = portPosition;
     }
 
-    @Override
-    public void onMoreClick(ListVideoData videoData) {
-        // 分享点击
-        SinglePlayerManager.getInstance().startFloatWindow();
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void doEventMainThread(ListVideoStickEvent event) {
-        PlayerLog.e(TAG, "ListVideoStickEvent: ");
+        PlayerLog.e(TAG, "ListVideoStickEvent: 启动时加载每个视频第一帧，作为封面回调");
         if (event == null ||  mDataList == null) {
             return;
         }
@@ -216,6 +265,7 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
                 mAdapter.notifyItemChanged(index);
             } else {
                 // 更新广告封面图
+
                 PlayerLog.e(TAG, "doEventMainThread: isStickAd = true");
                 ListVideoData realVideoData = mDataList.get(index);
                 realVideoData.setAdThumbPath(videoData.getAdThumbPath());
@@ -228,12 +278,12 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = false)
     public void doEventMainThread(LandScapeActivity.LandScapeVideoEvent event) {
-        PlayerLog.e(TAG, "LandScapeVideoEvent: ");
+        PlayerLog.e(TAG, "LandScapeVideoEvent: 横屏视频列表滚动，发送事件");
         // 横屏切竖屏 通信
         if (event == null) {
             return;
         }
-
+        int eventType = event.getEventType();
         int oldPosition = event.getOldPortPosition();
         IVideoBean landVideoBean = event.getLandVideoBean();
         BaseListVideoView landVideoView = event.getLandVideoView();
@@ -242,9 +292,15 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
         PlayerLog.e(TAG, "landVideoBean: " + landVideoBean.getTitle());
 
         if (oldPosition != -1) {
-            if (landVideoView != null) {
+            if (eventType == LandScapeActivity.LandScapeVideoEvent.EVENT_EXIT_FULLSCREEN) {
+                // 确认返回
                 mIsLandUpdatePort = false;
                 PlayerLog.e(TAG, "landVideoView: " + landVideoView);
+                if (SeamlessPlayActivity.SEAMLESS_PLAYING) {
+                    // 无缝播放 不接收 退出全屏的播放器
+                    return;
+                }
+
                 // 绑定新的播放器
                 RecyclerView.ViewHolder holder = mRecyclerView.findViewHolderForAdapterPosition(oldPosition);
                 if (holder instanceof  ListVideoAdapter.ListVideoHolder) {
@@ -252,27 +308,38 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
                     if (listVideoVH != null) {
                         listVideoVH.attachVideoPlayer(landVideoView);
                     }
-
+                    setPortPosition(-1);
                     // 更新成当前列表
+                    SinglePlayerManager.getInstance().attachVideoPlayer(landVideoBean, landVideoView);
                     SinglePlayerManager.getInstance().attachRecycleView(mRecyclerView);
                     // 开启画中画（可选）
 //                    SinglePlayerManager.getInstance().enablePip(true);
 
                 }
-            } else {
+                return;
+            }
+
+            if (eventType == LandScapeActivity.LandScapeVideoEvent.EVENT_UPDATE_SELECTED){
+
                 // 更新竖屏位置
                 mIsLandUpdatePort = true;
-                mAdapter.mDataList.set(oldPosition, (ListVideoData) landVideoBean);
-                mAdapter.notifyItemChanged(oldPosition);
+                if (landVideoBean != null && mAdapter != null) {
+                    mAdapter.mDataList.set(oldPosition, (ListVideoData) landVideoBean);
+                    mAdapter.notifyItemChanged(oldPosition);
+                }
+                return;
             }
         }
-
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        // 添加事件
+        boolean isRegistered =  EventBus.getDefault().isRegistered(this);
+        if (!isRegistered) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     @Override
@@ -283,18 +350,25 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
     @Override
     public void onStop() {
         super.onStop();
-        SinglePlayerManager.getInstance().onPause();
+        // 无缝播放 不暂停
+        if (!SeamlessPlayActivity.SEAMLESS_PLAYING) {
+            // 暂停
+            SinglePlayerManager.getInstance().onPause();
+        }
+        // 注销事件
+//        EventBus.getDefault().unregister(this);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        // 注销事件
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
 
         if (SinglePlayerManager.getInstance().isPipEnable()) {
             SinglePlayerManager.getInstance().stopFloatWindow();

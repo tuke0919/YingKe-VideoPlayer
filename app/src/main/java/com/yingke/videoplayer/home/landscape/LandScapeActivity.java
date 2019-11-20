@@ -35,6 +35,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.OrientationHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static com.yingke.videoplayer.home.landscape.LandScapeActivity.LandScapeVideoEvent.EVENT_EXIT_FULLSCREEN;
+import static com.yingke.videoplayer.home.landscape.LandScapeActivity.LandScapeVideoEvent.EVENT_UPDATE_SELECTED;
 import static com.yingke.videoplayer.main.MainActivity.TAB_HOME;
 
 /**
@@ -70,9 +72,8 @@ public class LandScapeActivity extends BaseActivity implements
     // for single
     // 父容器
     protected ViewParent mPlayerParent;
-    // 单个视屏全屏
+    // 单个视频/视频列表
     protected boolean mIsFullScreenSingle = false;
-
     // 是否全屏状态
     protected boolean mIsFullScreen = false;
 
@@ -145,12 +146,21 @@ public class LandScapeActivity extends BaseActivity implements
      */
     public void enterFullScreen(BaseListVideoView portListVideoView) {
         PlayerLog.e(TAG, "enterFullScreen: ");
+        beforeEnterFullScreen();
+
         mIsFullScreen = true;
        if (mIsFullScreenSingle) {
            enterFullScreenForSingle(portListVideoView);
        } else {
            enterFullScreenForList(portListVideoView);
        }
+    }
+
+    /**
+     * 渐入全屏前设置数据
+     */
+    protected void beforeEnterFullScreen() {
+
     }
 
 
@@ -183,18 +193,21 @@ public class LandScapeActivity extends BaseActivity implements
         // 禁止画中画
         SinglePlayerManager.getInstance().enablePip(false);
 
-        Fragment bottomFragment = getSupportFragmentManager().findFragmentByTag(TAB_HOME);
-        if (bottomFragment instanceof HomeFragment) {
-            Fragment currentFragment = ((HomeFragment) bottomFragment).getCurrentFragment();
-            if (currentFragment instanceof RecommendFragment) {
-                // 点击竖屏视频位置
-                mOldPortPosition = ((RecommendFragment) currentFragment).getPortPosition();
-            }
-        }
+        // 获取原来点击的位置，TODO 不应该有具体Fragment
+//        Fragment bottomFragment = getSupportFragmentManager().findFragmentByTag(TAB_HOME);
+//        if (bottomFragment instanceof HomeFragment) {
+//            Fragment currentFragment = ((HomeFragment) bottomFragment).getCurrentFragment();
+//            if (currentFragment instanceof RecommendFragment) {
+//                // 点击竖屏视频位置
+//                mOldPortPosition = ((RecommendFragment) currentFragment).getPortPosition();
+//            }
+//        }
 
         PlayerLog.e(TAG, "enterFullScreen: mOldPortPosition = " + mOldPortPosition);
 
         mCurrentLandVideoView = portListVideoView;
+        // 点击竖屏视频位置
+        mOldPortPosition = RecommendFragment.getPortPosition();
         // 移除竖屏播放器
         SinglePlayerManager.getInstance().removePlayerNotRelease();
 
@@ -204,7 +217,11 @@ public class LandScapeActivity extends BaseActivity implements
         initDatas();
         contentView.addView(mLandRecyclerView);
 
+
+        IVideoBean videoBean = mCurrentLandVideoView.getIjkVideoView().getVideoBean();
+
         // 更新成当前列表
+        SinglePlayerManager.getInstance().attachVideoPlayer(videoBean, mCurrentLandVideoView);
         SinglePlayerManager.getInstance().attachRecycleView(mLandRecyclerView);
     }
 
@@ -220,6 +237,15 @@ public class LandScapeActivity extends BaseActivity implements
         } else {
             exitFullScreenForList();
         }
+
+        afterExitFullScreen();
+    }
+
+    /**
+     * 退出全屏后 设置
+     */
+    protected void afterExitFullScreen() {
+
     }
 
     /**
@@ -233,6 +259,7 @@ public class LandScapeActivity extends BaseActivity implements
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT);
 
+            // 原播放器Parent，重新添加
             ((ViewGroup) mPlayerParent).addView(mCurrentLandVideoView, params);
 
             mPlayerParent = null;
@@ -252,7 +279,7 @@ public class LandScapeActivity extends BaseActivity implements
             }
 
             // 发送事件 竖屏列表更新更新数据
-            EventBus.getDefault().post(new LandScapeVideoEvent(mOldPortPosition, mLandVideoBean, mCurrentLandVideoView));
+            EventBus.getDefault().post(new LandScapeVideoEvent(EVENT_EXIT_FULLSCREEN, mOldPortPosition, mLandVideoBean, mCurrentLandVideoView));
 
             // 销毁横屏列表
             ViewGroup contentView = findViewById(android.R.id.content);
@@ -317,7 +344,7 @@ public class LandScapeActivity extends BaseActivity implements
                 landIjkVideoView.setVideoOnline(mLandVideoBean);
 
                 // 发送数据更新竖屏列表的数据
-                EventBus.getDefault().post(new LandScapeVideoEvent(mOldPortPosition, mLandVideoBean, null));
+                EventBus.getDefault().post(new LandScapeVideoEvent(EVENT_UPDATE_SELECTED, mOldPortPosition, mLandVideoBean, null));
             }
         }
     }
@@ -349,14 +376,30 @@ public class LandScapeActivity extends BaseActivity implements
      * 横屏发送给竖屏的数据
      */
     public class LandScapeVideoEvent {
+
+        // 更新 已选择Item
+        public static final int EVENT_UPDATE_SELECTED = 0;
+        // 退出全屏
+        public static final int EVENT_EXIT_FULLSCREEN = 1;
+
+        private int mEventType;
         private int mOldPortPosition;
         private IVideoBean mLandVideoBean;
         private BaseListVideoView mLandVideoView;
 
-        public LandScapeVideoEvent(int oldPortPosition, IVideoBean landVideoBean, BaseListVideoView landVideoView) {
+        public LandScapeVideoEvent(int eventType,
+                                   int oldPortPosition,
+                                   IVideoBean landVideoBean,
+                                   BaseListVideoView landVideoView) {
+
+            mEventType = eventType;
             mOldPortPosition = oldPortPosition;
             mLandVideoBean = landVideoBean;
             mLandVideoView = landVideoView;
+        }
+
+        public int getEventType() {
+            return mEventType;
         }
 
         public int getOldPortPosition() {
@@ -485,8 +528,14 @@ public class LandScapeActivity extends BaseActivity implements
             if (controller != null) {
                 mCurrentLandVideoView.getControllerView().setRequestedOrientation();
             }
+            return;
         } else {
-            super.onBackPressed();
+            onBack();
         }
     }
+
+    public void onBack(){
+        super.onBackPressed();
+    }
+
 }

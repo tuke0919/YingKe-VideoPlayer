@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/seamless_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/trans"
+    >
+
+    <!--  播放器   -->
+    <FrameLayout
+        android:id="@+id/video_container"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:background="@color/trans"
+        >
+
+        <!--视频容器-->
+        <FrameLayout
+            android:id="@+id/video_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="220dp">
+
+
+        </FrameLayout>
+
+        <!--封面-->
+        <RelativeLayout
+            android:id="@+id/cover_view"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:visibility="gone"
+            >
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/cover_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:actualImageResource="@drawable/videofeed_14"
+                app:actualImageScaleType="fitXY"
+                app:fadeDuration="100"
+                />
+
+            <!--竖屏 标题-->
+            <TextView
+                android:id="@+id/cover_title"
+                android:layout_width="match_parent"
+                android:layout_height="45dip"
+                android:layout_marginRight="16dip"
+                android:layout_marginLeft="16dp"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="2"
+                android:text="《极限挑战》未播：这三个人笑疯了，黄渤，孙红雷嘲讽宋小宝太黑看不见..."
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="17sp" />
+
+            <ImageView
+                android:id="@+id/cover_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/icon_play" />
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+    <!--  其他信息   -->
+    <FrameLayout
+        android:id="@+id/info_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/trans"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="其他信息，如评论，其他推荐视频列表，等数据"
+                android:textColor="@color/red"
+                android:textSize="17dp"
+                android:layout_marginBottom="10dp"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="作者："
+                    android:textColor="@color/color_333333"
+                    />
+
+                <TextView
+                    android:id="@+id/seamless_author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/color_333333"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="标题："
+                    android:textColor="@color/color_333333"
+                    />
+
+                <TextView
+                    android:id="@+id/seamless_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/color_333333"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+    </FrameLayout>
+</LinearLayout>

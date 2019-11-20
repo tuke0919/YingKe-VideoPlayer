@@ -127,7 +127,7 @@ public class SinglePlayerManager {
      * @param releasePlayer
      */
     private void showIdleView(View itemView, boolean releasePlayer) {
-        if (itemView == null) {
+        if (itemView == null || mRecyclerView == null) {
             return;
         }
         RecyclerView.ViewHolder holder = mRecyclerView.findContainingViewHolder(itemView);
@@ -248,7 +248,7 @@ public class SinglePlayerManager {
      * 开始画中画
      */
     public void startFloatWindow() {
-        if (!mIsPipEnable || mIsShowing || mCurrentListVideoView == null) {
+        if (!mIsPipEnable || mIsShowing || mCurrentListVideoView == null || mRecyclerView == null) {
             return;
         }
         mIsShowing = true;
@@ -351,10 +351,20 @@ public class SinglePlayerManager {
         return mPipType == PIP_TYPE_FLOAT_WINDOW;
     }
 
-    public void reset() {
+    /**
+     * 仅重置数据
+     */
+    public void resetData() {
         mCurrentListVideoView = null;
         mCurrentVideoBean = null;
         mRecyclerView = null;
+    }
+
+
+    /**
+     * 重置数据 和 悬浮窗设置
+     */
+    public void reset() {
         mIsPipEnable = false;
         mIsShowing = false;
         mSuspensionView = null;

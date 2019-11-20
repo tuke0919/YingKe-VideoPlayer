@@ -287,7 +287,7 @@ public abstract class BaseMediaController extends FrameLayout {
      * 进入全屏
      */
     public void enterFullScreen(){
-        Activity activity = PlayerUtils.scanForActivity(getContext());
+        Activity activity = PlayerUtils.getAttachedActivity(this);
         if (activity == null) {
             PlayerLog.d(TAG,"controller attached activity is null");
             return;
@@ -310,7 +310,7 @@ public abstract class BaseMediaController extends FrameLayout {
      * 退出全屏
      */
     public void exitFullScreen(){
-        Activity activity = PlayerUtils.scanForActivity(getContext());
+        Activity activity = PlayerUtils.getAttachedActivity(this);
         if (activity == null) {
             PlayerLog.d(TAG,"controller attached activity is null");
             return;

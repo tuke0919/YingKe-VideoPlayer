@@ -84,7 +84,7 @@ dependencies {
     implementation project(':yingke_player_java')
 
     implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation ('com.yanzhenjie:permission:2.0.0-rc12'){
+    implementation('com.yanzhenjie:permission:2.0.0-rc12') {
         exclude group: 'com.android.support'
     }
 
@@ -93,7 +93,9 @@ dependencies {
     annotationProcessor 'com.android.support:support-annotations:28.0.0-alpha3'
 
     // 可选，用于生成application类
-    annotationProcessor("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}") { changing = true }
+    annotationProcessor("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}") {
+        changing = true
+    }
     compileOnly("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}") { changing = true }
 
     //tinker 核心库，上线前使用这个，注销setting.gradle内容

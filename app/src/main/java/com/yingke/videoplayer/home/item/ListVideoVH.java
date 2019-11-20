@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +49,7 @@ public class ListVideoVH implements View.OnClickListener {
     private ImageView mCoverPlay;
 
     private SimpleDraweeView mAuthorAvatar;
+    private LinearLayout mNameDescView;
     private TextView mAuthorName;
     private TextView mDescription;
     private TextView mCommentCount;
@@ -70,12 +72,14 @@ public class ListVideoVH implements View.OnClickListener {
         mCoverPlay = itemView.findViewById(R.id.cover_play);
 
         mAuthorAvatar = itemView.findViewById(R.id.user_avatar);
+        mNameDescView = itemView.findViewById(R.id.tv_user_name_layout);
         mAuthorName = itemView.findViewById(R.id.tv_user_name);
         mDescription = itemView.findViewById(R.id.tv_description);
         mCommentCount = itemView.findViewById(R.id.tv_comments);
         mVoteCount = itemView.findViewById(R.id.iv_vote_view);
         mShareView = itemView.findViewById(R.id.iv_share_view);
 
+        mNameDescView.setOnClickListener(this);
         mCoverPlay.setOnClickListener(this);
         mShareView.setOnClickListener(this);
 
@@ -131,7 +135,7 @@ public class ListVideoVH implements View.OnClickListener {
 
     /**
      * 显示空闲界面
-     * @param releasePlayer 是否释放播放器
+     * @param releasePlayer 是否释放播放器 true - 释放播放器所有资源，false - 不释放资源，还在播放
      */
     public void showIdleView(boolean releasePlayer) {
         clearVideoPlayer(mVideoContainer, releasePlayer);
@@ -196,7 +200,12 @@ public class ListVideoVH implements View.OnClickListener {
                 if (mListener != null) {
                     mListener.onMoreClick(mListVideoData);
                 }
-
+                break;
+            case R.id.tv_user_name_layout:
+                // 进入详情
+                if (mListener != null) {
+                    mListener.onVideoDetailClick(itemView, mVideoContainer, mListVideoData, position);
+                }
                 break;
         }
     }

@@ -1,25 +1,28 @@
 <resources>
-
-
-
     <!-- Theme.AppCompat.Light.NoActionBar 浅色主题 深色文字和icon-->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-    <!-- Support library compatibility -->
-    <item name="windowActionBar">false</item>
-    <!-- 都是没有ActionBar的-->
-    <item name="android:windowNoTitle">true</item>
+        <!-- Support library compatibility -->
+        <item name="windowActionBar">false</item>
+        <!-- 都是没有ActionBar的-->
+        <item name="android:windowNoTitle">true</item>
 
-    <item name="colorPrimary">@color/white</item>
-    <item name="colorPrimaryDark">@color/gray</item>
-    <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/gray</item>
+        <item name="colorAccent">@color/colorAccent</item>
 
-    <item name="android:textColorPrimary">@color/black</item>
-    <item name="android:windowActionBarOverlay">false</item>
-    <item name="android:windowContentOverlay">@null</item>
-    <item name="windowActionModeOverlay">true</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="windowActionModeOverlay">true</item>
 
-    <!-- window 背景-->
-    <item name="android:windowBackground">@color/theme_window_color</item>
+        <!-- window 背景-->
+        <item name="android:windowBackground">@color/theme_window_color</item>
+
+        <!-- 使用共享元素 过渡动画需要-->
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">false</item>
+        <item name="android:windowAllowReturnTransitionOverlap">false</item>
+
     </style>
 
     <style name="toolbar_title_style">

@@ -3,6 +3,9 @@ package com.yingke.player.java.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 
 /**
  * 功能：
@@ -22,6 +25,29 @@ public class PlayerUtils {
      */
     public static Activity scanForActivity(Context context) {
         return context == null ? null : (context instanceof Activity ? (Activity) context : (context instanceof ContextWrapper ? scanForActivity(((ContextWrapper) context).getBaseContext()) : null));
+    }
+
+    /**
+     * 获取View 所在的Activity
+     * @param view
+     * @return
+     */
+    public static Activity getAttachedActivity(View view) {
+        if (view == null) {
+            return null;
+        }
+        View decorView = view.getRootView();
+        if (decorView == null){
+            throw new IllegalArgumentException("BaseListVideoView attached rootView is null");
+        }
+
+        // 用父布局的Activity
+        Context context = ((ViewGroup)decorView).findViewById(android.R.id.content).getContext();
+        Activity activity = PlayerUtils.scanForActivity(context);
+        if (activity == null){
+            throw new IllegalArgumentException("BaseListVideoView attached activity is null");
+        }
+        return activity;
     }
 
     /**

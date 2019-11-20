@@ -668,6 +668,13 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
     }
 
     /**
+     * @return 获取正在播放的数据
+     */
+    public IVideoBean getVideoBean() {
+        return mVideoBean;
+    }
+
+    /**
      * 设置视频地址
      */
     public void setVideoUrl(String url) {
@@ -949,7 +956,7 @@ public abstract class IjkBaseVideoView extends FrameLayout implements MediaPlaye
                 //300毫秒检测一次
                 return;
             }
-            Activity activity = PlayerUtils.scanForActivity(IjkBaseVideoView.this.getContext());
+            Activity activity = PlayerUtils.getAttachedActivity(IjkBaseVideoView.this);
             if (activity == null) {
                 return;
             }
