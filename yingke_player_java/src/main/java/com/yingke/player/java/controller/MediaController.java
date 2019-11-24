@@ -30,7 +30,7 @@ public class MediaController extends BaseMediaController {
 
     private static final String TAG = "MediaController";
 
-    protected static boolean mIsGestureEnabled = true;
+    protected boolean mIsGestureEnabled = true;
 
     protected GestureDetector mGestureDetector;
     protected GestureView mGestureView;
@@ -60,7 +60,7 @@ public class MediaController extends BaseMediaController {
     @Override
     protected void initView() {
         super.initView();
-
+        mIsGestureEnabled = true;
         if (mIsGestureEnabled) {
             mGestureView = new GestureView(getContext());
             mGestureView.setVisibility(GONE);
@@ -372,4 +372,8 @@ public class MediaController extends BaseMediaController {
         }
     }
 
+    @Override
+    public void setGestureEnabled(boolean gestureEnabled) {
+        mIsGestureEnabled = gestureEnabled;
+    }
 }

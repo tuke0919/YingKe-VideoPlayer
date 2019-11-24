@@ -519,6 +519,9 @@ public class LandScapeActivity extends BaseActivity implements
         mCurrentLandVideoView.getControllerView().setResolution(pos);
     }
 
+    public boolean isFullScreen() {
+        return mIsFullScreen;
+    }
 
     @Override
     public void onBackPressed() {
@@ -533,6 +536,7 @@ public class LandScapeActivity extends BaseActivity implements
             onBack();
         }
     }
+
 
     public void onBack(){
         super.onBackPressed();

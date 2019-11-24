@@ -308,7 +308,7 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
                     if (listVideoVH != null) {
                         listVideoVH.attachVideoPlayer(landVideoView);
                     }
-                    setPortPosition(-1);
+//                    setPortPosition(-1);
                     // 更新成当前列表
                     SinglePlayerManager.getInstance().attachVideoPlayer(landVideoBean, landVideoView);
                     SinglePlayerManager.getInstance().attachRecycleView(mRecyclerView);
@@ -379,8 +379,12 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
 
     @Override
     public void onChildViewAttachedToWindow(@NonNull View view) {
+        if (getActivity() instanceof LandScapeActivity && ((LandScapeActivity) getActivity()).isFullScreen() || mIsLandUpdatePort) {
+            return;
+        }
+
         int position  = mRecyclerView.getChildAdapterPosition(view);
-        if (position <= RecyclerView.NO_POSITION || mIsLandUpdatePort) {
+        if (position <= RecyclerView.NO_POSITION ) {
             return;
         }
         ListVideoData videoBean = mDataList.get(position);
@@ -403,8 +407,12 @@ public class RecommendFragment extends BaseRecyclerViewFragment<ListVideoData> i
 
     @Override
     public void onChildViewDetachedFromWindow(@NonNull View view) {
+        if (getActivity() instanceof LandScapeActivity && ((LandScapeActivity) getActivity()).isFullScreen() || mIsLandUpdatePort) {
+            return;
+        }
+
         int position  = mRecyclerView.getChildAdapterPosition(view);
-        if (position <= RecyclerView.NO_POSITION || mIsLandUpdatePort) {
+        if (position <= RecyclerView.NO_POSITION) {
             return;
         }
 

@@ -195,7 +195,15 @@ public abstract class BaseMediaController extends FrameLayout {
             mFullScreenView.setOnClickListener(mScaleListener);
         }
 
+        // 锁屏
         mLockView = mRootView.findViewById(R.id.controller_lock);
+        mLockView.setVisibility(GONE);
+        mLockView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doLockUnlock();
+            }
+        });
         // 进度条
         mSeekBar = mRootView.findViewById(R.id.controller_seekbar);
         mSeekBar.setOnSeekBarChangeListener(mSeekBarChangeListener);
@@ -377,14 +385,17 @@ public abstract class BaseMediaController extends FrameLayout {
             });
             mSpeedLandView.setVisibility(VISIBLE);
             mSpeedLandView.setText(mSpeedName[getSpeedPos()]);
+
             mResolutionLandView.setVisibility(VISIBLE);
             mResolutionLandView.setText(mResolutionName[mResolutionPos]);
+
 
         } else {
             mTitlePort.setVisibility(VISIBLE);
             mTitleLandView.setVisibility(GONE);
             mSpeedLandView.setVisibility(GONE);
             mResolutionLandView.setVisibility(GONE);
+            mLockView.setVisibility(GONE);
         }
 
     }
@@ -574,9 +585,22 @@ public abstract class BaseMediaController extends FrameLayout {
             return;
         }
 
+        if (isFullScreen()) {
+            mLockView.setVisibility(VISIBLE);
+            if (isLocked()) {
+                startHide(timeOut);
+                return;
+            }
+        }
+
         if (!isShowing()) {
             mControllerMainContent.setVisibility(VISIBLE);
             mBottomSeekView.setVisibility(GONE);
+
+            if (isFullScreen()) {
+                mLockView.setVisibility(VISIBLE);
+            }
+
             if (mShownHiddenListener != null){
                 mShownHiddenListener.onShown();
             }
@@ -588,6 +612,8 @@ public abstract class BaseMediaController extends FrameLayout {
                 mMainHandler.removeCallbacks(mShowHideTask);
             }
         }
+
+
     }
 
     /**
@@ -622,6 +648,8 @@ public abstract class BaseMediaController extends FrameLayout {
         if (isShowing()) {
             mControllerMainContent.setVisibility(GONE);
             mBottomSeekView.setVisibility(VISIBLE);
+            mLockView.setVisibility(GONE);
+
             if (mShownHiddenListener != null) {
                 mShownHiddenListener.onHidden();
             }
@@ -629,6 +657,8 @@ public abstract class BaseMediaController extends FrameLayout {
             mIsShowing = false;
             mMainHandler.removeCallbacks(mShowHideTask);
         }
+
+        mLockView.setVisibility(GONE);
     }
 
     /**
@@ -658,6 +688,40 @@ public abstract class BaseMediaController extends FrameLayout {
                 mUpdateProgressHelper.startSeekBarUpdate();
                 break;
         }
+    }
+
+    /**
+     * 锁屏 和 解锁
+     */
+    protected void doLockUnlock() {
+        if (mIsLocked) {
+            mIsLocked = false;
+            show();
+            setGestureEnabled(true);
+            mLockView.setImageResource(R.drawable.icon_controller_unlock);
+
+        } else {
+            mIsLocked = true;
+            hide();
+            setGestureEnabled(false);
+            mLockView.setImageResource(R.drawable.icon_controller_lock);
+        }
+        if (mMediaPlayer != null) {
+            mMediaPlayer.setLock(mIsLocked);
+        }
+    }
+
+    public void setGestureEnabled(boolean gestureEnabled) {
+
+    }
+
+
+
+    /**
+     * @return 是否锁屏
+     */
+    public boolean isLocked() {
+        return mIsLocked;
     }
 
     /**
@@ -913,7 +977,7 @@ public abstract class BaseMediaController extends FrameLayout {
     }
 
     /**
-     * 显示普通控制器
+     * 显示普通控制器，为了区别于画中画控制，广告控制器等
      */
     public void showNormalController(){
         mNormalControllerView.setVisibility(VISIBLE);

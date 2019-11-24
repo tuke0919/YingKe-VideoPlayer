@@ -222,18 +222,20 @@
                 </LinearLayout>
             </RelativeLayout>
 
-            <!--锁-->
-            <ImageView
-                android:id="@+id/controller_lock"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="15dip"
-                android:src="@drawable/icon_controller_unlock"
-                android:visibility="gone" />
-
         </RelativeLayout>
+
+
+        <!--锁-->
+        <ImageView
+            android:id="@+id/controller_lock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dip"
+            android:src="@drawable/icon_controller_unlock"
+            android:visibility="gone" />
+
 
         <!--底部进度条-->
         <FrameLayout
